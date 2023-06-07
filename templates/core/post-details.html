@@ -1,0 +1,252 @@
+{% extends 'core/base.html' %}
+ {% block title %}
+    Newsfeed
+    {% endblock title %} 
+{% block content %}
+{% load static %}
+{% load humanize %}
+<section>
+    <div class="gap2 gray-bg">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="row merged20" id="page-contents">
+                               
+                                <!-- sidebar -->
+                                <div class="col-lg-6">
+                                    <div class="central-meta item">
+                                        <div class="user-post">
+                                            <div class="friend-info">
+                                                <figure>
+                                                    <img src="{{profile.profile_pic.url}}" alt="">
+                                                </figure>
+                                                <div class="friend-name">
+                                                    {% if p.user == request.user %}
+                                                    <div class="more">
+                                                        <div class="more-post-optns"><i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                                                            <ul>
+                                                                <form method="post">
+                                                                    {% csrf_token %}
+                                                                    <input type="hidden" name="id" value="{{p.id}}">
+                                                                <li><button style="" type="submit" name="delete_post" class="fa fa-trash-o"></i> Delete</li>
+                                                                </form>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    {% endif %}
+                                                    <ins><a href="{% url 'core:profile' profile.user.id %}" title="">{{profile.firstname}} {{profile.lastname}}</a></ins>
+                                                    <span><i class="fa fa-globe"></i> published: {{p.created_at|date:"M d, Y"}} {{p.created_at|time:"h:i, A"}}</span>
+
+                                                </div>
+                                                <div class="post-meta">
+                                                    <p>
+                                                        {{p.content}}
+                                                    </p>
+                                                    {% if p.shared_post %}
+																	<div class="friend-info" style="border: solid 0.1px #8080802e; padding: 10px;">
+																		<figure>
+																			<img src="{{p.shared_post.profile.profile_pic.url}}" alt="">
+																		</figure>
+																		<div class="friend-name">
+																			
+																			<ins><a href="{% url 'core:profile' p.shared_post.user.id %}" title="">{{p.shared_post.profile.firstname}} {{p.shared_post.profile.lastname}}</a></ins>
+																			<span><i class="fa fa-globe"></i> published: {{p.shared_post.created_at|date:"M d, Y"}} {{p.shared_post.created_at|time:"h:i, A"}}</span>
+					
+																		</div>
+																		<div class="post-meta">
+																			<p>
+																				{{p.shared_post.content}}
+																			</p>
+																			{% if p.shared_post.image %}
+																			<figure>
+																				<a href="{% url 'core:post' p.shared_post.original_post_id %}"><img src="{{p.shared_post.image.url}}" alt=""></a>
+																			</figure>
+																			{% endif %}
+																			{% if p.shared_post.video %}
+																			<figure>
+																				<a href="{% url 'core:post' p.shared_post.original_post_id %}"><video width="320" height="240" controls>
+																					<source src="{{p.shared_post.video.url}}">
+																				  </video></a>
+																			</figure>
+																			{% endif %}
+																		</div>
+																	</div>
+																	{% endif %}
+                                                    {% if p.image %}
+                                                    <figure>
+                                                        <img src="{{p.image.url}}" alt="">
+                                                    </figure>
+                                                    {% endif %}
+                                                    {% if p.video %}
+                                                    <figure>
+                                                        <video width="320" height="240" controls>
+                                                            <source src="{{p.video.url}}">
+                                                          </video>
+                                                    </figure>
+                                                    {% endif %}
+                                                    <div class="description">
+                                                    </div>
+                                                    <div class="we-video-info">
+                                                        <ul>
+                                                            <li>
+
+
+                                                                {% if liked %}
+                                                                <button style="border: 0; background-color: #fdfcfc00;" class="like-button" data-post-id="{{ p.id }}"><div class="likes heart happy" title="Like/Dislike"><i class="fa-solid fa-thumbs-up"></i> <span>{{p.likes}}</span></div></button>
+                                                                {% else %}
+                                                                <button style="border: 0; background-color: #fdfcfc00;" class="like-button" data-post-id="{{ p.id }}"><div class="likes heart" title="Like/Dislike"><i class="fa-solid fa-thumbs-up"></i> <span>{{p.likes}}</span></div></button>
+                                                                {% endif %}
+                                                            </li>
+                                                            <li>
+                                                                <span class="comment" title="Comments">
+                                                                <i class="fa fa-commenting"></i>
+                                                                <ins>{{p.comments}}</ins>
+                                                            </span>
+                                                            </li>
+
+                                                            <li>
+                                                                <span>
+                                                                    {% if p.shared_post %}
+                                                                    <a href="{% url 'core:post' p.shared_post.original_post_id %}" title="Share">
+                                                                        <i class="fa fa-share-alt"></i>
+                                                                    {% else %}
+                                                                <a class="share-pst" data-post-id="{{ p.id }}" href="#" title="Share">
+                                                                    <i class="fa fa-share-alt"></i>
+                                                                </a>
+                                                                {% endif %}
+                                                                <ins>{{p.shares}}</ins>
+                                                            </span>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                        <!-- digital sponsors -->
+                                     
+                                        <!-- video post -->
+
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="central-meta item">
+                                        <div class="coment-area" style="display: block;">
+                                            <h4>Comments</h4>
+                                            <ul class="we-comet" id="comments">
+                                                {% for c in p.post_comments.all %}
+                                                <li>
+                                                    <div class="comet-avatar">
+                                                        <img src="{{c.profile.profile_pic.url}}" alt="">
+                                                    </div>
+                                                    
+        
+                                                    <div class="we-comment">
+                                                        {% if c.user == request.user %}
+                                                        <div class="more">
+                                                            <div class="more-post-optns"><i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                                                                <ul>
+                                                                    <form method="post">
+                                                                        {% csrf_token %}
+                                                                        <input type="hidden" name="id" value="{{p.id}}">
+                                                                        <input type="hidden" name="cid" value="{{c.cid}}">
+                                                                    <li><button style="" type="submit" name="delete_comment" class="fa fa-trash-o"></i> Delete</li>
+                                                                    </form>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                        {% endif %}
+                                                        <h5><a href="{{c.user.id}}" title="">{{c.profile.firstname}} {{c.profile.lastname}}</a></h5>
+                                                        <p>{{c.comment}}</p>
+                                                        {% if c.image %}
+                                                        <img src="{{c.image.url}}" alt="">
+                                                        {% endif %}
+                                                        <div class="inline-itms">
+                                                            <span>{{c.created_at|timesince}}</span>
+                                                        </div>
+                                                        
+                                                    </div>
+                                                    
+                                                </li>
+                                                {% endfor %}
+                                                <li class="post-comment">
+                                                    <div class="comet-avatar">
+                                                        <img src="{{profile_user.profile_pic.url}}" alt="">
+                                                    </div>
+                                                    <div class="post-comt-box">
+                                                        <form id="comment-form" method="POST">
+                                                            {% csrf_token %}
+                                                            <input type="hidden" value="{{p.id}}" name="post_id">
+                                                            <textarea id="myTextarea" name="comment" placeholder="Post your comment"></textarea>
+                                                            
+                                                            <div class="add-smiles">
+                                                                <div class="uploadimage">
+                                                                    <i class="fa fa-image"></i>
+                                                                    <label class="fileContainer">
+                                                                        <input type="file" name="image">	
+                                                                    </label>
+                                                                </div>
+                                                            
+                                                                <button name="add-comment" style="background: none; padding: 0;" type="submit"><i style="color: #1877f2;" class="fas fa-paper-plane"></i></button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </li>
+                                                
+                                            </ul>
+                                        </div>
+                                    </div>
+                                        <!-- digital sponsors -->
+                                     
+                                        <!-- video post -->
+
+                                </div>
+                                <!-- centerl meta -->
+                               
+                                <!-- sidebar -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div id="share-form-{{ p.id }}" class="popup-wraper2">
+            <div class="popup post-sharing">
+                <div class="popup-meta">
+                    <div class="postbox" >
+                        <div class="post-comt-box">
+                            <form method="post" class="share-post" id="share-post-{{p.id}}">
+                                {% csrf_token %}
+                                <input type="hidden" value="{{p.id}}" name="original_post_id">
+                                <textarea placeholder="Add caption..." name="new_post_content"></textarea>
+                        </div>
+                        {% if p.image %}
+
+                        <div style="display: flex; justify-content: center; align-items: center;"><img style="width: 200px;" src="{{p.image.url}}" alt=""></div>
+                        {% endif %}
+                        {% if p.video %}
+                        <div style="display: flex; justify-content: center; align-items: center;"><video style="width: 300px; margin-bottom: 10px;" src="{{p.video.url}}"></video></div>
+                        {% endif %}
+                        <div class="friend-info">
+                            <figure>
+                                <img alt="" src="{{profile_pro.profile_pic.url}}">
+                            </figure>
+                            <div class="friend-name">
+                                <ins><a >{{profile_pro.firstname}} {{profile_pro.lastname}}</a> shared <a>{{p.profile.firstname}} {{p.profile.lastname}}'s post</a></ins>
+                                <span>{{p.content}}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="we-video-info">
+                            
+                            <button class="main-btn color" type="submit">Share</button>
+                            <button class="main-btn cancel" data-ripple="">Close</button>
+                        </div>
+                    </form>
+                    </div>
+                </div>	
+            </div>
+        </div>
+
+          
+                {% endblock content %}

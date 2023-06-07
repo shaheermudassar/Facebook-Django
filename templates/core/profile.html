@@ -1,0 +1,1212 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block content %}
+	<section>
+		<div class="gap2 gray-bg">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="row merged20">
+							<div class="user-profile">
+								<figure>
+									<div class="edit-pp">
+										<a href="{% url 'core:settings' %}">
+											<i class="fa fa-camera"></i>
+											</a>
+									</div>
+									<div class="cover-image-container">
+										<img src="{{ profile.cover_pic.url }}" alt="" class="cover-image fullscreen-img">
+									  </div>
+									  
+									<ul class="profile-controls">
+										{% if profile.user != request.user %}
+										<li><a href="#" title="Add friend" data-toggle="tooltip"><i class="fa fa-user-plus"></i></a></li>
+										{% endif %}
+										{% if profile.user != request.user %}
+										<li><a class="send-mesg" href="#" title="Send Message" data-toggle="tooltip"><i class="fa fa-comment"></i></a></li>
+										{% endif %}
+										{% if profile.user == request.user %}
+										<li><a href="{% url 'core:settings' %}" class="edit-seting" title="Edit Profile image"><i class="fa fa-sliders"></i></a></li>
+										{% endif %}
+									</ul>
+								</figure>
+								
+								<div class="profile-section">
+									<div class="row">
+										<div class="col-lg-3">
+											<div class="profile-author">
+												<div class="profile-author-thumb image-container" >
+													<img style="border-radius: 0px;" alt="author" src="{{profile.profile_pic.url}}" class="fullscreen-img">
+													<div class="edit-dp">
+														<a href="{% url 'core:settings' %}">
+														<i class="fa fa-camera"></i>
+														</a>
+													</div>
+												</div>
+												<div class="author-content">
+													<a class="h4 author-name" href="02-ProfilePage.html">{{profile.firstname}} {{profile.lastname}}</a>
+													<div class="country">{{profile.city}}, {{profile.country}}</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-lg-10 col-md-9">
+											<ul class="nav nav-tabs links-tab">
+												<li class="nav-item"><a class="active" href="#link3" data-toggle="tab">Timeline</a></li>
+												 <li class="nav-item"><a class="" href="#link1" data-toggle="tab">About</a></li>
+												 <li class="nav-item"><a class="" href="#link2" data-toggle="tab">Videos</a></li>
+												 <li class="nav-item"><a class="" href="#link4" data-toggle="tab">Photos</a></li>
+												 <li class="nav-item"><a class="" href="#link5" data-toggle="tab">Friends</a></li>
+											</ul>
+											
+										</div>
+									</div>
+								</div>	
+							</div><!-- user profile banner  -->
+							<div class="col-lg-12">
+								<div class="tab-content">
+									<div class="tab-pane fade " id="link1">
+										<div class="row merged20" id="page-contents">
+											
+											<div class="col-lg-8 col-md-8">
+												<div class="central-meta">
+													<span class="create-post">General Info
+														{% if profile.user == request.user %}
+														<a href="{% url 'core:settings' %}" title="">Edit</a>
+														{% endif %}
+													</span>
+													<div class="row">
+														<div class="col-lg-6">
+															<div class="gen-metabox">
+																<span><i class="fa fa-puzzle-piece"></i> Hobbies</span>
+																<p>
+																	{{info.hobbies}}
+																</p>
+															</div>
+															<div class="gen-metabox">
+																<span><i class="fa fa-plus"></i> Others Interests</span>
+																<p>
+																	{{info.other_interests}}
+																</p>
+															</div>
+														</div>
+														<div class="col-lg-6">
+															<div class="gen-metabox">
+																<span><i class="fa fa-mortar-board"></i> Education</span>
+																<p>
+																	{{info.education}}
+																</p>
+															</div>
+															<div class="gen-metabox">
+																<span><i class="fa fa-certificate"></i> Work and experience</span>
+																<p>
+																	{{info.work_experience}}
+																</p>
+															</div>
+														</div>
+														
+													</div>	
+												</div>
+												<div class="central-meta">
+													<span class="create-post">Favourit Movies & TV Shows (33) <a href="#" title="">See All</a></span>
+													<div class="row">
+														<div class="col-lg-4 col-md-6 col-sm-6">
+															<div class="fav-play">
+																<figure>
+																	<img src="{% static 'images/resources/tvplay1.jpg' %}" alt="">
+																</figure>	
+																<span class="tv-play-title">Attaturk Tv Series 2017 </span>
+															</div>
+														</div>
+														<div class="col-lg-4 col-md-6 col-sm-6">
+															<div class="fav-play">
+																<figure>
+																	<img src="{% static 'images/resources/tvplay2.jpg' %}" alt="">
+																</figure>	
+																<span class="tv-play-title">Thor Hollywood Movie 2017 </span>
+															</div>
+														</div>
+														<div class="col-lg-4 col-md-6 col-sm-6">
+															<div class="fav-play">
+																<figure>
+																	<img src="{% static 'images/resources/tvplay3.jpg' %}" alt="">
+																</figure>	
+																<span class="tv-play-title">Spider Men 2015 </span>
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="central-meta">
+													<span class="create-post">Friend's (320) <a href="timeline-friends2.html" title="">See All</a></span>
+													<ul class="frndz-list">
+														<li>
+															<img src="{% static 'images/resources/recent1.jpg' %}" alt="">
+															<div class="sugtd-frnd-meta">
+																<a href="#" title="">Olivia</a>
+																<span>1 mutual friend</span>
+																<ul class="add-remove-frnd">
+																	<li class="add-tofrndlist"><a class="send-mesg" href="#" title="Send Message"><i class="fa fa-commenting"></i></a></li>
+																	<li class="remove-frnd"><a href="#" title="remove friend"><i class="fa fa-user-times"></i></a></li>
+																</ul>
+															</div>
+														</li>
+														<li>
+															<img src="{% static 'images/resources/recent2.jpg' %}" alt="">
+															<div class="sugtd-frnd-meta">
+																<a href="#" title="">Emma watson</a>
+																<span>2 mutual friend</span>
+																<ul class="add-remove-frnd">
+																	<li class="add-tofrndlist"><a class="send-mesg" href="#" title="Send Message"><i class="fa fa-commenting"></i></a></li>
+																	<li class="remove-frnd"><a href="#" title="remove friend"><i class="fa fa-user-times"></i></a></li>
+																</ul>
+															</div>
+														</li>
+														<li>
+															<img src="{% static 'images/resources/recent3.jpg' %}" alt="">
+															<div class="sugtd-frnd-meta">
+																<a href="#" title="">Isabella</a>
+																<span><a href="#" title="">Emmy</a> is mutual friend</span>
+																<ul class="add-remove-frnd">
+																	<li class="add-tofrndlist"><a class="send-mesg" href="#" title="Send Message"><i class="fa fa-commenting"></i></a></li>
+																	<li class="remove-frnd"><a href="#" title="remove friend"><i class="fa fa-user-times"></i></a></li>
+																</ul>
+															</div>
+														</li>
+														<li>
+															<img src="{% static 'images/resources/recent4.jpg' %}" alt="">
+															<div class="sugtd-frnd-meta">
+																<a href="#" title="">Amelia</a>
+																<span>5 mutual friend</span>
+																<ul class="add-remove-frnd">
+																	<li class="add-tofrndlist"><a class="send-mesg" href="#" title="Send Message"><i class="fa fa-commenting"></i></a></li>
+																	<li class="remove-frnd"><a href="#" title="remove friend"><i class="fa fa-user-times"></i></a></li>
+																</ul>
+															</div>
+														</li>
+														<li>
+															<img src="{% static 'images/resources/recent5.jpg' %}" alt="">
+															<div class="sugtd-frnd-meta">
+																<a href="#" title="">Sophia</a>
+																<span>1 mutual friend</span>
+																<ul class="add-remove-frnd">
+																	<li class="add-tofrndlist"><a class="send-mesg" href="#" title="Send Message"><i class="fa fa-commenting"></i></a></li>
+																	<li class="remove-frnd"><a href="#" title="remove friend"><i class="fa fa-user-times"></i></a></li>
+																</ul>
+															</div>
+														</li>
+														<li>
+															<img src="{% static 'images/resources/recent6.jpg' %}" alt="">
+															<div class="sugtd-frnd-meta">
+																<a href="#" title="">Amelia</a>
+																<span>3 mutual friend</span>
+																<ul class="add-remove-frnd">
+																	<li class="add-tofrndlist"><a class="send-mesg" href="#" title="Send Message"><i class="fa fa-commenting"></i></a></li>
+																	<li class="remove-frnd"><a href="#" title="remove friend"><i class="fa fa-user-times"></i></a></li>
+																</ul>
+															</div>
+														</li>
+													</ul>
+												</div><!-- friends list -->
+												<div class="central-meta">
+													<span class="create-post">Photos </span>
+													<ul class="photos-list">
+														{% for p in post %}
+														{% if p.image %}
+														<li>
+															<div class="item-box">
+																<a class="strip" href="{{p.image.url}}" title="" data-strip-group="mygroup" data-strip-group-options="loop: false">
+																<img src="{{p.image.url}}" alt=""></a>
+																<div class="over-photo">
+																	<div class="likes heart" title="Like/Dislike"><i class="fa-solid fa-thumbs-up"></i> <span>{{p.likes}}</span></div>
+																	<span>{{p.created_at|timesince}}</span>
+																</div>
+															</div>
+														</li>
+														{% endif %}
+														{% endfor %}
+													</ul>
+												</div>
+												<div class="central-meta">
+													<span class="create-post">Videos </span>
+													<ul class="videos-list">
+														{% for p in post %}
+														{% if p.video %}
+														<li>
+															<div class="item-box">
+																<a href="{% url 'core:post' p.id %}"><video src="{{p.video.url}}"></video></a>
+																<div class="over-photo">
+																	<div class="likes heart" title="Like/Dislike"><i class="fa-solid fa-thumbs-up"></i> <span>{{p.likes}}</span></div>
+																	<span>{{p.created_at|timesince}}</span>
+																</div>
+															</div>
+														</li>
+														{% endif %}
+														{% endfor %}
+													</ul>
+												</div>
+											</div>	
+											<div class="col-lg-4 col-md-4">
+												<aside class="sidebar">
+													<div class="central-meta stick-widget">
+														<span class="create-post">Personal Info</span>
+														<div class="personal-head">
+															<span class="f-title"><i class="fa fa-user"></i> About Me:</span>
+															<p>
+																{{profile.bio}}
+															</p>
+															<span class="f-title"><i class="fa fa-birthday-cake"></i> Birthday:</span>
+															<p>
+																{{profile.birthday|date:"M d, Y"}}
+															</p>
+															<span class="f-title"><i class="fa fa-phone"></i> Phone Number:</span>
+															<p>
+																{{profile.phone_no}} 
+															</p>
+															<span class="f-title"><i class="fa fa-medkit"></i> Blood group:</span>
+															<p>
+																B+
+															</p>
+															<span class="f-title"><i class="fa fa-male"></i> Gender:</span>
+															<p>
+																{{profile.gender}} 
+															</p>
+															<span class="f-title"><i class="fa fa-globe"></i> Country:</span>
+															<p>
+																{{profile.city}}, {{profile.country}} 
+															</p>
+
+															<span class="f-title"><i class="fa fa-handshake-o"></i> Joined:</span>
+															<p>
+																{{user.date_joined|date:"M d, Y"}}  
+															</p>
+
+														</div>
+													</div>
+												</aside>	
+											</div>	
+										</div>
+									</div>
+									<div class="tab-pane fade" id="link2">
+										<div class="central-meta">
+											<div class="create-post">Videos</div>
+											<div class="row merged20">
+												{% for p in post %}
+												{% if p.video %}
+												<div class="col-lg-3 col-md-4 col-sm-6">
+													<div class="tube-post">
+															<a href = "{% url 'core:post' p.id %}"><video style="width: 270px; height: 150px;" controls src="{{p.video.url}}"></video></a>
+														<div class="tube-title">
+															<h6>{{p.content}}</h6>
+															<span class="upload-time">{{p.created_at}}</span>
+														</div>
+													</div>
+												</div>
+												{% endif %}
+												{% endfor %}
+												
+											</div>
+										</div>	
+									</div>
+									<div class="tab-pane active fade show" id="link3">
+										<div class="row merged20" id="page-contents">
+											<div class="col-lg-9">
+												{% if profile.user == request.user %}
+												<div class="central-meta postbox">
+													<span class="create-post">Create post</span>
+													<div class="new-postbox">
+														<figure>
+															<img style="width: 60px" src="{{profile.profile_pic.url}}" alt="">
+														</figure>
+														<form method="post" enctype="multipart/form-data">
+															{% csrf_token %}
+															<div class="newpst-input">
+															  <textarea rows="2" required placeholder="Share some what you are thinking?" name="content"></textarea>
+															</div>
+															<div class="attachments">
+															  <ul>
+																<li>
+																  <i class="fa fa-image"></i>
+																  <label class="fileContainer">
+																	<input type="file" accept="image/*" name="image" onchange="previewImage(event)">
+																  </label>
+																  <img id="imagePreview" src="#" alt="Image Preview" style="display: none;">
+																</li>
+																<li>
+																  <i class="fa fa-video-camera"></i>
+																  <label class="fileContainer">
+																	<input type="file" accept="video/*" name="video" onchange="previewVideo(event)">
+																  </label>
+																  <video id="videoPreview" src="#" alt="Video Preview" style="display: none;" controls></video>
+																</li>
+															  </ul>
+															  <button class="post-btn" type="submit" name="add_post">Post</button>
+															</div>
+														  </form>
+														  
+														  <script>
+															function previewImage(event) {
+															  var reader = new FileReader();
+															  reader.onload = function() {
+																var imagePreview = document.getElementById('imagePreview');
+																imagePreview.src = reader.result;
+																imagePreview.style.display = 'block';
+															  }
+															  reader.readAsDataURL(event.target.files[0]);
+															}
+															
+															function previewVideo(event) {
+															  var reader = new FileReader();
+															  reader.onload = function() {
+																var videoPreview = document.getElementById('videoPreview');
+																videoPreview.src = reader.result;
+																videoPreview.style.display = 'block';
+															  }
+															  reader.readAsDataURL(event.target.files[0]);
+															}
+														  </script>
+														  
+															<div class="add-location-post">
+																<span>Drag map point to selected area</span>
+															<div class="row">
+																
+																<div class="col-lg-6">
+																	<label class="control-label">Lat :</label>
+																	<input type="text" class="" id="us3-lat" />
+																</div>
+																<div class="col-lg-6">
+																	<label>Long :</label>
+																	<input type="text" class="" id="us3-lon" />
+																</div>
+															</div>
+															<!-- map -->
+															<div id="us3"></div>
+														</div>
+													</div>
+												</div>
+												{% endif %}
+												
+                                    
+                                        
+													{% for p in post %}
+													<div class="central-meta item">
+														<div class="user-post">
+															<div class="friend-info">
+																<figure>
+																	<img src="{{profile.profile_pic.url}}" alt="">
+																</figure>
+																<div class="friend-name">
+																	{% if p.user == request.user %}
+																	<div class="more">
+																		<div class="more-post-optns"><i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+																			<ul>
+																				<form method="post">
+																					{% csrf_token %}
+																					<input type="hidden" name="id" value="{{p.id}}">
+																				<li><button style="" type="submit" name="delete_post" class="fa fa-trash-o"></i> Delete</li>
+																				</form>
+																			</ul>
+																		</div>
+																	</div>
+																	{% endif %}
+																	<ins><a href="{% url 'core:profile' profile.user.id %}" title="">{{profile.firstname}} {{profile.lastname}}</a>{% if p.shared_post %} shared <a href="{% url 'core:profile' p.shared_post.profile.user.id %}" title=""> {{p.shared_post.profile.firstname}} {{p.shared_post.profile.lastname}}'s</a> post{% endif %}</ins>
+																	<span><i class="fa fa-globe"></i> published: {{p.created_at|date:"M d, Y"}} {{p.created_at|time:"h:i, A"}}</span>
+			
+																</div>
+																<div class="post-meta">
+																	<p>
+																		{{p.content}}
+																	</p>
+																	{% if p.shared_post %}
+																	<div class="friend-info" style="border: solid 0.1px #8080802e; padding: 10px;">
+																		<figure>
+																			<img src="{{p.shared_post.profile.profile_pic.url}}" alt="">
+																		</figure>
+																		<div class="friend-name">
+																			
+																			<ins><a href="{% url 'core:profile' p.shared_post.user.id %}" title="">{{p.shared_post.profile.firstname}} {{p.shared_post.profile.lastname}}</a></ins>
+																			<span><i class="fa fa-globe"></i> published: {{p.shared_post.created_at|date:"M d, Y"}} {{p.shared_post.created_at|time:"h:i, A"}}</span>
+					
+																		</div>
+																		<div class="post-meta">
+																			<p>
+																				{{p.shared_post.content}}
+																			</p>
+																			{% if p.shared_post.image %}
+																			<figure>
+																				<a href="{% url 'core:post' p.shared_post.original_post_id %}"><img src="{{p.shared_post.image.url}}" alt=""></a>
+																			</figure>
+																			{% endif %}
+																			{% if p.shared_post.video %}
+																			<figure>
+																				<a href="{% url 'core:post' p.shared_post.original_post_id %}"><video style="max-height: 400px;" controls>
+																					<source src="{{p.shared_post.video.url}}">
+																				  </video></a>
+																			</figure>
+																			{% endif %}
+																		</div>
+																	</div>
+																	{% endif %}
+																	{% if p.image %}
+																	<figure>
+																		<a href="{% url 'core:post' p.id %}"><img src="{{p.image.url}}" alt=""></a>
+																	</figure>
+																	{% endif %}
+																	{% if p.video %}
+																	<figure>
+																		<a href="{% url 'core:post' p.id %}"><video style="max-height: 400px;" controls>
+																			<source src="{{p.video.url}}">
+																		  </video></a>
+																	</figure>
+																	{% endif %}
+																	
+																	<div class="we-video-info">
+																		<ul style="margin-top: 0;">
+																			<li>
+
+
+																				{% if p.id in liked_post_ids %}
+																				<button style="border: 0; background-color: #fdfcfc00;" class="like-button" data-post-id="{{ p.id }}"><div class="likes heart happy" title="Like/Dislike"><i class="fa-solid fa-thumbs-up"></i> <span>{{p.likes}}</span></div></button>
+																				{% else %}
+																				<button style="border: 0; background-color: #fdfcfc00;" class="like-button" data-post-id="{{ p.id }}"><div class="likes heart" title="Like/Dislike"><i class="fa-solid fa-thumbs-up"></i> <span>{{p.likes}}</span></div></button>
+																				{% endif %}
+																			</li>
+																			<li>
+																				<span class="comment" title="Comments">
+																				<i class="fa fa-commenting"></i>
+																				<ins>{{p.comments}}</ins>
+																			</span>
+																			</li>
+			
+																			<li>
+																				<span>
+																					{% if p.shared_post %}
+																					<a href="{% url 'core:post' p.shared_post.original_post_id %}" title="Share">
+																						<i class="fa fa-share-alt"></i>
+																					{% else %}
+																				<a class="share-pst" data-post-id="{{ p.id }}" href="#" title="Share">
+																					<i class="fa fa-share-alt"></i>
+																				</a>
+																				{% endif %}
+																				<ins>{{p.shares}}</ins>
+																			</span>
+																			</li>
+																		</ul>
+																	</div>
+																</div>
+																<div class="coment-area">
+																	<ul class="we-comet">
+																		{% for c in p.post_comments.all %}
+																		<li>
+																			<div class="comet-avatar">
+																				<img src="{{c.profile.profile_pic.url}}" alt="">
+																			</div>
+																			<div class="we-comment">
+																				<h5><a href="{{c.user.id}}" title="">{{c.profile.firstname}} {{c.profile.lastname}}</a></h5>
+																				<p>{{c.comment}}</p>
+																				{% if c.image %}
+																				<img src="{{c.image.url}}" alt="">
+																				{% endif %}
+																				<div class="inline-itms">
+																					<span>{{c.created_at|timesince}}</span>
+																				</div>
+																			</div>
+																			{% if c.user == request.user %}
+																			<div class="more">
+																				<div class="more-post-optns"><i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+																					<ul>
+																						<form method="post">
+																							{% csrf_token %}
+																							<input type="hidden" name="id" value="{{p.id}}">
+																							<input type="hidden" name="cid" value="{{c.cid}}">
+																						<li><button style="" type="submit" name="delete_comment" class="fa fa-trash-o"></i> Delete</li>
+																						</form>
+																					</ul>
+																				</div>
+																			</div>
+																			{% endif %}
+																		</li>
+																		
+																		{% endfor %}
+																		<li class="post-comment">
+																			<div class="comet-avatar">
+																				<img src="{{profile_user.profile_pic.url}}" alt="">
+																			</div>
+																			<div class="post-comt-box">
+																				<form id="comment-form" method="POST">
+																					{% csrf_token %}
+																					<input type="hidden" value="{{p.id}}" name="post_id">
+																					<textarea name="comment" placeholder="Post your comment"></textarea>
+																					
+																					<div class="add-smiles">
+																						<div class="uploadimage">
+																							<i class="fa fa-image"></i>
+																							<label class="fileContainer">
+																								<input type="file" name="image">	
+																							</label>
+																						</div>
+																					
+																						<button name="add-comment" style="background: none; padding: 0;" type="submit"><i style="color: #1877f2;" class="fas fa-paper-plane"></i></button>
+																					</div>
+																				</form>
+																			</div>
+																		</li>
+																		
+																	</ul>
+																</div>
+															</div>
+														</div>
+													</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+													<div id="share-form-{{ p.id }}" class="popup-wraper2">
+														<div class="popup post-sharing">
+															<div class="popup-meta">
+																<div class="postbox" >
+																	<div class="post-comt-box">
+																		<form method="post" class="share-post" id="share-post-{{p.id}}">
+																			{% csrf_token %}
+																			<input type="hidden" value="{{p.id}}" name="original_post_id">
+																			<textarea placeholder="Add caption..." name="new_post_content"></textarea>
+																	</div>
+																	{% if p.image %}
+
+																	<div style="display: flex; justify-content: center; align-items: center;"><img style="width: 200px;" src="{{p.image.url}}" alt=""></div>
+																	{% endif %}
+																	{% if p.video %}
+																	<div style="display: flex; justify-content: center; align-items: center;"><video style="width: 300px; margin-bottom: 10px;" src="{{p.video.url}}"></video></div>
+																	{% endif %}
+																	<div class="friend-info">
+																		<figure>
+																			<img alt="" src="{{profile_pro.profile_pic.url}}">
+																		</figure>
+																		<div class="friend-name">
+																			<ins><a >{{profile_pro.firstname}} {{profile_pro.lastname}}</a> shared <a>{{p.profile.firstname}} {{p.profile.lastname}}'s post</a></ins>
+																			<span>{{p.content}}</span>
+																		</div>
+																	</div>
+																	
+																	<div class="we-video-info">
+																		
+																		<button class="main-btn color" type="submit">Share</button>
+																		<button class="main-btn cancel" data-ripple="">Close</button>
+																	</div>
+																</form>
+																</div>
+															</div>	
+														</div>
+													</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+													{% endfor %}
+													
+													<!-- digital sponsors -->
+												 
+													<!-- video post -->
+												
+											</div><!-- centerl meta -->
+											<div class="col-lg-3">
+												<aside class="sidebar static right">
+													<div class="widget">
+														<h4 class="widget-title">Your page</h4>	
+														<div class="your-page">
+															<figure>
+																<a href="#" title=""><img src="{% static 'images/resources/friend-avatar9.jpg' %}" alt=""></a>
+															</figure>
+															<div class="page-meta">
+																<a href="#" title="" class="underline">My Creative Page</a>
+																<span><i class="ti-comment"></i><a href="insight.html" title="">Messages <em>9</em></a></span>
+																<span><i class="ti-bell"></i><a href="insight.html" title="">Notifications <em>2</em></a></span>
+															</div>
+															<ul class="page-publishes">
+																<li>
+																	<span><i class="ti-pencil-alt"></i>Publish</span>
+																</li>
+																<li>
+																	<span><i class="ti-camera"></i>Photo</span>
+																</li>
+																<li>
+																	<span><i class="ti-video-camera"></i>Live</span>
+																</li>
+																<li>
+																	<span><i class="fa fa-user-plus"></i>Invite</span>
+																</li>
+															</ul>
+															<div class="page-likes">
+																<ul class="nav nav-tabs likes-btn">
+																	<li class="nav-item"><a class="active" href="#link1" data-toggle="tab" data-ripple="">likes</a></li>
+																	 <li class="nav-item"><a class="" href="#link2" data-toggle="tab" data-ripple="">views</a></li>
+																</ul>
+																<!-- Tab panes -->
+																<div class="tab-content">
+																  <div class="tab-pane fade " id="link1" >
+																	<span><i class="ti-heart"></i>884</span>
+																	  <a href="#" title="weekly-likes">35 new likes this week</a>
+																	  <div class="users-thumb-list">
+																		<a href="#" title="Anderw" data-toggle="tooltip">
+																			<img src="{% static 'images/resources/userlist-1.jpg' %}" alt="">  
+																		</a>
+																		<a href="#" title="frank" data-toggle="tooltip">
+																			<img src="{% static 'images/resources/userlist-2.jpg' %}" alt="">  
+																		</a>
+																		<a href="#" title="Sara" data-toggle="tooltip">
+																			<img src="{% static 'images/resources/userlist-3.jpg' %}" alt="">  
+																		</a>
+																		<a href="#" title="Amy" data-toggle="tooltip">
+																			<img src="{% static 'images/resources/userlist-4.jpg' %}" alt="">  
+																		</a>
+																		<a href="#" title="Ema" data-toggle="tooltip">
+																			<img src="{% static 'images/resources/userlist-5.jpg' %}" alt="">  
+																		</a>
+																		<a href="#" title="Sophie" data-toggle="tooltip">
+																			<img src="{% static 'images/resources/userlist-6.jpg' %}" alt="">  
+																		</a>
+																		<a href="#" title="Maria" data-toggle="tooltip">
+																			<img src="{% static 'images/resources/userlist-7.jpg' %}" alt="">  
+																		</a>  
+																	  </div>
+																  </div>
+																  <div class="tab-pane fade" id="link2" >
+																	  <span><i class="fa fa-eye"></i>440</span>
+																	  <a href="#" title="weekly-likes">440 new views this week</a>
+																	  <div class="users-thumb-list">
+																		<a href="#" title="Anderw" data-toggle="tooltip">
+																			<img src="{% static 'images/resources/userlist-1.jpg' %}" alt="">  
+																		</a>
+																		<a href="#" title="frank" data-toggle="tooltip">
+																			<img src="{% static 'images/resources/userlist-2.jpg' %}" alt="">  
+																		</a>
+																		<a href="#" title="Sara" data-toggle="tooltip">
+																			<img src="{% static 'images/resources/userlist-3.jpg' %}" alt="">  
+																		</a>
+																		<a href="#" title="Amy" data-toggle="tooltip">
+																			<img src="{% static 'images/resources/userlist-4.jpg' %}" alt="">  
+																		</a>
+																		<a href="#" title="Ema" data-toggle="tooltip">
+																			<img src="{% static 'images/resources/userlist-5.jpg' %}" alt="">  
+																		</a>
+																		<a href="#" title="Sophie" data-toggle="tooltip">
+																			<img src="{% static 'images/resources/userlist-6.jpg' %}" alt="">  
+																		</a>
+																		<a href="#" title="Maria" data-toggle="tooltip">
+																			<img src="{% static 'images/resources/userlist-7.jpg' %}" alt="">  
+																		</a>  
+																	  </div>
+																  </div>
+																</div>
+															</div>
+														</div>
+													</div><!-- page like widget -->
+													<div class="widget">
+														<h4 class="widget-title">Profile intro</h4>
+														<ul class="short-profile">
+															<li>
+																<span>about</span>
+																<p>Hi, i am jhon kates, i am 32 years old and worked as a web developer in microsoft </p>
+															</li>
+															<li>
+																<span>fav tv show</span>
+																<p>Sacred Games, Spartcus Blood, Games of Theron </p>
+															</li>
+															<li>
+																<span>favourit music</span>
+																<p>Justin Biber, Shakira, Nati Natasah</p>
+															</li>
+														</ul>
+													</div>
+													<div class="widget">
+														<div class="banner medium-opacity purple">
+															<div class="bg-image" style="background-image: url(images/resources/baner-widgetbg.jpg)"></div>
+															<div class="baner-top">
+																<span><img alt="" src="{% static 'images/book-icon.png' %}"></span>
+																<i class="fa fa-ellipsis-h"></i>
+															</div>
+															<div class="banermeta">
+																<p>
+																	create your own favourit page.
+																</p>
+																<span>like them all</span>
+																<a data-ripple="" title="" href="#">start now!</a>
+															</div>
+														</div>											
+													</div>
+													<div class="widget pitnik-links stick-widget">
+														<ul>
+															<li><a href="#" title="">about</a></li>
+															<li><a href="#" title="">career</a></li>
+															<li><a href="#" title="">advertise</a></li>
+															<li><a href="#" title="">Pitnik Apps</a></li>
+															<li><a href="#" title="">Pitnik Blog</a></li>
+															<li><a href="#" title="">Help</a></li>
+															<li><a href="#" title="">Pitnik Gifts</a></li>
+															<li><a href="#" title="">contetn policy</a></li>
+															<li><a href="#" title="">User Policy</a></li>
+														</ul>
+														<p>© Pitnik 2020. All Rights Reserved.</p>
+													</div><!-- little links -->
+												</aside>
+											</div><!-- sidebar -->
+										</div>
+									</div>
+									<div class="tab-pane fade" id="link4">
+										
+												<div class="row merged20">
+													<style>
+														.row.merged20 > div {
+															padding: 10px 10px;
+														}
+													</style>
+													<div class="central-meta">
+														<div class="row merged5">
+															{% for p in post %}
+															{% if p.image %}
+															<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+																<div class="item-box">
+																	<a class="strip" href="{{p.image.url}}" title="" >
+																		<img class="square-image" src="{{p.image.url}}" alt=""></a>
+																		<div class="over-photo">
+																		<a href="{% url 'core:post' p.id %}" title=""><i class="fa-solid fa-thumbs-up"></i> {{p.likes}}</a>
+																		<span>{{p.created_at}}</span>
+																	</div>
+																</div>
+															</div>
+															{% endif %}
+															{% endfor %}
+														</div>
+													</div><!-- photos -->
+												</div>
+											</div>
+										<style>
+											.square-image {
+												width: 200px;
+												height: 270px;
+												object-fit: cover;
+											}
+										</style>
+										<div class="tab-pane fade" id="link5">
+											<div class="central-meta">
+												<div class="title-block">
+													<div class="row">
+														<div class="col-lg-6">
+															<div class="align-left">
+																<h5>Friends / Followers <span>44</span></h5>
+															</div>
+														</div>
+														<div class="col-lg-6">
+															<div class="row merged20">
+																<div class="col-lg-7 col-lg-7 col-sm-7">
+																	<form method="post">
+																		<input type="text" placeholder="Search Friend">
+																		<button type="submit"><i class="fa fa-search"></i></button>
+																	</form>
+																</div>
+																<div class="col-lg-4 col-md-4 col-sm-4">
+																	<div class="select-options">
+																		<select class="select">
+																			<option>Sort by</option>
+																			<option>A to Z</option>
+																			<option>See All</option>
+																			<option>Newest</option>
+																			<option>oldest</option>
+																		</select>
+																	</div>
+																</div>
+																<div class="col-lg-1 col-md-1 col-sm-1">
+																	<div class="option-list">
+																		<i class="fa fa-ellipsis-v"></i>
+																		<ul>
+																			<li><a title="" href="#">Show Friends Public</a></li>
+																			<li><a title="" href="#">Show Friends Private</a></li>
+																			<li><a title="" href="#">Mute Notifications</a></li>
+																		</ul>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div><!-- title block -->
+									
+											<div class="central-meta padding30">
+												<div class="row">
+													<div class="col-lg-3 col-md-6 col-sm-6">
+														<div class="friend-box">
+															<figure>
+																<img src="{% static 'images/resources/frnd-cover1.jpg' %}" alt="">
+																<span>Followers: 120</span>
+															</figure>
+															<div class="frnd-meta">
+																<img src="{% static 'images/resources/frnd-figure1.jpg' %}" alt="">
+																<div class="frnd-name">
+																	<a href="#" title="">Adam James</a>
+																	<span>California, USA</span>
+																</div>
+																<ul class="frnd-info">
+																	<li><span>Friends:</span> 223 (2 mutule friends)</li>
+																	<li><span>Videos:</span> 240</li>
+																	<li><span>Photos:</span> 144</li>
+																	<li><span>Post:</span> 250</li>
+																	<li><span>Since:</span> December, 2014</li>
+																</ul>
+																<a class="send-mesg" href="#" title="">Message</a>
+																<div class="more-opotnz">
+																	<i class="fa fa-ellipsis-h"></i>
+																	<ul>
+																		<li><a href="#" title="">Block</a></li>
+																		<li><a href="#" title="">UnBlock</a></li>
+																		<li><a href="#" title="">Mute Notifications</a></li>
+																		<li><a href="#" title="">hide from friend list</a></li>
+																	</ul>
+																</div>
+															</div>
+														</div>
+													</div>
+													<div class="col-lg-3 col-md-6 col-sm-6">
+														<div class="friend-box">
+															<figure>
+																<img src="{% static 'images/resources/frnd-cover2.jpg' %}" alt="">
+																<span>Followers: 450</span>
+															</figure>
+															<div class="frnd-meta">
+																<img src="{% static 'images/resources/frnd-figure2.jpg' %}" alt="">
+																<div class="frnd-name">
+																	<a href="#" title="">Andrew</a>
+																	<span>Tornoto, Canada</span>
+																</div>
+																<ul class="frnd-info">
+																	<li><span>Friends:</span> 223 (2 mutule friends)</li>
+																	<li><span>Videos:</span> 240</li>
+																	<li><span>Photos:</span> 144</li>
+																	<li><span>Post:</span> 250</li>
+																	<li><span>Since:</span> December, 2014</li>
+																</ul>
+																<a class="send-mesg" href="#" title="">Message</a>
+																<div class="more-opotnz">
+																	<i class="fa fa-ellipsis-h"></i>
+																	<ul>
+																		<li><a href="#" title="">Block</a></li>
+																		<li><a href="#" title="">UnBlock</a></li>
+																		<li><a href="#" title="">Mute Notifications</a></li>
+																		<li><a href="#" title="">hide from friend list</a></li>
+																	</ul>
+																</div>
+															</div>
+														</div>
+													</div>
+													<div class="col-lg-3 col-md-6 col-sm-6">
+														<div class="friend-box">
+															<figure>
+																<img src="{% static 'images/resources/frnd-cover3.jpg' %}" alt="">
+																<span>Followers: 50</span>
+															</figure>
+															<div class="frnd-meta">
+																<img src="{% static 'images/resources/frnd-figure3.jpg' %}" alt="">
+																<div class="frnd-name">
+																	<a href="#" title="">Arnold</a>
+																	<span>Istanbul, Turky</span>
+																</div>
+																<ul class="frnd-info">
+																	<li><span>Friends:</span> 223 (2 mutule friends)</li>
+																	<li><span>Videos:</span> 240</li>
+																	<li><span>Photos:</span> 144</li>
+																	<li><span>Post:</span> 250</li>
+																	<li><span>Since:</span> December, 2014</li>
+																</ul>
+																<a class="send-mesg" href="#" title="">Message</a>
+																<div class="more-opotnz">
+																	<i class="fa fa-ellipsis-h"></i>
+																	<ul>
+																		<li><a href="#" title="">Block</a></li>
+																		<li><a href="#" title="">UnBlock</a></li>
+																		<li><a href="#" title="">Mute Notifications</a></li>
+																		<li><a href="#" title="">hide from friend list</a></li>
+																	</ul>
+																</div>
+															</div>
+														</div>
+													</div>
+													<div class="col-lg-3 col-md-6 col-sm-6">
+														<div class="friend-box">
+															<figure>
+																<img src="{% static 'images/resources/frnd-cover4.jpg' %}" alt="">
+																<span>Followers: 410</span>
+															</figure>
+															<div class="frnd-meta">
+																<img src="{% static 'images/resources/frnd-figure4.jpg' %}" alt="">
+																<div class="frnd-name">
+																	<a href="#" title="">Ella John</a>
+																	<span>Maxico city, USA</span>
+																</div>
+																<ul class="frnd-info">
+																	<li><span>Friends:</span> 223 (2 mutule friends)</li>
+																	<li><span>Videos:</span> 240</li>
+																	<li><span>Photos:</span> 144</li>
+																	<li><span>Post:</span> 250</li>
+																	<li><span>Since:</span> December, 2014</li>
+																</ul>
+																<a class="send-mesg" href="#" title="">Message</a>
+																<div class="more-opotnz">
+																	<i class="fa fa-ellipsis-h"></i>
+																	<ul>
+																		<li><a href="#" title="">Block</a></li>
+																		<li><a href="#" title="">UnBlock</a></li>
+																		<li><a href="#" title="">Mute Notifications</a></li>
+																		<li><a href="#" title="">hide from friend list</a></li>
+																	</ul>
+																</div>
+															</div>
+														</div>
+													</div>
+													<div class="col-lg-3 col-md-6 col-sm-6">
+														<div class="friend-box">
+															<figure>
+																<img src="{% static 'images/resources/frnd-cover5.jpg' %}" alt="">
+																<span>Followers: 16k</span>
+															</figure>
+															<div class="frnd-meta">
+																<img src="{% static 'images/resources/frnd-figure5.jpg' %}" alt="">
+																<div class="frnd-name">
+																	<a href="#" title="">Madison</a>
+																	<span>Los Angeles, CA</span>
+																</div>
+																<ul class="frnd-info">
+																	<li><span>Friends:</span> 223 (2 mutule friends)</li>
+																	<li><span>Videos:</span> 240</li>
+																	<li><span>Photos:</span> 144</li>
+																	<li><span>Post:</span> 250</li>
+																	<li><span>Since:</span> December, 2014</li>
+																</ul>
+																<a class="send-mesg" href="#" title="">Message</a>
+																<div class="more-opotnz">
+																	<i class="fa fa-ellipsis-h"></i>
+																	<ul>
+																		<li><a href="#" title="">Block</a></li>
+																		<li><a href="#" title="">UnBlock</a></li>
+																		<li><a href="#" title="">Mute Notifications</a></li>
+																		<li><a href="#" title="">hide from friend list</a></li>
+																	</ul>
+																</div>
+															</div>
+														</div>
+													</div>
+													<div class="col-lg-3 col-md-6 col-sm-6">
+														<div class="friend-box">
+															<figure>
+																<img src="{% static 'images/resources/frnd-cover6.jpg' %}" alt="">
+																<span>Followers: 2M</span>
+															</figure>
+															<div class="frnd-meta">
+																<img src="{% static 'images/resources/frnd-figure6.jpg' %}" alt="">
+																<div class="frnd-name">
+																	<a href="#" title="">Victoria</a>
+																	<span>Brazil</span>
+																</div>
+																<ul class="frnd-info">
+																	<li><span>Friends:</span> 223 (2 mutule friends)</li>
+																	<li><span>Videos:</span> 240</li>
+																	<li><span>Photos:</span> 144</li>
+																	<li><span>Post:</span> 250</li>
+																	<li><span>Since:</span> December, 2014</li>
+																</ul>
+																<a class="send-mesg" href="#" title="">Message</a>
+																<div class="more-opotnz">
+																	<i class="fa fa-ellipsis-h"></i>
+																	<ul>
+																		<li><a href="#" title="">Block</a></li>
+																		<li><a href="#" title="">UnBlock</a></li>
+																		<li><a href="#" title="">Mute Notifications</a></li>
+																		<li><a href="#" title="">hide from friend list</a></li>
+																	</ul>
+																</div>
+															</div>
+														</div>
+													</div>
+													<div class="col-lg-3 col-md-6 col-sm-6">
+														<div class="friend-box">
+															<figure>
+																<img src="{% static 'images/resources/frnd-cover7.jpg' %}" alt="">
+																<span>Followers: 220</span>
+															</figure>
+															<div class="frnd-meta">
+																<img src="{% static 'images/resources/frnd-figure7.jpg' %}" alt="">
+																<div class="frnd-name">
+																	<a href="#" title="">Lillian</a>
+																	<span>Mumbai, India</span>
+																</div>
+																<ul class="frnd-info">
+																	<li><span>Friends:</span> 223 (2 mutule friends)</li>
+																	<li><span>Videos:</span> 240</li>
+																	<li><span>Photos:</span> 144</li>
+																	<li><span>Post:</span> 250</li>
+																	<li><span>Since:</span> December, 2014</li>
+																</ul>
+																<a class="send-mesg" href="#" title="">Message</a>
+																<div class="more-opotnz">
+																	<i class="fa fa-ellipsis-h"></i>
+																	<ul>
+																		<li><a href="#" title="">Block</a></li>
+																		<li><a href="#" title="">UnBlock</a></li>
+																		<li><a href="#" title="">Mute Notifications</a></li>
+																		<li><a href="#" title="">hide from friend list</a></li>
+																	</ul>
+																</div>
+															</div>
+														</div>
+													</div>
+													<div class="col-lg-3 col-md-6 col-sm-6">
+														<div class="friend-box">
+															<figure>
+																<img src="{% static 'images/resources/frnd-cover8.jpg' %}" alt="">
+																<span>Followers: 220</span>
+															</figure>
+															<div class="frnd-meta">
+																<img src="{% static 'images/resources/frnd-figure8.jpg' %}" alt="">
+																<div class="frnd-name">
+																	<a href="#" title="">Xing Weng</a>
+																	<span>Beijing, China</span>
+																</div>
+																<ul class="frnd-info">
+																	<li><span>Friends:</span> 223 (2 mutule friends)</li>
+																	<li><span>Videos:</span> 240</li>
+																	<li><span>Photos:</span> 144</li>
+																	<li><span>Post:</span> 250</li>
+																	<li><span>Since:</span> December, 2014</li>
+																</ul>
+																<a class="send-mesg" href="#" title="">Message</a>
+																<div class="more-opotnz">
+																	<i class="fa fa-ellipsis-h"></i>
+																	<ul>
+																		<li><a href="#" title="">Block</a></li>
+																		<li><a href="#" title="">UnBlock</a></li>
+																		<li><a href="#" title="">Mute Notifications</a></li>
+																		<li><a href="#" title="">hide from friend list</a></li>
+																	</ul>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="lodmore">
+													<span>Viewing 1-8 of 44 friends</span>
+													<button class="btn-view btn-load-more"></button>
+												</div>
+											</div>
+												
+								
+									
+								</div>
+							</div>
+						</div>	
+					</div>
+				</div>
+			</div>
+		</div>	
+	</section>
+	<style>
+		.fullscreen-img {
+  cursor: pointer;
+}
+
+.fullscreen-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.fullscreen-image {
+  max-width: 90%;
+  max-height: 90%;
+}
+
+	</style>
+<script>
+	const imgContainer = document.querySelector('.image-container');
+const img = imgContainer.querySelector('.fullscreen-img');
+
+img.addEventListener('click', function () {
+  const overlay = document.createElement('div');
+  overlay.classList.add('fullscreen-overlay');
+
+  const fullscreenImg = document.createElement('img');
+  fullscreenImg.classList.add('fullscreen-image');
+  fullscreenImg.src = img.src;
+
+  overlay.appendChild(fullscreenImg);
+  document.body.appendChild(overlay);
+
+  overlay.addEventListener('click', function () {
+    document.body.removeChild(overlay);
+  });
+});
+
+</script>
+<style>
+	.cover-image-container {
+  position: relative;
+}
+
+.cover-image {
+  cursor: pointer;
+}
+
+/* Add the rest of the CSS code for the overlay and full-screen image from the previous example */
+
+</style>
+<script>
+	const coverImgContainer = document.querySelector('.cover-image-container');
+const coverImg = coverImgContainer.querySelector('.cover-image');
+
+coverImg.addEventListener('click', function () {
+  const overlay = document.createElement('div');
+  overlay.classList.add('fullscreen-overlay');
+
+  const fullscreenImg = document.createElement('img');
+  fullscreenImg.classList.add('fullscreen-image');
+  fullscreenImg.src = coverImg.src;
+
+  overlay.appendChild(fullscreenImg);
+  document.body.appendChild(overlay);
+
+  overlay.addEventListener('click', function () {
+    document.body.removeChild(overlay);
+  });
+});
+
+</script>
+
+
+	{% endblock content %}

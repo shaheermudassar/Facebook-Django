@@ -1,0 +1,560 @@
+{% extends 'core/base.html' %}
+ {% block title %}
+    Newsfeed
+    {% endblock title %} 
+{% block content %}
+{% load static %}
+<section>
+    <div class="gap2 gray-bg">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="row merged20" id="page-contents">
+                                <div class="col-lg-2">
+                                    <aside class="sidebar static left">
+                                       
+                                        <!-- who's following -->
+                                    </aside>
+                                </div>
+                                <!-- sidebar -->
+                                <div class="col-lg-7">
+                                    <div class="central-meta postbox">
+                                        <span class="create-post">Create post</span>
+                                        <div class="new-postbox">
+                                            <figure>
+                                                <img style="width: 50px;" src="{{profile_pro.profile_pic.url}}" alt="">
+                                            </figure>
+                                            <form method="post" enctype="multipart/form-data">
+                                                {% csrf_token %}
+                                                <div class="newpst-input">
+                                                  <textarea rows="2" required placeholder="Share some what you are thinking?" name="content"></textarea>
+                                                </div>
+                                                <div class="attachments">
+                                                  <ul>
+                                                    <li>
+                                                      <i class="fa fa-image"></i>
+                                                      <label class="fileContainer">
+                                                        <input type="file" accept="image/*" name="image" onchange="previewImage(event)">
+                                                      </label>
+                                                      <img id="imagePreview" src="#" alt="Image Preview" style="display: none;">
+                                                    </li>
+                                                    <li>
+                                                      <i class="fa fa-video-camera"></i>
+                                                      <label class="fileContainer">
+                                                        <input type="file" accept="video/*" name="video" onchange="previewVideo(event)">
+                                                      </label>
+                                                      <video id="videoPreview" src="#" alt="Video Preview" style="display: none;" controls></video>
+                                                    </li>
+                                                  </ul>
+                                                  <button class="post-btn" type="submit">Post</button>
+                                                </div>
+                                              </form>
+                                              
+                                              <script>
+                                                function previewImage(event) {
+                                                  var reader = new FileReader();
+                                                  reader.onload = function() {
+                                                    var imagePreview = document.getElementById('imagePreview');
+                                                    imagePreview.src = reader.result;
+                                                    imagePreview.style.display = 'block';
+                                                  }
+                                                  reader.readAsDataURL(event.target.files[0]);
+                                                }
+                                                
+                                                function previewVideo(event) {
+                                                  var reader = new FileReader();
+                                                  reader.onload = function() {
+                                                    var videoPreview = document.getElementById('videoPreview');
+                                                    videoPreview.src = reader.result;
+                                                    videoPreview.style.display = 'block';
+                                                  }
+                                                  reader.readAsDataURL(event.target.files[0]);
+                                                }
+                                              </script>
+                                              
+                                                <div class="add-location-post">
+                                                    <span>Drag map point to selected area</span>
+                                                <div class="row">
+                                                    
+                                                    <div class="col-lg-6">
+                                                        <label class="control-label">Lat :</label>
+                                                        <input type="text" class="" id="us3-lat" />
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <label>Long :</label>
+                                                        <input type="text" class="" id="us3-lon" />
+                                                    </div>
+                                                </div>
+                                                <!-- map -->
+                                                <div id="us3"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- add post new box -->
+                                    <div class="central-meta">
+                                        <span class="create-post">Recent Stories <a href="#" title="">See All</a></span>
+                                        <div class="story-postbox">
+                                            <div class="row">
+                                                <div class="col-lg-3 col-md-3 col-sm-3">
+                                                    <div class="story-box">
+                                                        <figure>
+                                                            <img src="{% static 'images/resources/story-1.jpg' %}" alt="">
+                                                            <span>Add Your Story</span>
+                                                        </figure>
+                                                        <div class="story-thumb" data-toggle="tooltip" title="Add Your Story">
+                                                            <i class="fa fa-plus"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-3 col-sm-3">
+                                                    <div class="story-box">
+                                                        <figure>
+                                                            <img src="{% static 'images/resources/story-2.jpg' %}" alt="">
+                                                            <span>Adam James</span>
+                                                        </figure>
+                                                        <div class="story-thumb" data-toggle="tooltip" title="Adam James">
+                                                            <img src="{% static 'images/resources/thumb-2.jpg' %}" alt="">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-3 col-sm-3">
+                                                    <div class="story-box">
+                                                        <figure>
+                                                            <img src="{% static 'images/resources/story-3.jpg' %}" alt="">
+                                                            <span>Emily grey</span>
+                                                        </figure>
+                                                        <div class="story-thumb" data-toggle="tooltip" title="Emily grey">
+                                                            <img src="{% static 'images/resources/thumb-3.jpg' %}" alt="">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-3 col-sm-3">
+                                                    <div class="story-box">
+                                                        <figure>
+                                                            <img src="{% static 'images/resources/story-4.jpg' %}" alt="">
+                                                            <span>Jhon Deo</span>
+                                                        </figure>
+                                                        <div class="story-thumb" data-toggle="tooltip" title="Jhon Deo">
+                                                            <img src="{% static 'images/resources/thumb-4.jpg' %}" alt="">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="stories-wraper">
+                                                <div class="status-story">
+                                                    <span class="close-story"><i class="ti-close"></i></span>
+                                                    <div class="row">
+                                                        <div class="col-lg-4">
+                                                            <div class="stories-users">
+                                                                <h5>Stories</h5>
+                                                                <div class="my-status">
+                                                                    <figure><img src="{% static 'images/resources/friend-avatar10.jpg' %}" alt=""></figure>
+                                                                    <a href="#" title="" class="main-btn">Add New</a>
+                                                                    <div class="story-user">
+                                                                        <span>My Story</span>
+                                                                        <ins>No updates</ins>
+                                                                    </div>
+                                                                </div>
+                                                                <ul class="frnds-stories">
+                                                                    <li>
+                                                                        <figure><img src="{% static 'images/resources/friend-avatar11.jpg' %}" alt=""></figure>
+                                                                        <div class="story-user">
+                                                                            <span>Emily doll</span>
+                                                                            <ins>yesterday</ins>
+                                                                        </div>
+                                                                    </li>
+                                                                    <li>
+                                                                        <figure><img src="{% static 'images/resources/friend-avatar15.jpg' %}" alt=""></figure>
+                                                                        <div class="story-user">
+                                                                            <span>Jhon Borny</span>
+                                                                            <ins>3 days ago</ins>
+                                                                        </div>
+                                                                    </li>
+                                                                    <li>
+                                                                        <figure><img src="{% static 'images/resources/friend-avatar12.jpg' %}" alt=""></figure>
+                                                                        <div class="story-user">
+                                                                            <span>Sarah Khan</span>
+                                                                            <ins>2 days ago</ins>
+                                                                        </div>
+                                                                    </li>
+                                                                    <li>
+                                                                        <figure><img src="{% static 'images/resources/friend-avatar13.jpg' %}" alt=""></figure>
+                                                                        <div class="story-user">
+                                                                            <span>Zara Hayat</span>
+                                                                            <ins>1 day ago</ins>
+                                                                        </div>
+                                                                    </li>
+                                                                    <li>
+                                                                        <figure><img src="{% static 'images/resources/friend-avatar14.jpg' %}" alt=""></figure>
+                                                                        <div class="story-user">
+                                                                            <span>Zing Jang</span>
+                                                                            <ins>2 days ago</ins>
+                                                                        </div>
+                                                                    </li>
+
+                                                                    <li>
+                                                                        <figure><img src="{% static 'images/resources/friend-avatar16.jpg' %}" alt=""></figure>
+                                                                        <div class="story-user">
+                                                                            <span>Emma watson</span>
+                                                                            <ins>jan,12 2020</ins>
+                                                                        </div>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-8">
+                                                            <div id="btns-wrapper"></div>
+                                                            <div id="slideshow">
+                                                                <img class="slide" src="http://placehold.it/856x380/FF6347/FFFFFF&text=1" alt="11" />
+                                                                <img class="slide" src="http://placehold.it/856x380/6FC6F7/FFFFFF&text=2" alt="2" />
+                                                                <img class="slide" src="http://placehold.it/856x380/f3e686/FFFFFF&text=3" alt="3" />
+                                                                <img class="slide" src="http://placehold.it/856x380/71eea3/FFFFFF&text=4" alt="4" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- top stories -->
+                                    
+                                        
+                                    {% for p in post %}
+                                    <div class="central-meta item">
+                                        <div class="user-post">
+                                            <div class="friend-info">
+                                                <figure>
+                                                    <img src="{{p.profile.profile_pic.url}}" alt="">
+                                                </figure>
+                                                <div class="friend-name">
+                                                    {% if p.user == request.user %}
+                                                    <div class="more">
+                                                        <div class="more-post-optns"><i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                                                            <ul>
+                                                                <form method="post">
+                                                                    {% csrf_token %}
+                                                                    <input type="hidden" name="id" value="{{p.id}}">
+                                                                <li><button style="" type="submit" name="delete_post" class="fa fa-trash-o"></i> Delete</li>
+                                                                </form>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    {% endif %}
+                                                    <ins><a href="{% url 'core:profile' p.user.id %}" title="">{{p.profile.firstname}} {{p.profile.lastname}}</a></ins>
+                                                    <span><i class="fa fa-globe"></i> published: {{p.created_at|date:"M d, Y"}} {{p.created_at|time:"h:i, A"}}</span>
+
+                                                </div>
+                                                <div class="post-meta">
+                                                    <p>
+                                                        {{p.content}}
+                                                    </p>
+                                                    {% if p.shared_post %}
+																	<div class="friend-info" style="border: solid 0.1px #8080802e; padding: 10px;">
+																		<figure>
+																			<img src="{{p.shared_post.profile.profile_pic.url}}" alt="">
+																		</figure>
+																		<div class="friend-name">
+																			
+																			<ins><a href="{% url 'core:profile' p.shared_post.user.id %}" title="">{{p.shared_post.profile.firstname}} {{p.shared_post.profile.lastname}}</a></ins>
+																			<span><i class="fa fa-globe"></i> published: {{p.shared_post.created_at|date:"M d, Y"}} {{p.shared_post.created_at|time:"h:i, A"}}</span>
+					
+																		</div>
+																		<div class="post-meta">
+																			<p>
+																				{{p.shared_post.content}}
+																			</p>
+																			{% if p.shared_post.image %}
+																			<figure>
+																				<a href="{% url 'core:post' p.shared_post.original_post_id %}"><img src="{{p.shared_post.image.url}}" alt=""></a>
+																			</figure>
+																			{% endif %}
+																			{% if p.shared_post.video %}
+																			<figure>
+																				<a href="{% url 'core:post' p.shared_post.original_post_id %}"><video style="max-height: 400px;" controls>
+																					<source src="{{p.shared_post.video.url}}">
+																				  </video></a>
+																			</figure>
+																			{% endif %}
+																		</div>
+																	</div>
+																	{% endif %}
+                                                    {% if p.image %}
+                                                    <figure>
+                                                        <a href="{% url 'core:post' p.id %}"><img src="{{p.image.url}}" alt=""></a>
+                                                    </figure>
+                                                    {% endif %}
+                                                    {% if p.video %}
+                                                    <figure>
+                                                        <a href="{% url 'core:post' p.id %}"><video style="max-height: 400px;" controls>
+                                                            <source src="{{p.video.url}}">
+                                                          </video></a>
+                                                    </figure>
+                                                    {% endif %}
+                                                    
+                                                    <div class="we-video-info">
+                                                        <ul style="margin-top: 0;">
+                                                            <li>
+
+
+                                                                {% if p.id in liked_post_ids %}
+                                                                <button style="border: 0; background-color: #fdfcfc00;" class="like-button" data-post-id="{{ p.id }}"><div class="likes heart happy" title="Like/Dislike"><i class="fa-solid fa-thumbs-up"></i> <span>{{p.likes}}</span></div></button>
+                                                                {% else %}
+                                                                <button style="border: 0; background-color: #fdfcfc00;" class="like-button" data-post-id="{{ p.id }}"><div class="likes heart" title="Like/Dislike"><i class="fa-solid fa-thumbs-up"></i> <span>{{p.likes}}</span></div></button>
+                                                                {% endif %}
+                                                            </li>
+                                                            <li>
+                                                                <span class="comment" title="Comments">
+                                                                <i class="fa fa-commenting"></i>
+                                                                <ins>{{p.comments}}</ins>
+                                                            </span>
+                                                            </li>
+
+                                                            <li>
+                                                                <span>
+                                                                    {% if p.shared_post %}
+                                                                    <a href="{% url 'core:post' p.shared_post.original_post_id %}" title="Share">
+                                                                        <i class="fa fa-share-alt"></i>
+                                                                    {% else %}
+                                                                <a class="share-pst" data-post-id="{{ p.id }}" href="#" title="Share">
+                                                                    <i class="fa fa-share-alt"></i>
+                                                                </a>
+                                                                {% endif %}
+                                                                <ins>{{p.shares}}</ins>
+                                                            </span>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div class="coment-area">
+                                                    <ul class="we-comet">
+                                                        {% for c in p.post_comments.all %}
+                                                        <li>
+                                                            <div class="comet-avatar">
+                                                                <img src="{{c.profile.profile_pic.url}}" alt="">
+                                                            </div>
+                                                            <div class="we-comment">
+                                                                <h5><a href="{{c.user.id}}" title="">{{c.profile.firstname}} {{c.profile.lastname}}</a></h5>
+                                                                <p>{{c.comment}}</p>
+                                                                {% if c.image %}
+                                                                <img src="{{c.image.url}}" alt="">
+                                                                {% endif %}
+                                                                <div class="inline-itms">
+                                                                    <span>{{c.created_at|timesince}}</span>
+                                                                </div>
+                                                            </div>
+                                                            {% if c.user == request.user %}
+                                                            <div class="more">
+                                                                <div class="more-post-optns"><i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+                                                                    <ul>
+                                                                        <form method="post">
+                                                                            {% csrf_token %}
+                                                                            <input type="hidden" name="id" value="{{p.id}}">
+                                                                            <input type="hidden" name="cid" value="{{c.cid}}">
+                                                                        <li><button style="" type="submit" name="delete_comment" class="fa fa-trash-o"></i> Delete</li>
+                                                                        </form>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                            {% endif %}
+                                                        </li>
+                                                        {% endfor %}
+                                                        <li class="post-comment">
+                                                            <div class="comet-avatar">
+                                                                <img src="{{profile_user.profile_pic.url}}" alt="">
+                                                            </div>
+                                                            <div class="post-comt-box">
+                                                                <form id="comment-form" method="POST">
+                                                                    {% csrf_token %}
+                                                                    <input type="hidden" value="{{p.id}}" name="post_id">
+                                                                    <textarea name="comment" placeholder="Post your comment"></textarea>
+                                                                    
+                                                                    <div class="add-smiles">
+                                                                        <div class="uploadimage">
+                                                                            <i class="fa fa-image"></i>
+                                                                            <label class="fileContainer">
+                                                                                <input type="file" name="image">	
+                                                                            </label>
+                                                                        </div>
+                                                                    
+                                                                        <button name="add-comment" style="background: none; padding: 0;" type="submit"><i style="color: #1877f2;" class="fas fa-paper-plane"></i></button>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </li>
+                                                        
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="share-form-{{ p.id }}" class="popup-wraper2">
+                                        <div class="popup post-sharing">
+                                            <div class="popup-meta">
+                                                <div class="postbox" >
+                                                    <div class="post-comt-box">
+                                                        <form method="post" class="share-post" id="share-post-{{p.id}}">
+                                                            {% csrf_token %}
+                                                            <input type="hidden" value="{{p.id}}" name="original_post_id">
+                                                            <textarea placeholder="Add caption..." name="new_post_content"></textarea>
+                                                    </div>
+                                                    {% if p.image %}
+                            
+                                                    <div style="display: flex; justify-content: center; align-items: center;"><img style="width: 200px;" src="{{p.image.url}}" alt=""></div>
+                                                    {% endif %}
+                                                    {% if p.video %}
+                                                    <div style="display: flex; justify-content: center; align-items: center;"><video style="width: 300px; margin-bottom: 10px;" src="{{p.video.url}}"></video></div>
+                                                    {% endif %}
+                                                    <div class="friend-info">
+                                                        <figure>
+                                                            <img alt="" src="{{profile_pro.profile_pic.url}}">
+                                                        </figure>
+                                                        <div class="friend-name">
+                                                            <ins><a >{{profile_pro.firstname}} {{profile_pro.lastname}}</a> shared <a>{{p.profile.firstname}} {{p.profile.lastname}}'s post</a></ins>
+                                                            <span>{{p.content}}</span>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="we-video-info">
+                                                        
+                                                        <button class="main-btn color" type="submit">Share</button>
+                                                        <button class="main-btn cancel" data-ripple="">Close</button>
+                                                    </div>
+                                                </form>
+                                                </div>
+                                            </div>	
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                        <!-- digital sponsors -->
+                                     
+                                        <!-- video post -->
+
+                                </div>
+                                <!-- centerl meta -->
+                                <div class="col-lg-3">
+                                    <aside class="sidebar static right">
+                                        <div class="widget">
+                                            <h4 class="widget-title">Shortcuts</h4>
+                                            <ul class="naves">
+                                                <li>
+                                                    <i class="ti-clipboard"></i>
+                                                    <a href="newsfeed.html" title="">News feed</a>
+                                                </li>
+                                                <li>
+                                                    <i class="ti-mouse-alt"></i>
+                                                    <a href="inbox.html" title="">Inbox</a>
+                                                </li>
+                                                <li>
+                                                    <i class="ti-files"></i>
+                                                    <a href="fav-page.html" title="">My pages</a>
+                                                </li>
+                                                <li>
+                                                    <i class="ti-user"></i>
+                                                    <a href="timeline-friends.html" title="">friends</a>
+                                                </li>
+                                                <li>
+                                                    <i class="ti-image"></i>
+                                                    <a href="timeline-photos.html" title="">images</a>
+                                                </li>
+                                                <li>
+                                                    <i class="ti-video-camera"></i>
+                                                    <a href="timeline-videos.html" title="">videos</a>
+                                                </li>
+                                                <li>
+                                                    <i class="ti-comments-smiley"></i>
+                                                    <a href="messages.html" title="">Messages</a>
+                                                </li>
+                                                <li>
+                                                    <i class="ti-bell"></i>
+                                                    <a href="notifications.html" title="">Notifications</a>
+                                                </li>
+                                                <li>
+                                                    <i class="ti-share"></i>
+                                                    <a href="people-nearby.html" title="">People Nearby</a>
+                                                </li>
+                                                <li>
+                                                    <i class="fa fa-bar-chart-o"></i>
+                                                    <a href="insights.html" title="">insights</a>
+                                                </li>
+                                                <li>
+                                                    <i class="ti-power-off"></i>
+                                                    <a href="landing.html" title="">Logout</a>
+                                                </li>
+                                            </ul>
+                                        </div><!-- Shortcuts -->
+                                        <div class="widget">
+                                            <h4 class="widget-title">Recent Activity</h4>
+                                            <ul class="activitiez">
+                                                <li>
+                                                    <div class="activity-meta">
+                                                        <i>10 hours Ago</i>
+                                                        <span><a href="#" title="">Commented on Video posted </a></span>
+                                                        <h6>by <a href="time-line.html">black demon.</a></h6>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div class="activity-meta">
+                                                        <i>30 Days Ago</i>
+                                                        <span><a href="#" title="">Posted your status. “Hello guys, how are you?”</a></span>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div class="activity-meta">
+                                                        <i>2 Years Ago</i>
+                                                        <span><a href="#" title="">Share a video on her timeline.</a></span>
+                                                        <h6>"<a href="#">you are so funny mr.been.</a>"</h6>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div><!-- recent activites -->
+                                        <div class="widget stick-widget">
+                                            <h4 class="widget-title">Who's follownig</h4>
+                                            <ul class="followers">
+                                                <li>
+                                                    <figure><img src="{% static 'images/resources/friend-avatar2.jpg' %}" alt=""></figure>
+                                                    <div class="friend-meta">
+                                                        <h4><a href="time-line.html" title="">Kelly Bill</a></h4>
+                                                        <a href="#" title="" class="underline">Add Friend</a>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <figure><img src="{% static 'images/resources/friend-avatar4.jpg' %}" alt=""></figure>
+                                                    <div class="friend-meta">
+                                                        <h4><a href="time-line.html" title="">Issabel</a></h4>
+                                                        <a href="#" title="" class="underline">Add Friend</a>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <figure><img src="{% static 'images/resources/friend-avatar6.jpg' %}" alt=""></figure>
+                                                    <div class="friend-meta">
+                                                        <h4><a href="time-line.html" title="">Andrew</a></h4>
+                                                        <a href="#" title="" class="underline">Add Friend</a>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <figure><img src="{% static 'images/resources/friend-avatar8.jpg' %}" alt=""></figure>
+                                                    <div class="friend-meta">
+                                                        <h4><a href="time-line.html" title="">Sophia</a></h4>
+                                                        <a href="#" title="" class="underline">Add Friend</a>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <figure><img src="{% static 'images/resources/friend-avatar3.jpg' %}" alt=""></figure>
+                                                    <div class="friend-meta">
+                                                        <h4><a href="time-line.html" title="">Allen</a></h4>
+                                                        <a href="#" title="" class="underline">Add Friend</a>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div><!-- who's following -->
+                                    </aside>
+                                </div>
+                                <!-- sidebar -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+                {% endblock content %}
