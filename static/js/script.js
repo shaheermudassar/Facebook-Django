@@ -75,7 +75,9 @@ jQuery(document).ready(function($) {
 	
 // Stories slide show
 	$('.story-box').on('click', function () {
-		$('.stories-wraper').addClass('active');
+		var story_open = $(this).data('story-open');
+            console.log("story id:", story_open);
+		$('.stories-wraper[data-opener="' + story_open + '"]').addClass('active');
 	});
 		$('.close-story').on('click', function () {
 		$('.stories-wraper').removeClass('active');

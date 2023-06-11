@@ -1,6 +1,7 @@
 {% extends 'core/base.html' %}
 {% load static %}
 {% block content %}
+
 	<section>
 		<div class="gap2 gray-bg">
 			<div class="container">
@@ -19,12 +20,61 @@
 									  </div>
 									  
 									<ul class="profile-controls">
-										{% if profile.user != request.user %}
-										<li><a href="#" title="Add friend" data-toggle="tooltip"><i class="fa fa-user-plus"></i></a></li>
+										
+										{% if profile.user != request.user and friend_request %}
+										<li>
+											<form method="post">
+												{% csrf_token %}
+												<input type="hidden" value="{{profile.id}}" name="profile_id">
+												<input type="hidden" value="{{profile.user.id}}" name="user_id">
+												<button name="accept_request" style="border-radius: 8px; display: inline-block; height: 100%; line-height: 150%; text-align: center; width: 100%; font-size: 16px; padding: 6px; border: none; background: #1877f2; color: white;" title="Accept Friend Request" ><i class="fa-solid fa-user-plus"></i> Accept</button>
+											</form>
+										</li>
+										<li>
+											<form method="post">
+												{% csrf_token %}
+												<input type="hidden" value="{{profile.id}}" name="profile_id">
+												<input type="hidden" value="{{profile.user.id}}" name="user_id">
+												<button type="submit" style="border-radius: 8px; display: inline-block; height: 100%; line-height: 150%; text-align: center; width: 100%; font-size: 16px; padding: 6px; border: none; color: #1877f2; background: white;" title="Delete Friend Request" name="delete_request" >Delete</button>
+											</form>
+										</li>
+										
+										{% elif profile.user != request.user and sent_request %}
+										<li><a style="border-radius: 8px; display: inline-block; height: 100%; line-height: 150%; text-align: center; width: 100%; font-size: 16px; padding: 6px;" title="Accept Friend Request" >Sent Request✓</a></li>
+										<li>
+											<form method="post">
+												{% csrf_token %}
+												<input type="hidden" value="{{profile.id}}" name="profile_id">
+												<button type="submit" style="border-radius: 8px; display: inline-block; height: 100%; line-height: 150%; text-align: center; width: 100%; font-size: 16px; padding: 6px; border: none; color: #1877f2; background: white;" title="Delete Friend Request" name="cancel_sent_request">Cancel</a>
+												</form>
+											</li>
+											{% elif profile.user != request.user and is_friend %}
+											<li><button  style="border-radius: 8px; display: inline-block; height: 100%; line-height: 150%; text-align: center; width: 100%; font-size: 16px; padding: 6px; border: none; background: #1877f2; color: white;" title="Accept Friend Request" ><i class="fa-solid fa-user-check"></i> Friends</button></li>
+											<li><a href="{% url 'messenger:chat' profile.user.id %}"  style="border-radius: 8px; display: inline-block; height: 100%; line-height: 150%; text-align: center; width: 100%; font-size: 16px; padding: 6px; border: none; background: white; color: #1877f2;" title="Accept Friend Request" ><i class="fa-brands fa-facebook-messenger"></i> Message</a></li>
+											<li><div class="more">
+												<div class="more-post-optns"><i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+													<ul>
+														<form method="post">
+															{% csrf_token %}
+															<input type="hidden" value="{{profile.id}}" name="id">
+														<li><button type="submit" name="unfriend_user"  style="border-radius: 8px; display: inline-block; height: 100%; line-height: 150%; text-align: center; width: 100%; font-size: 16px; padding: 6px; border: none; background: #1877f2; color: white;" title="UnFriend" ><i class="fas fa-user-times"></i> Unfriend</li>
+														</form>
+													</ul>
+												</div>
+											</div></li>
+											{% elif profile.user != request.user %}
+										<li>
+											<form method="post">
+												{% csrf_token %}
+												<input type="hidden" value="{{profile.id}}" name="profile_id">
+												<button type="submit" style="border-radius: 8px; display: inline-block; height: 100%; line-height: 150%; text-align: center; width: 100%; font-size: 16px; padding: 6px 10px; border: none; color: white; background: #1877f2;" title="Add friend" name="add_friend"><i class="fa-solid fa-user-plus"></i> Add friend</button>
+											</form>
+										</li>
+										<li><a href="{% url 'messenger:chat' profile.user.id %}" style="border-radius: 8px; display: inline-block; height: 100%; line-height: 150%; text-align: center; width: 100%; font-size: 16px; padding: 6px; border: none; background: #1877f2; color: white;" title="Accept Friend Request" ><i class="fa-brands fa-facebook-messenger"></i> Message</a></li>
+										
+										
 										{% endif %}
-										{% if profile.user != request.user %}
-										<li><a class="send-mesg" href="#" title="Send Message" data-toggle="tooltip"><i class="fa fa-comment"></i></a></li>
-										{% endif %}
+										
 										{% if profile.user == request.user %}
 										<li><a href="{% url 'core:settings' %}" class="edit-seting" title="Edit Profile image"><i class="fa fa-sliders"></i></a></li>
 										{% endif %}
@@ -136,74 +186,16 @@
 													</div>
 												</div>
 												<div class="central-meta">
-													<span class="create-post">Friend's (320) <a href="timeline-friends2.html" title="">See All</a></span>
+													<span class="create-post">Friend's ({{friend_list|length}}) </span>
 													<ul class="frndz-list">
+														{% for f in friend_list %}
 														<li>
-															<img src="{% static 'images/resources/recent1.jpg' %}" alt="">
+															<img src="{{f.friend_profile.profile_pic.url}}" alt="">
 															<div class="sugtd-frnd-meta">
-																<a href="#" title="">Olivia</a>
-																<span>1 mutual friend</span>
-																<ul class="add-remove-frnd">
-																	<li class="add-tofrndlist"><a class="send-mesg" href="#" title="Send Message"><i class="fa fa-commenting"></i></a></li>
-																	<li class="remove-frnd"><a href="#" title="remove friend"><i class="fa fa-user-times"></i></a></li>
-																</ul>
+																<a href="{% url 'core:profile' f.friend_profile.user.id %}" title="">{{f.friend_profile.firstname}} {{f.friend_profile.lastname}}</a>
 															</div>
 														</li>
-														<li>
-															<img src="{% static 'images/resources/recent2.jpg' %}" alt="">
-															<div class="sugtd-frnd-meta">
-																<a href="#" title="">Emma watson</a>
-																<span>2 mutual friend</span>
-																<ul class="add-remove-frnd">
-																	<li class="add-tofrndlist"><a class="send-mesg" href="#" title="Send Message"><i class="fa fa-commenting"></i></a></li>
-																	<li class="remove-frnd"><a href="#" title="remove friend"><i class="fa fa-user-times"></i></a></li>
-																</ul>
-															</div>
-														</li>
-														<li>
-															<img src="{% static 'images/resources/recent3.jpg' %}" alt="">
-															<div class="sugtd-frnd-meta">
-																<a href="#" title="">Isabella</a>
-																<span><a href="#" title="">Emmy</a> is mutual friend</span>
-																<ul class="add-remove-frnd">
-																	<li class="add-tofrndlist"><a class="send-mesg" href="#" title="Send Message"><i class="fa fa-commenting"></i></a></li>
-																	<li class="remove-frnd"><a href="#" title="remove friend"><i class="fa fa-user-times"></i></a></li>
-																</ul>
-															</div>
-														</li>
-														<li>
-															<img src="{% static 'images/resources/recent4.jpg' %}" alt="">
-															<div class="sugtd-frnd-meta">
-																<a href="#" title="">Amelia</a>
-																<span>5 mutual friend</span>
-																<ul class="add-remove-frnd">
-																	<li class="add-tofrndlist"><a class="send-mesg" href="#" title="Send Message"><i class="fa fa-commenting"></i></a></li>
-																	<li class="remove-frnd"><a href="#" title="remove friend"><i class="fa fa-user-times"></i></a></li>
-																</ul>
-															</div>
-														</li>
-														<li>
-															<img src="{% static 'images/resources/recent5.jpg' %}" alt="">
-															<div class="sugtd-frnd-meta">
-																<a href="#" title="">Sophia</a>
-																<span>1 mutual friend</span>
-																<ul class="add-remove-frnd">
-																	<li class="add-tofrndlist"><a class="send-mesg" href="#" title="Send Message"><i class="fa fa-commenting"></i></a></li>
-																	<li class="remove-frnd"><a href="#" title="remove friend"><i class="fa fa-user-times"></i></a></li>
-																</ul>
-															</div>
-														</li>
-														<li>
-															<img src="{% static 'images/resources/recent6.jpg' %}" alt="">
-															<div class="sugtd-frnd-meta">
-																<a href="#" title="">Amelia</a>
-																<span>3 mutual friend</span>
-																<ul class="add-remove-frnd">
-																	<li class="add-tofrndlist"><a class="send-mesg" href="#" title="Send Message"><i class="fa fa-commenting"></i></a></li>
-																	<li class="remove-frnd"><a href="#" title="remove friend"><i class="fa fa-user-times"></i></a></li>
-																</ul>
-															</div>
-														</li>
+														{% endfor %}
 													</ul>
 												</div><!-- friends list -->
 												<div class="central-meta">
@@ -214,7 +206,7 @@
 														<li>
 															<div class="item-box">
 																<a class="strip" href="{{p.image.url}}" title="" data-strip-group="mygroup" data-strip-group-options="loop: false">
-																<img src="{{p.image.url}}" alt=""></a>
+																<img style="height: 120px; object-fit: cover;" src="{{p.image.url}}" alt=""></a>
 																<div class="over-photo">
 																	<div class="likes heart" title="Like/Dislike"><i class="fa-solid fa-thumbs-up"></i> <span>{{p.likes}}</span></div>
 																	<span>{{p.created_at|timesince}}</span>
@@ -816,38 +808,7 @@
 													<div class="row">
 														<div class="col-lg-6">
 															<div class="align-left">
-																<h5>Friends / Followers <span>44</span></h5>
-															</div>
-														</div>
-														<div class="col-lg-6">
-															<div class="row merged20">
-																<div class="col-lg-7 col-lg-7 col-sm-7">
-																	<form method="post">
-																		<input type="text" placeholder="Search Friend">
-																		<button type="submit"><i class="fa fa-search"></i></button>
-																	</form>
-																</div>
-																<div class="col-lg-4 col-md-4 col-sm-4">
-																	<div class="select-options">
-																		<select class="select">
-																			<option>Sort by</option>
-																			<option>A to Z</option>
-																			<option>See All</option>
-																			<option>Newest</option>
-																			<option>oldest</option>
-																		</select>
-																	</div>
-																</div>
-																<div class="col-lg-1 col-md-1 col-sm-1">
-																	<div class="option-list">
-																		<i class="fa fa-ellipsis-v"></i>
-																		<ul>
-																			<li><a title="" href="#">Show Friends Public</a></li>
-																			<li><a title="" href="#">Show Friends Private</a></li>
-																			<li><a title="" href="#">Mute Notifications</a></li>
-																		</ul>
-																	</div>
-																</div>
+																<h5>Friends <span>{{friend_list|length}}</span></h5>
 															</div>
 														</div>
 													</div>
@@ -856,267 +817,28 @@
 									
 											<div class="central-meta padding30">
 												<div class="row">
-													<div class="col-lg-3 col-md-6 col-sm-6">
+													{% for f in friend_list %}
+													
+													<div class="col-lg-3 col-md-6 col-sm-6 friend-link">
 														<div class="friend-box">
 															<figure>
-																<img src="{% static 'images/resources/frnd-cover1.jpg' %}" alt="">
-																<span>Followers: 120</span>
+																<img style="height: 120px; overflow-y: auto; object-fit: cover;" src="{{f.friend_profile.cover_pic.url}}" alt="">
 															</figure>
 															<div class="frnd-meta">
-																<img src="{% static 'images/resources/frnd-figure1.jpg' %}" alt="">
+																<img  style="width: 90px;" src="{{f.friend_profile.profile_pic.url}}" alt="">
 																<div class="frnd-name">
-																	<a href="#" title="">Adam James</a>
-																	<span>California, USA</span>
+																	<a href="{% url 'core:profile' f.friend_profile.user.id %}" title="">{{f.friend_profile.firstname}} {{f.friend_profile.lastname}}</a>
+																	<span>{{f.friend_profile.city}}, {{f.friend_profile.country}}</span>
 																</div>
-																<ul class="frnd-info">
-																	<li><span>Friends:</span> 223 (2 mutule friends)</li>
-																	<li><span>Videos:</span> 240</li>
-																	<li><span>Photos:</span> 144</li>
-																	<li><span>Post:</span> 250</li>
-																	<li><span>Since:</span> December, 2014</li>
-																</ul>
-																<a class="send-mesg" href="#" title="">Message</a>
-																<div class="more-opotnz">
-																	<i class="fa fa-ellipsis-h"></i>
-																	<ul>
-																		<li><a href="#" title="">Block</a></li>
-																		<li><a href="#" title="">UnBlock</a></li>
-																		<li><a href="#" title="">Mute Notifications</a></li>
-																		<li><a href="#" title="">hide from friend list</a></li>
-																	</ul>
-																</div>
+																<div>
+																<a style="color: #1877f2;" class="send-mesg" href="{% url 'core:profile' f.friend_profile.user.id %}" title="">View Profile</a>
+															    </div>
 															</div>
 														</div>
 													</div>
-													<div class="col-lg-3 col-md-6 col-sm-6">
-														<div class="friend-box">
-															<figure>
-																<img src="{% static 'images/resources/frnd-cover2.jpg' %}" alt="">
-																<span>Followers: 450</span>
-															</figure>
-															<div class="frnd-meta">
-																<img src="{% static 'images/resources/frnd-figure2.jpg' %}" alt="">
-																<div class="frnd-name">
-																	<a href="#" title="">Andrew</a>
-																	<span>Tornoto, Canada</span>
-																</div>
-																<ul class="frnd-info">
-																	<li><span>Friends:</span> 223 (2 mutule friends)</li>
-																	<li><span>Videos:</span> 240</li>
-																	<li><span>Photos:</span> 144</li>
-																	<li><span>Post:</span> 250</li>
-																	<li><span>Since:</span> December, 2014</li>
-																</ul>
-																<a class="send-mesg" href="#" title="">Message</a>
-																<div class="more-opotnz">
-																	<i class="fa fa-ellipsis-h"></i>
-																	<ul>
-																		<li><a href="#" title="">Block</a></li>
-																		<li><a href="#" title="">UnBlock</a></li>
-																		<li><a href="#" title="">Mute Notifications</a></li>
-																		<li><a href="#" title="">hide from friend list</a></li>
-																	</ul>
-																</div>
-															</div>
-														</div>
-													</div>
-													<div class="col-lg-3 col-md-6 col-sm-6">
-														<div class="friend-box">
-															<figure>
-																<img src="{% static 'images/resources/frnd-cover3.jpg' %}" alt="">
-																<span>Followers: 50</span>
-															</figure>
-															<div class="frnd-meta">
-																<img src="{% static 'images/resources/frnd-figure3.jpg' %}" alt="">
-																<div class="frnd-name">
-																	<a href="#" title="">Arnold</a>
-																	<span>Istanbul, Turky</span>
-																</div>
-																<ul class="frnd-info">
-																	<li><span>Friends:</span> 223 (2 mutule friends)</li>
-																	<li><span>Videos:</span> 240</li>
-																	<li><span>Photos:</span> 144</li>
-																	<li><span>Post:</span> 250</li>
-																	<li><span>Since:</span> December, 2014</li>
-																</ul>
-																<a class="send-mesg" href="#" title="">Message</a>
-																<div class="more-opotnz">
-																	<i class="fa fa-ellipsis-h"></i>
-																	<ul>
-																		<li><a href="#" title="">Block</a></li>
-																		<li><a href="#" title="">UnBlock</a></li>
-																		<li><a href="#" title="">Mute Notifications</a></li>
-																		<li><a href="#" title="">hide from friend list</a></li>
-																	</ul>
-																</div>
-															</div>
-														</div>
-													</div>
-													<div class="col-lg-3 col-md-6 col-sm-6">
-														<div class="friend-box">
-															<figure>
-																<img src="{% static 'images/resources/frnd-cover4.jpg' %}" alt="">
-																<span>Followers: 410</span>
-															</figure>
-															<div class="frnd-meta">
-																<img src="{% static 'images/resources/frnd-figure4.jpg' %}" alt="">
-																<div class="frnd-name">
-																	<a href="#" title="">Ella John</a>
-																	<span>Maxico city, USA</span>
-																</div>
-																<ul class="frnd-info">
-																	<li><span>Friends:</span> 223 (2 mutule friends)</li>
-																	<li><span>Videos:</span> 240</li>
-																	<li><span>Photos:</span> 144</li>
-																	<li><span>Post:</span> 250</li>
-																	<li><span>Since:</span> December, 2014</li>
-																</ul>
-																<a class="send-mesg" href="#" title="">Message</a>
-																<div class="more-opotnz">
-																	<i class="fa fa-ellipsis-h"></i>
-																	<ul>
-																		<li><a href="#" title="">Block</a></li>
-																		<li><a href="#" title="">UnBlock</a></li>
-																		<li><a href="#" title="">Mute Notifications</a></li>
-																		<li><a href="#" title="">hide from friend list</a></li>
-																	</ul>
-																</div>
-															</div>
-														</div>
-													</div>
-													<div class="col-lg-3 col-md-6 col-sm-6">
-														<div class="friend-box">
-															<figure>
-																<img src="{% static 'images/resources/frnd-cover5.jpg' %}" alt="">
-																<span>Followers: 16k</span>
-															</figure>
-															<div class="frnd-meta">
-																<img src="{% static 'images/resources/frnd-figure5.jpg' %}" alt="">
-																<div class="frnd-name">
-																	<a href="#" title="">Madison</a>
-																	<span>Los Angeles, CA</span>
-																</div>
-																<ul class="frnd-info">
-																	<li><span>Friends:</span> 223 (2 mutule friends)</li>
-																	<li><span>Videos:</span> 240</li>
-																	<li><span>Photos:</span> 144</li>
-																	<li><span>Post:</span> 250</li>
-																	<li><span>Since:</span> December, 2014</li>
-																</ul>
-																<a class="send-mesg" href="#" title="">Message</a>
-																<div class="more-opotnz">
-																	<i class="fa fa-ellipsis-h"></i>
-																	<ul>
-																		<li><a href="#" title="">Block</a></li>
-																		<li><a href="#" title="">UnBlock</a></li>
-																		<li><a href="#" title="">Mute Notifications</a></li>
-																		<li><a href="#" title="">hide from friend list</a></li>
-																	</ul>
-																</div>
-															</div>
-														</div>
-													</div>
-													<div class="col-lg-3 col-md-6 col-sm-6">
-														<div class="friend-box">
-															<figure>
-																<img src="{% static 'images/resources/frnd-cover6.jpg' %}" alt="">
-																<span>Followers: 2M</span>
-															</figure>
-															<div class="frnd-meta">
-																<img src="{% static 'images/resources/frnd-figure6.jpg' %}" alt="">
-																<div class="frnd-name">
-																	<a href="#" title="">Victoria</a>
-																	<span>Brazil</span>
-																</div>
-																<ul class="frnd-info">
-																	<li><span>Friends:</span> 223 (2 mutule friends)</li>
-																	<li><span>Videos:</span> 240</li>
-																	<li><span>Photos:</span> 144</li>
-																	<li><span>Post:</span> 250</li>
-																	<li><span>Since:</span> December, 2014</li>
-																</ul>
-																<a class="send-mesg" href="#" title="">Message</a>
-																<div class="more-opotnz">
-																	<i class="fa fa-ellipsis-h"></i>
-																	<ul>
-																		<li><a href="#" title="">Block</a></li>
-																		<li><a href="#" title="">UnBlock</a></li>
-																		<li><a href="#" title="">Mute Notifications</a></li>
-																		<li><a href="#" title="">hide from friend list</a></li>
-																	</ul>
-																</div>
-															</div>
-														</div>
-													</div>
-													<div class="col-lg-3 col-md-6 col-sm-6">
-														<div class="friend-box">
-															<figure>
-																<img src="{% static 'images/resources/frnd-cover7.jpg' %}" alt="">
-																<span>Followers: 220</span>
-															</figure>
-															<div class="frnd-meta">
-																<img src="{% static 'images/resources/frnd-figure7.jpg' %}" alt="">
-																<div class="frnd-name">
-																	<a href="#" title="">Lillian</a>
-																	<span>Mumbai, India</span>
-																</div>
-																<ul class="frnd-info">
-																	<li><span>Friends:</span> 223 (2 mutule friends)</li>
-																	<li><span>Videos:</span> 240</li>
-																	<li><span>Photos:</span> 144</li>
-																	<li><span>Post:</span> 250</li>
-																	<li><span>Since:</span> December, 2014</li>
-																</ul>
-																<a class="send-mesg" href="#" title="">Message</a>
-																<div class="more-opotnz">
-																	<i class="fa fa-ellipsis-h"></i>
-																	<ul>
-																		<li><a href="#" title="">Block</a></li>
-																		<li><a href="#" title="">UnBlock</a></li>
-																		<li><a href="#" title="">Mute Notifications</a></li>
-																		<li><a href="#" title="">hide from friend list</a></li>
-																	</ul>
-																</div>
-															</div>
-														</div>
-													</div>
-													<div class="col-lg-3 col-md-6 col-sm-6">
-														<div class="friend-box">
-															<figure>
-																<img src="{% static 'images/resources/frnd-cover8.jpg' %}" alt="">
-																<span>Followers: 220</span>
-															</figure>
-															<div class="frnd-meta">
-																<img src="{% static 'images/resources/frnd-figure8.jpg' %}" alt="">
-																<div class="frnd-name">
-																	<a href="#" title="">Xing Weng</a>
-																	<span>Beijing, China</span>
-																</div>
-																<ul class="frnd-info">
-																	<li><span>Friends:</span> 223 (2 mutule friends)</li>
-																	<li><span>Videos:</span> 240</li>
-																	<li><span>Photos:</span> 144</li>
-																	<li><span>Post:</span> 250</li>
-																	<li><span>Since:</span> December, 2014</li>
-																</ul>
-																<a class="send-mesg" href="#" title="">Message</a>
-																<div class="more-opotnz">
-																	<i class="fa fa-ellipsis-h"></i>
-																	<ul>
-																		<li><a href="#" title="">Block</a></li>
-																		<li><a href="#" title="">UnBlock</a></li>
-																		<li><a href="#" title="">Mute Notifications</a></li>
-																		<li><a href="#" title="">hide from friend list</a></li>
-																	</ul>
-																</div>
-															</div>
-														</div>
-													</div>
+													{% endfor %}
 												</div>
-												<div class="lodmore">
-													<span>Viewing 1-8 of 44 friends</span>
-													<button class="btn-view btn-load-more"></button>
-												</div>
+												
 											</div>
 												
 								
@@ -1153,6 +875,7 @@
 }
 
 	</style>
+	
 <script>
 	const imgContainer = document.querySelector('.image-container');
 const img = imgContainer.querySelector('.fullscreen-img');

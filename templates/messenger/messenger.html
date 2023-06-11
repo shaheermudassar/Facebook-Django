@@ -1,0 +1,72 @@
+{% extends 'messenger/base.html' %}
+{% load static %}
+{% block content %}
+<body class="sidebar-active">
+  <div class="chitchat-container sidebar-toggle">
+    <aside class="chitchat-left-sidebar left-disp">
+      <div class="recent-default dynemic-sidebar active">
+        <div class="chat custom-scroll">
+          <div class="theme-title">
+            <div class="media">
+              <div> 
+                <h2>Chat</h2>
+                <h4>Start New Conversation</h4>
+              </div>
+              <div class="media-body text-end">   <a class="icon-btn btn-outline-light btn-sm search contact-search" href="#"> <i data-feather="search"></i></a>
+                <form class="form-inline search-form" method="get" action="{% url 'messenger:search' %}">
+                  <div class="form-group">
+                    <input class="form-control-plaintext" type="search" placeholder="Search.." name="query"/>
+                    <div class="icon-close close-search"><i>close</i></div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div class="theme-tab tab-sm chat-tabs">     
+            <div class="tab-content" id="myTabContent">
+              <div class="tab-pane fade show active" id="chat" role="tabpanel" aria-labelledby="chat-tab"> 
+                <div class="theme-tab">       
+                  <div class="tab-content" id="myTabContent1">
+                    <div class="tab-pane fade show active" id="direct" role="tabpanel" aria-labelledby="direct-tab"> 
+                      <ul class="chat-main">
+                        {% for r in recent %}
+                        <li data-to="blank">
+                          <a href="{% url 'messenger:chat' r.friend_user.id %}">
+                          <div class="chat-box">
+                            <div class="profile offline"><img class="bg-img" src="{{r.friend_profile.profile_pic.url}}" alt="Avatar"/></div>
+                            <div class="details">
+                              <h5>{{r.friend_profile.firstname}} {{r.friend_profile.lastname}}</h5>
+                              <h6>Click to start a Chat.</h6>
+                            </div>
+                          </div>
+                          </a>
+                        </li>
+                        {% endfor %}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+    <div class="messages custom-scroll active center-container">
+      <h1>Select or search person to chat...</h1>
+    </div>
+    <style>
+      .center-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+h1 {
+  margin-left: 20px;
+  text-align: center;
+  color: #1c9dea;
+}
+    </style>
+{% endblock content %}

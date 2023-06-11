@@ -1,0 +1,60 @@
+{% extends 'messenger/base.html' %}
+{% load static %}
+{% block content %}
+<body class="sidebar-active">
+    <div class="chitchat-container sidebar-toggle">
+      <aside class="chitchat-left-sidebar left-disp">
+        <div class="recent-default dynemic-sidebar active">
+          <div class="chat custom-scroll">
+            <div class="theme-title">
+              <div class="media">
+                <div> 
+                  <h2>Chat</h2>
+                  <h4>Start New Conversation</h4>
+                </div>
+                <div class="media-body text-end">   <a class="icon-btn btn-outline-light btn-sm search contact-search" href="#"> <i data-feather="search"></i></a>
+                  <form class="form-inline search-form" method="get" action="{% url 'messenger:search' %}">
+                    <div class="form-group">
+                      <input class="form-control-plaintext" type="search" placeholder="Search.." name="query"/>
+                      <div class="icon-close close-search"><i>close</i></div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+            <div class="theme-tab tab-sm chat-tabs">     
+              <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="chat" role="tabpanel" aria-labelledby="chat-tab"> 
+                  <div class="theme-tab">       
+                    <div class="tab-content" id="myTabContent1">
+                      <div class="tab-pane fade show active" id="direct" role="tabpanel" aria-labelledby="direct-tab"> 
+                        <ul class="chat-main">
+                          {% if recent %}
+                          {% for r in recent %}
+                          <li data-to="blank">
+                            <a href="{% url 'messenger:chat' r.user.id %}">
+                            <div class="chat-box">
+                              <div class="profile offline"><img class="bg-img" src="{{r.profile_pic.url}}" alt="Avatar"/></div>
+                              <div class="details">
+                                <h5>{{r.firstname}} {{r.lastname}}</h5>
+                                <h6>Click to start a Chat.</h6>
+                              </div>
+                            </div>
+                            </a>
+                          </li>
+                          {% endfor %}
+                          {% else %}
+                          <h1> No results found</h1>
+                          {% endif %}
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+{% endblock content %}

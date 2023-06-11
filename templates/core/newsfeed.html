@@ -4,6 +4,7 @@
     {% endblock title %} 
 {% block content %}
 {% load static %}
+{% load user_agents %}
 <section>
     <div class="gap2 gray-bg">
                 <div class="container">
@@ -46,7 +47,7 @@
                                                       <video id="videoPreview" src="#" alt="Video Preview" style="display: none;" controls></video>
                                                     </li>
                                                   </ul>
-                                                  <button class="post-btn" type="submit">Post</button>
+                                                  <button class="post-btn" type="submit" name="add-post">Post</button>
                                                 </div>
                                               </form>
                                               
@@ -94,126 +95,95 @@
                                     <div class="central-meta">
                                         <span class="create-post">Recent Stories <a href="#" title="">See All</a></span>
                                         <div class="story-postbox">
-                                            <div class="row">
+                                            <div class="row" style="display: flex; flex-wrap: nowrap; overflow: auto;">
                                                 <div class="col-lg-3 col-md-3 col-sm-3">
                                                     <div class="story-box">
                                                         <figure>
-                                                            <img src="{% static 'images/resources/story-1.jpg' %}" alt="">
-                                                            <span>Add Your Story</span>
+                                                            <img style="height: 210px; object-fit: cover;" src="{{profile_user.profile_pic.url}}" alt="">
+                                                            <span style="color: white;">Add Your Story</span>
                                                         </figure>
-                                                        <div class="story-thumb" data-toggle="tooltip" title="Add Your Story">
+                                                        <div class="story-thumb fileContainer" data-toggle="tooltip" title="Add Your Story">
+                                                            <!-- <label class="fileContainer">
+                                                            </label> -->
                                                             <i class="fa fa-plus"></i>
+                                                            <form id="myForm" method="post" enctype="multipart/form-data">
+                                                                {% csrf_token %}
+                                                                <input name="unique_file_input_name" type="file" accept="image/*, video/*" onchange="submitForm()">
+                                                            </form>
                                                         </div>
                                                     </div>
                                                 </div>
+                                                {% if request|is_mobile %}
+                                                {% for s in stories|slice:"3" %}
                                                 <div class="col-lg-3 col-md-3 col-sm-3">
-                                                    <div class="story-box">
+                                                    <div class="story-box" data-story-open="{{s.id}}">
                                                         <figure>
-                                                            <img src="{% static 'images/resources/story-2.jpg' %}" alt="">
-                                                            <span>Adam James</span>
+                                                            {% if s.image %}
+                                                            <img style="height: 210px; object-fit: cover" src="{{s.image.url}}" alt="">
+                                                            {% elif s.video %}
+                                                            <video style="height: 210px; object-fit: cover" src="{{s.video.url}}" alt=""></video>
+                                                            {% endif %}
+                                                            <span style="color: white;">{{s.profile.firstname}} {{s.profile.lastname}}</span>
                                                         </figure>
-                                                        <div class="story-thumb" data-toggle="tooltip" title="Adam James">
-                                                            <img src="{% static 'images/resources/thumb-2.jpg' %}" alt="">
+                                                        <div class="story-thumb" data-toggle="tooltip" title="{{s.profile.firstname}} {{s.profile.lastname}}">
+                                                            <a href = "{% url 'core:profile' s.user.id %}"><img style="width: 40px;" src="{{s.profile.profile_pic.url}}" alt=""></a>
                                                         </div>
                                                     </div>
                                                 </div>
+                                               {% endfor %}
+                                                {% else %}
+                                                {% for s in stories %}
+                                                
                                                 <div class="col-lg-3 col-md-3 col-sm-3">
-                                                    <div class="story-box">
+                                                    <div class="story-box" data-story-open="{{s.id}}">
                                                         <figure>
-                                                            <img src="{% static 'images/resources/story-3.jpg' %}" alt="">
-                                                            <span>Emily grey</span>
+                                                            {% if s.image %}
+                                                            <img style="height: 210px; object-fit: cover" src="{{s.image.url}}" alt="">
+                                                            {% elif s.video %}
+                                                            <video style="height: 210px; object-fit: cover" src="{{s.video.url}}" alt=""></video>
+                                                            {% endif %}
+                                                            <span style="color: white;">{{s.profile.firstname}} {{s.profile.lastname}}</span>
                                                         </figure>
-                                                        <div class="story-thumb" data-toggle="tooltip" title="Emily grey">
-                                                            <img src="{% static 'images/resources/thumb-3.jpg' %}" alt="">
+                                                        <div class="story-thumb" data-toggle="tooltip" title="{{s.profile.firstname}} {{s.profile.lastname}}">
+                                                            <a href = "{% url 'core:profile' s.user.id %}"><img style="width: 40px;" src="{{s.profile.profile_pic.url}}" alt=""></a>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-lg-3 col-md-3 col-sm-3">
-                                                    <div class="story-box">
-                                                        <figure>
-                                                            <img src="{% static 'images/resources/story-4.jpg' %}" alt="">
-                                                            <span>Jhon Deo</span>
-                                                        </figure>
-                                                        <div class="story-thumb" data-toggle="tooltip" title="Jhon Deo">
-                                                            <img src="{% static 'images/resources/thumb-4.jpg' %}" alt="">
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                {% endfor %}
+                                                {% endif %}
                                             </div>
-                                            <div class="stories-wraper">
-                                                <div class="status-story">
-                                                    <span class="close-story"><i class="ti-close"></i></span>
+                                            {% for s in stories %}
+                                            <div class="stories-wraper" data-opener="{{s.id}}">
+                                                <div class="status-story" style="overflow: scroll;">
+                                                    <span style="font-size: 40px;" class="close-story"><i class="fa-solid fa-circle-xmark"></i></span>
+                                                    {% if s.user == request.user %}
+                                                    <span style="margin-right: 50px;">
+                                                        <div>
+                                                        <form method="post">
+                                                            {% csrf_token %}
+                                                            <input type="hidden" value="{{s.id}}" name="id">
+                                                            <button name="delete_story" type="submit"  title="Delete Post" style="font-size: 30px; border: none; background: none; color: white;" ><i class="fas fa-trash"></i></button>
+                                                        </form>
+                                                        </div>
+                                                    </span>
+                                                    {% endif %}
+                                                    
                                                     <div class="row">
-                                                        <div class="col-lg-4">
-                                                            <div class="stories-users">
-                                                                <h5>Stories</h5>
-                                                                <div class="my-status">
-                                                                    <figure><img src="{% static 'images/resources/friend-avatar10.jpg' %}" alt=""></figure>
-                                                                    <a href="#" title="" class="main-btn">Add New</a>
-                                                                    <div class="story-user">
-                                                                        <span>My Story</span>
-                                                                        <ins>No updates</ins>
-                                                                    </div>
-                                                                </div>
-                                                                <ul class="frnds-stories">
-                                                                    <li>
-                                                                        <figure><img src="{% static 'images/resources/friend-avatar11.jpg' %}" alt=""></figure>
-                                                                        <div class="story-user">
-                                                                            <span>Emily doll</span>
-                                                                            <ins>yesterday</ins>
-                                                                        </div>
-                                                                    </li>
-                                                                    <li>
-                                                                        <figure><img src="{% static 'images/resources/friend-avatar15.jpg' %}" alt=""></figure>
-                                                                        <div class="story-user">
-                                                                            <span>Jhon Borny</span>
-                                                                            <ins>3 days ago</ins>
-                                                                        </div>
-                                                                    </li>
-                                                                    <li>
-                                                                        <figure><img src="{% static 'images/resources/friend-avatar12.jpg' %}" alt=""></figure>
-                                                                        <div class="story-user">
-                                                                            <span>Sarah Khan</span>
-                                                                            <ins>2 days ago</ins>
-                                                                        </div>
-                                                                    </li>
-                                                                    <li>
-                                                                        <figure><img src="{% static 'images/resources/friend-avatar13.jpg' %}" alt=""></figure>
-                                                                        <div class="story-user">
-                                                                            <span>Zara Hayat</span>
-                                                                            <ins>1 day ago</ins>
-                                                                        </div>
-                                                                    </li>
-                                                                    <li>
-                                                                        <figure><img src="{% static 'images/resources/friend-avatar14.jpg' %}" alt=""></figure>
-                                                                        <div class="story-user">
-                                                                            <span>Zing Jang</span>
-                                                                            <ins>2 days ago</ins>
-                                                                        </div>
-                                                                    </li>
-
-                                                                    <li>
-                                                                        <figure><img src="{% static 'images/resources/friend-avatar16.jpg' %}" alt=""></figure>
-                                                                        <div class="story-user">
-                                                                            <span>Emma watson</span>
-                                                                            <ins>jan,12 2020</ins>
-                                                                        </div>
-                                                                    </li>
-                                                                </ul>
+                                                        <div  class="col-lg-12">
+                                                            {% if s.image %}
+                                                            <div class="col-lg-6" id="slideshow" style="overflow: visible">
+                                                                <img style="width: 100%; max-height:500px;" class="slide" src="{{s.image.url}}" />
                                                             </div>
-                                                        </div>
-                                                        <div class="col-lg-8">
-                                                            <div id="btns-wrapper"></div>
-                                                            <div id="slideshow">
-                                                                <img class="slide" src="http://placehold.it/856x380/FF6347/FFFFFF&text=1" alt="11" />
-                                                                <img class="slide" src="http://placehold.it/856x380/6FC6F7/FFFFFF&text=2" alt="2" />
-                                                                <img class="slide" src="http://placehold.it/856x380/f3e686/FFFFFF&text=3" alt="3" />
-                                                                <img class="slide" src="http://placehold.it/856x380/71eea3/FFFFFF&text=4" alt="4" />
+                                                            {% elif s.video %}
+                                                            <div class="col-lg-6" id="slideshow" style="overflow: visible; height: 100%;">
+                                                                <video style="width: 100%; max-height:500px;" class="slide" src="{{s.video.url}}" controls></video>
                                                             </div>
+                                                            {% endif %}
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
+                                            {% endfor %}
                                         </div>
                                     </div>
                                     <!-- top stories -->
@@ -240,7 +210,7 @@
                                                         </div>
                                                     </div>
                                                     {% endif %}
-                                                    <ins><a href="{% url 'core:profile' p.user.id %}" title="">{{p.profile.firstname}} {{p.profile.lastname}}</a></ins>
+                                                    <ins><a href="{% url 'core:profile' p.user.id %}" title="">{{p.profile.firstname}} {{p.profile.lastname}}</a>{% if p.shared_post %} shared <a href="{% url 'core:profile' p.shared_post.profile.user.id %}" title=""> {{p.shared_post.profile.firstname}} {{p.shared_post.profile.lastname}}'s</a> post{% endif %}</ins>
                                                     <span><i class="fa fa-globe"></i> published: {{p.created_at|date:"M d, Y"}} {{p.created_at|time:"h:i, A"}}</span>
 
                                                 </div>
@@ -556,5 +526,9 @@
                 </div>
             </div>
         </section>
-
+        <script>
+            function submitForm() {
+                document.getElementById("myForm").submit();
+            }
+        </script>
                 {% endblock content %}

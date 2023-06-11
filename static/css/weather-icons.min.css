@@ -300,7 +300,7 @@
     content: "\f033"
 }
 
-.wi-night-partly-cloudy:before {
+.wi-night-pay-cloudy:before {
     content: "\f083"
 }
 
@@ -376,7 +376,7 @@
     content: "\f080"
 }
 
-.wi-night-alt-partly-cloudy:before {
+.wi-night-alt-pay-cloudy:before {
     content: "\f081"
 }
 
@@ -1328,11 +1328,11 @@
     content: "\f013"
 }
 
-.wi-forecast-io-partly-cloudy-day:before {
+.wi-forecast-io-pay-cloudy-day:before {
     content: "\f002"
 }
 
-.wi-forecast-io-partly-cloudy-night:before {
+.wi-forecast-io-pay-cloudy-night:before {
     content: "\f031"
 }
 
@@ -2422,11 +2422,11 @@
     content: "\f00d"
 }
 
-.wi-wu-partlycloudy:before {
+.wi-wu-paycloudy:before {
     content: "\f002"
 }
 
-.wi-wu-partlysunny:before {
+.wi-wu-paysunny:before {
     content: "\f00d"
 }
 

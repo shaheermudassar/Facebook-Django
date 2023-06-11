@@ -48,6 +48,9 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'taggit',
     'core',
+    'django_user_agents',
+    'messenger',
+
 
 ]
 
@@ -60,6 +63,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_user_agents.middleware.UserAgentMiddleware',
 ]
 
 ROOT_URLCONF = 'facebook.urls'

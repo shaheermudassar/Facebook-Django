@@ -36,6 +36,10 @@ class Profile(models.Model):
     birthday = models.DateField(null=True)
     phone_no = models.CharField(max_length=25, null=True)
 
+    @property
+    def full_name(self):
+        return f"{self.firstname} {self.lastname}"
+
     def __str__(self):
         return self.firstname
     

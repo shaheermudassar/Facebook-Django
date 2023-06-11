@@ -12,4 +12,7 @@ urlpatterns = [
     path("create-profile", views.create_profile ,name="create-profile"),
     path("post/<id>", views.post_details ,name="post"),
     path("videos", views.videos ,name="videos"),
+    path("friend-requests", views.friend_requests ,name="friend-requests"),
+    path("delete_friend_request/", views.delete_friend_request ,name="delete_friend_request"),
+    path("accept_friend_request/", views.accept_friend_request ,name="accept_friend_request"),
 ]

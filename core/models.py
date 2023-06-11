@@ -51,7 +51,7 @@ class General_information(models.Model):
         return self.user.username
     
     class Meta:
-        verbose_name_plural = "General_informations"
+        verbose_name_plural = "General informations"
 
 class Like(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -75,3 +75,60 @@ class Comment(models.Model):
     
     class Meta:
         verbose_name_plural = "Comments"
+
+class FriendRequest(models.Model):
+    fri_req_id = ShortUUIDField(unique=True, length=10, max_length=30, prefix="fri_req", alphabet="abcdefgh12345", null=True)
+    created_at = models.DateTimeField(null=True, auto_now_add=True)
+    sender_profile = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, related_name='sent_friend_requests')
+    reciever_profile = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, related_name='recieve_friend_requests')
+    sender_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_friend_requests')
+    reciever_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='recieve_friend_requests')
+    is_friend = models.BooleanField(default=False)
+    
+    
+    def sender_profile_image(self):
+        return mark_safe('<img src="%s" width="50" height="50"/>'% (self.sender_profile.profile_pic.url))
+    
+    def reciever_profile_image(self):
+        return mark_safe('<img src="%s" width="50" height="50"/>'% (self.reciever_profile.profile_pic.url))
+    
+    def sender_name(self):
+        return self.sender_profile.firstname
+    def reciever_name(self):
+        return self.reciever_profile.firstname
+    
+    class Meta:
+        verbose_name_plural = "Friend Requests"
+
+class Friend(models.Model):
+    fri_id = ShortUUIDField(unique=True, length=10, max_length=30, prefix="fri", alphabet="abcdefgh12345", null=True)
+    created_at = models.DateTimeField(null=True, auto_now_add=True)
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True,related_name='user_friends')
+    friend_profile = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, related_name='friends')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='user_friends')
+    friend_user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='friends')
+
+    
+    def profile_image(self):
+        return mark_safe('<img src="%s" width="50" height="50"/>'% (self.profile.profile_pic.url))
+    
+    def friend_profile_image(self):
+        return mark_safe('<img src="%s" width="50" height="50"/>'% (self.friend_profile.profile_pic.url))
+    
+    def user_name(self):
+        return self.profile.firstname
+    def friend_name(self):
+        return self.friend_profile.firstname
+
+    class Meta:
+        verbose_name_plural = "Friends"
+
+class Story(models.Model):
+    sid = ShortUUIDField(unique=True, length=10, max_length=30, prefix="stry", alphabet="abcdefgh12345", null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
+    image = models.ImageField(null=True, blank=True)
+    video = models.FileField(null=True, blank=True)
+    class Meta:
+        verbose_name_plural = "Stories"

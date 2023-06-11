@@ -1,0 +1,173 @@
+{% extends 'messenger/base.html' %}
+{% load static %}
+{% block content %}
+<div class="chitchat-main small-sidebar" id="content">
+    <div class="chat-content tabto active">
+      <div class="messages custom-scroll active" id="chating">
+        <div class="contact-details">
+          <div class="row">
+            <div class="col-7">
+              <div class="media left">
+                <div class="media-left me-3">
+                  <div class="profile online menu-trigger"><img class="bg-img" src="{{friend_profile.profile_pic.url}}" alt="Avatar"/></div>
+                </div>
+                <div>
+                  <h5>{{friend_profile.firstname}} {{friend_profile.lastname}}</h5>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="contact-chat">
+          {% if messages %}
+          <ul class="chatappend">
+            {% for m in messages %}
+            {% if m.sender_body %}
+            <li class="replies">
+              <div class="media">
+                <div class="profile me-4"><img class="bg-img" src="{{m.sender_profile.profile_pic.url}}" alt="Avatar"/></div>
+                <div class="media-body">
+                  <div class="contact-name">
+                    <ul class="msg-box">
+                      <li class="msg-setting-main">
+                        <div class="msg-dropdown-main">
+                          <form method="post">
+                            {% csrf_token %}
+                            <input type="hidden" value="{{m.mid}}" name="mid">
+                            <button style="border: none;" class="msg-setting" name="delete_message"><i >delete</i></button>
+                          </form>
+                        </div>
+                        <h5>{{m.sender_body}}</h5>
+                      </li>
+                    </ul>
+                    <h6>{{m.created_at}}</h6>
+                  </div>
+                </div>
+              </div>
+            </li>
+            {% endif %}
+            {% if m.reciever_body %}
+            <li class="sent">
+              <div class="media">
+                <div class="profile me-4"><img class="bg-img" src="{{m.reciever_profile.profile_pic.url}}" alt="Avatar"/></div>
+                <div class="media-body">
+                  <div class="contact-name">
+                    <ul class="msg-box">
+                      <li class="msg-setting-main">
+                        <h5>{{m.reciever_body}} </h5>
+                      </li>
+                      <h6>{{m.created_at}}</h6>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </li>
+            {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+        {% else %}
+        <div class="center-container">
+        <h1> start chat with {{friend_profile.firstname}}.</h1>
+        </div>
+        {% endif %}
+      </div>
+      <form method="post"  enctype="multipart/form-data">
+        {% csrf_token %}
+      <div class="message-input">
+        <div class="wrap emojis-main">
+          <div class="dot-btn dot-primary me-3"><a class="icon-btn btn-outline-primary button-effect toggle-emoji" href="#"><i data-feather="smile"></i></a></div>
+
+          <input name="sender_body" class="setemoj" id="setemoj" type="text" placeholder="Write your message..."/>
+            <button type="submit" name="send_message" class="icon-btn btn-outline-primary me-4" style="font-family: 'Courier New', Courier, monospace;">send</button>
+            <div class="emojis-contain">
+              <div class="emojis-sub-contain custom-scroll">
+                <ul>
+                  <li>&#128512;</li>
+                  <li>&#128513;</li>
+                  <li>&#128514;</li>
+                  <li>&#128515;</li>
+                  <li>&#128516;</li>
+                  <li>&#128517;</li>
+                  <li>&#128518;</li>
+                  <li>&#128519;</li>
+                  <li>&#128520;</li>
+                  <li>&#128521;</li>
+                  <li>&#128522;</li>
+                  <li>&#128523;</li>
+                  <li>&#128524;</li>
+                  <li>&#128525;</li>
+                  <li>&#128526;</li>
+                  <li>&#128527;</li>
+                  <li>&#128528;</li>
+                  <li>&#128529;</li>
+                  <li>&#128530;</li>
+                  <li>&#128531;</li>
+                  <li>&#128532;</li>
+                  <li>&#128533;</li>
+                  <li>&#128534;</li>
+                <li>&#128535;</li>
+                <li>&#128536;</li>
+                <li>&#128537;</li>
+                <li>&#128538;</li>
+                <li>&#128539;</li>
+                <li>&#128540;</li>
+                <li>&#128541;</li>
+                <li>&#128542;</li>
+                <li>&#128543;</li>
+                <li>&#128544;</li>
+                <li>&#128545;</li>
+                <li>&#128546;</li>
+                <li>&#128547;</li>
+                <li>&#128549;</li>
+                <li>&#128550;</li>
+                <li>&#128551;</li>
+                <li>&#128552;</li>
+                <li>&#128553;</li>
+                <li>&#128554;</li>
+                <li>&#128555;</li>
+                <li>&#128557;</li>
+                <li>&#128558;</li>
+                <li>&#128559;</li>
+                <li>&#128560;</li>
+                <li>&#128561;</li>
+                <li>&#128562;</li>
+                <li>&#128563;</li>
+                <li>&#128564;</li>
+                <li>&#128565;</li>
+                <li>&#128566;</li>
+                <li>&#128567;</li>
+                <li>&#128568;</li>
+                <li>&#128569;</li>
+                <li>&#128570;</li>
+                <li>&#128571;</li>
+                <li>&#128572;</li>
+                <li>&#128573;</li>
+                <li>&#128574;</li>
+                <li>&#128576;                    </li>
+                <li>&#128579;                    </li>
+              </ul>
+            </div>
+          </div>
+        </form>
+        </div>
+      </div>
+    </div>
+</div>
+
+<style>
+  .center-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  h1 {
+    text-align: center;
+    margin-left: 30px;
+    color: #1c9dea;
+  }
+  
+</style>
+{% endblock content %}

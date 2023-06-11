@@ -16849,45 +16849,45 @@ input.ui-button::-moz-focus-inner {
     font-size: 0
 }
 
-.ui-datepicker-rtl {
-    direction: rtl
+.ui-datepicker- {
+    direction: 
 }
 
-.ui-datepicker-rtl .ui-datepicker-prev {
+.ui-datepicker- .ui-datepicker-prev {
     right: 2px;
     left: auto
 }
 
-.ui-datepicker-rtl .ui-datepicker-next {
+.ui-datepicker- .ui-datepicker-next {
     left: 2px;
     right: auto
 }
 
-.ui-datepicker-rtl .ui-datepicker-prev:hover {
+.ui-datepicker- .ui-datepicker-prev:hover {
     right: 1px;
     left: auto
 }
 
-.ui-datepicker-rtl .ui-datepicker-next:hover {
+.ui-datepicker- .ui-datepicker-next:hover {
     left: 1px;
     right: auto
 }
 
-.ui-datepicker-rtl .ui-datepicker-buttonpane {
+.ui-datepicker- .ui-datepicker-buttonpane {
     clear: right
 }
 
-.ui-datepicker-rtl .ui-datepicker-buttonpane button {
+.ui-datepicker- .ui-datepicker-buttonpane button {
     float: left
 }
 
-.ui-datepicker-rtl .ui-datepicker-buttonpane button.ui-datepicker-current,
-.ui-datepicker-rtl .ui-datepicker-group {
+.ui-datepicker- .ui-datepicker-buttonpane button.ui-datepicker-current,
+.ui-datepicker- .ui-datepicker-group {
     float: right
 }
 
-.ui-datepicker-rtl .ui-datepicker-group-last .ui-datepicker-header,
-.ui-datepicker-rtl .ui-datepicker-group-middle .ui-datepicker-header {
+.ui-datepicker- .ui-datepicker-group-last .ui-datepicker-header,
+.ui-datepicker- .ui-datepicker-group-middle .ui-datepicker-header {
     border-right-width: 0;
     border-left-width: 1px
 }
@@ -36474,15 +36474,15 @@ html.mm-dropdown.mm-opened:not(.mm-opening) .mm-menu {
     width: 16.67%
 }
 
-.mm-menu.mm-rtl {
-    direction: rtl
+.mm-menu.mm- {
+    direction: 
 }
 
-.mm-menu.mm-rtl.mm-offcanvas {
+.mm-menu.mm-.mm-offcanvas {
     right: auto
 }
 
-.mm-menu.mm-rtl .mm-panel:not(.mm-opened) {
+.mm-menu.mm- .mm-panel:not(.mm-opened) {
     -webkit-transform: translate(-100%, 0);
     -ms-transform: translate(-100%, 0);
     transform: translate(-100%, 0);
@@ -36490,7 +36490,7 @@ html.mm-dropdown.mm-opened:not(.mm-opening) .mm-menu {
     transform: translate3d(-100%, 0, 0)
 }
 
-.mm-menu.mm-rtl .mm-panel.mm-subopened {
+.mm-menu.mm- .mm-panel.mm-subopened {
     -webkit-transform: translate(30%, 0);
     -ms-transform: translate(30%, 0);
     transform: translate(30%, 0);
@@ -36498,17 +36498,17 @@ html.mm-dropdown.mm-opened:not(.mm-opening) .mm-menu {
     transform: translate3d(30%, 0, 0)
 }
 
-.mm-menu.mm-rtl .mm-navbar .mm-btn:first-child {
+.mm-menu.mm- .mm-navbar .mm-btn:first-child {
     left: auto;
     right: 0
 }
 
-.mm-menu.mm-rtl .mm-navbar .mm-btn:last-child {
+.mm-menu.mm- .mm-navbar .mm-btn:last-child {
     right: auto;
     left: 0
 }
 
-.mm-menu.mm-rtl .mm-navbar .mm-next:after {
+.mm-menu.mm- .mm-navbar .mm-next:after {
     -webkit-transform: rotate(-45deg);
     -ms-transform: rotate(-45deg);
     transform: rotate(-45deg);
@@ -36516,7 +36516,7 @@ html.mm-dropdown.mm-opened:not(.mm-opening) .mm-menu {
     right: auto
 }
 
-.mm-menu.mm-rtl .mm-navbar .mm-prev:before {
+.mm-menu.mm- .mm-navbar .mm-prev:before {
     -webkit-transform: rotate(135deg);
     -ms-transform: rotate(135deg);
     transform: rotate(135deg);
@@ -36524,29 +36524,29 @@ html.mm-dropdown.mm-opened:not(.mm-opening) .mm-menu {
     left: auto
 }
 
-.mm-menu.mm-rtl .mm-listview>li:not(.mm-divider)::after {
+.mm-menu.mm- .mm-listview>li:not(.mm-divider)::after {
     left: 0;
     right: 20px
 }
 
-.mm-menu.mm-rtl .mm-listview>li>a:not(.mm-next),
-.mm-menu.mm-rtl .mm-listview>li>span:not(.mm-next) {
+.mm-menu.mm- .mm-listview>li>a:not(.mm-next),
+.mm-menu.mm- .mm-listview>li>span:not(.mm-next) {
     padding-left: 10px;
     padding-right: 20px !important;
     margin-right: 0 !important
 }
 
-.mm-menu.mm-rtl .mm-listview .mm-next {
+.mm-menu.mm- .mm-listview .mm-next {
     right: auto;
     left: 0
 }
 
-.mm-menu.mm-rtl .mm-listview .mm-next:before {
+.mm-menu.mm- .mm-listview .mm-next:before {
     left: auto;
     right: 0
 }
 
-.mm-menu.mm-rtl .mm-listview .mm-next:after {
+.mm-menu.mm- .mm-listview .mm-next:after {
     -webkit-transform: rotate(-45deg);
     -ms-transform: rotate(-45deg);
     transform: rotate(-45deg);
@@ -36554,86 +36554,86 @@ html.mm-dropdown.mm-opened:not(.mm-opening) .mm-menu {
     right: auto
 }
 
-.mm-menu.mm-rtl .mm-listview .mm-next+a,
-.mm-menu.mm-rtl .mm-listview .mm-next+span {
+.mm-menu.mm- .mm-listview .mm-next+a,
+.mm-menu.mm- .mm-listview .mm-next+span {
     margin-left: 50px
 }
 
-.mm-menu.mm-rtl .mm-listview .mm-next.mm-fullsubopen+a,
-.mm-menu.mm-rtl .mm-listview .mm-next.mm-fullsubopen+span {
+.mm-menu.mm- .mm-listview .mm-next.mm-fullsubopen+a,
+.mm-menu.mm- .mm-listview .mm-next.mm-fullsubopen+span {
     padding-left: 50px
 }
 
-.mm-menu.mm-rtl em.mm-counter {
+.mm-menu.mm- em.mm-counter {
     left: 45px;
     right: auto
 }
 
-.mm-menu.mm-rtl em.mm-counter+a.mm-next+a,
-.mm-menu.mm-rtl em.mm-counter+a.mm-next+span {
+.mm-menu.mm- em.mm-counter+a.mm-next+a,
+.mm-menu.mm- em.mm-counter+a.mm-next+span {
     margin-left: 90px
 }
 
-.mm-menu.mm-rtl .mm-listview em.mm-counter+.mm-fullsubopen+a,
-.mm-menu.mm-rtl .mm-listview em.mm-counter+.mm-fullsubopen+span {
+.mm-menu.mm- .mm-listview em.mm-counter+.mm-fullsubopen+a,
+.mm-menu.mm- .mm-listview em.mm-counter+.mm-fullsubopen+span {
     padding-left: 90px
 }
 
-.mm-menu.mm-rtl label.mm-check,
-.mm-menu.mm-rtl label.mm-toggle {
+.mm-menu.mm- label.mm-check,
+.mm-menu.mm- label.mm-toggle {
     left: 20px;
     right: auto !important
 }
 
-.mm-menu.mm-rtl label.mm-toggle+a,
-.mm-menu.mm-rtl label.mm-toggle+span {
+.mm-menu.mm- label.mm-toggle+a,
+.mm-menu.mm- label.mm-toggle+span {
     padding-left: 80px
 }
 
-.mm-menu.mm-rtl label.mm-check+a,
-.mm-menu.mm-rtl label.mm-check+span {
+.mm-menu.mm- label.mm-check+a,
+.mm-menu.mm- label.mm-check+span {
     padding-left: 60px
 }
 
-.mm-menu.mm-rtl a.mm-next+label.mm-check,
-.mm-menu.mm-rtl a.mm-next+label.mm-toggle {
+.mm-menu.mm- a.mm-next+label.mm-check,
+.mm-menu.mm- a.mm-next+label.mm-toggle {
     left: 60px
 }
 
-.mm-menu.mm-rtl a.mm-next+label.mm-check+a,
-.mm-menu.mm-rtl a.mm-next+label.mm-check+span,
-.mm-menu.mm-rtl a.mm-next+label.mm-toggle+a,
-.mm-menu.mm-rtl a.mm-next+label.mm-toggle+span {
+.mm-menu.mm- a.mm-next+label.mm-check+a,
+.mm-menu.mm- a.mm-next+label.mm-check+span,
+.mm-menu.mm- a.mm-next+label.mm-toggle+a,
+.mm-menu.mm- a.mm-next+label.mm-toggle+span {
     margin-left: 50px
 }
 
-.mm-menu.mm-rtl a.mm-next+label.mm-toggle+a,
-.mm-menu.mm-rtl a.mm-next+label.mm-toggle+span {
+.mm-menu.mm- a.mm-next+label.mm-toggle+a,
+.mm-menu.mm- a.mm-next+label.mm-toggle+span {
     padding-left: 70px
 }
 
-.mm-menu.mm-rtl a.mm-next+label.mm-check+a,
-.mm-menu.mm-rtl a.mm-next+label.mm-check+span {
+.mm-menu.mm- a.mm-next+label.mm-check+a,
+.mm-menu.mm- a.mm-next+label.mm-check+span {
     padding-left: 50px
 }
 
-.mm-menu.mm-rtl em.mm-counter+a.mm-next+label.mm-check,
-.mm-menu.mm-rtl em.mm-counter+a.mm-next+label.mm-toggle {
+.mm-menu.mm- em.mm-counter+a.mm-next+label.mm-check,
+.mm-menu.mm- em.mm-counter+a.mm-next+label.mm-toggle {
     left: 100px
 }
 
-.mm-menu.mm-rtl em.mm-counter+a.mm-next+label.mm-check+a,
-.mm-menu.mm-rtl em.mm-counter+a.mm-next+label.mm-check+span,
-.mm-menu.mm-rtl em.mm-counter+a.mm-next+label.mm-toggle+a,
-.mm-menu.mm-rtl em.mm-counter+a.mm-next+label.mm-toggle+span {
+.mm-menu.mm- em.mm-counter+a.mm-next+label.mm-check+a,
+.mm-menu.mm- em.mm-counter+a.mm-next+label.mm-check+span,
+.mm-menu.mm- em.mm-counter+a.mm-next+label.mm-toggle+a,
+.mm-menu.mm- em.mm-counter+a.mm-next+label.mm-toggle+span {
     margin-left: 90px
 }
 
-.mm-menu.mm-rtl .mm-panel[class*=mm-iconpanel-] {
+.mm-menu.mm- .mm-panel[class*=mm-iconpanel-] {
     left: 0
 }
 
-.mm-menu.mm-rtl .mm-panel[class*=mm-iconpanel-].mm-subopened {
+.mm-menu.mm- .mm-panel[class*=mm-iconpanel-].mm-subopened {
     -webkit-transform: translate(0, 0);
     -ms-transform: translate(0, 0);
     transform: translate(0, 0);
@@ -36641,42 +36641,42 @@ html.mm-dropdown.mm-opened:not(.mm-opening) .mm-menu {
     transform: translate3d(0, 0, 0)
 }
 
-.mm-menu.mm-rtl.mm-iconpanel .mm-panel {
+.mm-menu.mm-.mm-iconpanel .mm-panel {
     -webkit-transition-property: right, -webkit-transform;
     transition-property: right, -webkit-transform;
     transition-property: transform, right;
     transition-property: transform, right, -webkit-transform
 }
 
-.mm-menu.mm-rtl.mm-iconpanel .mm-panel.mm-iconpanel-0 {
+.mm-menu.mm-.mm-iconpanel .mm-panel.mm-iconpanel-0 {
     right: 0
 }
 
-.mm-menu.mm-rtl.mm-iconpanel .mm-panel.mm-iconpanel-1 {
+.mm-menu.mm-.mm-iconpanel .mm-panel.mm-iconpanel-1 {
     right: 40px
 }
 
-.mm-menu.mm-rtl.mm-iconpanel .mm-panel.mm-iconpanel-2 {
+.mm-menu.mm-.mm-iconpanel .mm-panel.mm-iconpanel-2 {
     right: 80px
 }
 
-.mm-menu.mm-rtl.mm-iconpanel .mm-panel.mm-iconpanel-3 {
+.mm-menu.mm-.mm-iconpanel .mm-panel.mm-iconpanel-3 {
     right: 120px
 }
 
-.mm-menu.mm-rtl.mm-iconpanel .mm-panel.mm-iconpanel-4 {
+.mm-menu.mm-.mm-iconpanel .mm-panel.mm-iconpanel-4 {
     right: 160px
 }
 
-.mm-menu.mm-rtl.mm-iconpanel .mm-panel.mm-iconpanel-5 {
+.mm-menu.mm-.mm-iconpanel .mm-panel.mm-iconpanel-5 {
     right: 200px
 }
 
-.mm-menu.mm-rtl.mm-iconpanel .mm-panel.mm-iconpanel-6 {
+.mm-menu.mm-.mm-iconpanel .mm-panel.mm-iconpanel-6 {
     right: 240px
 }
 
-.mm-menu.mm-rtl.mm-iconpanel .mm-panel.mm-opened {
+.mm-menu.mm-.mm-iconpanel .mm-panel.mm-opened {
     border-left: none;
     border-right: 1px solid;
     border-color: inherit
@@ -37108,11 +37108,11 @@ em.mm-counter+a.mm-next+label.mm-toggle+span {
     cursor: grab
 }
 
-.owl-carousel.owl-rtl {
-    direction: rtl
+.owl-carousel.owl- {
+    direction: 
 }
 
-.owl-carousel.owl-rtl .owl-item {
+.owl-carousel.owl- .owl-item {
     float: right
 }
 
@@ -37591,84 +37591,84 @@ This file is generated by `grunt build`, do not edit it by hand.
     cursor: default
 }
 
-.chosen-rtl {
+.chosen- {
     text-align: right
 }
 
-.chosen-rtl .chosen-single {
+.chosen- .chosen-single {
     overflow: visible;
     padding: 0 8px 0 0
 }
 
-.chosen-rtl .chosen-single span {
+.chosen- .chosen-single span {
     margin-right: 0;
     margin-left: 26px;
-    direction: rtl
+    direction: 
 }
 
-.chosen-rtl .chosen-single-with-deselect span {
+.chosen- .chosen-single-with-deselect span {
     margin-left: 38px
 }
 
-.chosen-rtl .chosen-single div {
+.chosen- .chosen-single div {
     right: auto;
     left: 3px
 }
 
-.chosen-rtl .chosen-single abbr {
+.chosen- .chosen-single abbr {
     right: auto;
     left: 26px
 }
 
-.chosen-rtl .chosen-choices li {
+.chosen- .chosen-choices li {
     float: right
 }
 
-.chosen-rtl .chosen-choices li.search-field input[type=text] {
-    direction: rtl
+.chosen- .chosen-choices li.search-field input[type=text] {
+    direction: 
 }
 
-.chosen-rtl .chosen-choices li.search-choice {
+.chosen- .chosen-choices li.search-choice {
     margin: 3px 5px 3px 0;
     padding: 3px 5px 3px 19px
 }
 
-.chosen-rtl .chosen-choices li.search-choice .search-choice-close {
+.chosen- .chosen-choices li.search-choice .search-choice-close {
     right: auto;
     left: 4px
 }
 
-.chosen-rtl .chosen-drop,
-.chosen-rtl.chosen-container-single-nosearch .chosen-search {
+.chosen- .chosen-drop,
+.chosen-.chosen-container-single-nosearch .chosen-search {
     left: 9999px
 }
 
-.chosen-rtl.chosen-container-single .chosen-results {
+.chosen-.chosen-container-single .chosen-results {
     margin: 0 0 4px 4px;
     padding: 0 4px 0 0
 }
 
-.chosen-rtl .chosen-results li.group-option {
+.chosen- .chosen-results li.group-option {
     padding-right: 15px;
     padding-left: 0
 }
 
-.chosen-rtl.chosen-container-active.chosen-with-drop .chosen-single div {
+.chosen-.chosen-container-active.chosen-with-drop .chosen-single div {
     border-right: none
 }
 
-.chosen-rtl .chosen-search input[type=text] {
+.chosen- .chosen-search input[type=text] {
     padding: 4px 5px 4px 20px;
     background: #fff url(chosen-sprite.png) no-repeat -30px -20px;
     background: url(chosen-sprite.png) no-repeat -30px -20px;
-    direction: rtl
+    direction: 
 }
 
-.chosen-rtl.chosen-container-single .chosen-single div b {
+.chosen-.chosen-container-single .chosen-single div b {
     background-position: 6px 2px
 }
 
-.chosen-rtl.chosen-container-single.chosen-with-drop .chosen-single div b {
+.chosen-.chosen-container-single.chosen-with-drop .chosen-single div b {
     background-position: -12px 2px
 }
 
@@ -37682,7 +37682,7 @@ only screen and (min-resolution:1.5dppx) {
     .chosen-container-single .chosen-search input[type=text],
     .chosen-container-single .chosen-single abbr,
     .chosen-container-single .chosen-single div b,
-    .chosen-rtl .chosen-search input[type=text] {
+    .chosen- .chosen-search input[type=text] {
         background-image: url(chosen-sprite@2x.png) !important;
         background-size: 52px 37px !important;
         background-repeat: no-repeat !important
@@ -37758,7 +37758,7 @@ only screen and (min-resolution:1.5dppx) {
     min-height: 1px
 }
 
-[dir=rtl] .slick-slide {
+[dir=] .slick-slide {
     float: right
 }
 
@@ -40921,8 +40921,8 @@ all and (max-height:375px) and (max-width:667px) {
     background-image: url(emoji/part_alternation_mark.png)
 }
 
-.em-partly_sunny {
-    background-image: url(emoji/partly_sunny.png)
+.em-pay_sunny {
+    background-image: url(emoji/pay_sunny.png)
 }
 
 .em-passport_control {
@@ -41877,8 +41877,8 @@ all and (max-height:375px) and (max-width:667px) {
     background-image: url(emoji/tulip.png)
 }
 
-.em-turtle {
-    background-image: url(emoji/turtle.png)
+.em-tue {
+    background-image: url(emoji/tue.png)
 }
 
 .em-tv {

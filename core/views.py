@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from core.models import Posts, General_information, Like, Comment, SharedPost
+from core.models import Posts, General_information, Like, Comment, SharedPost, FriendRequest, Friend, Story
 from userauths.models import Profile, User
 from django.urls import reverse
 from django.http import JsonResponse
@@ -14,6 +14,7 @@ def newsfeed(request):
     liked_post_ids = Like.objects.filter(user=request.user).values_list('post_id', flat=True)
     user = request.user
     profile_for_post_creation = Profile.objects.get(user = user)
+    stories = Story.objects.all().order_by("-id")
 
     if request.method == "POST":
         if "add_post" in request.POST:
@@ -71,22 +72,54 @@ def newsfeed(request):
             redirect_url = redirect("core:post", post_id).url
             redirect_url += "#comments"
             return redirect(redirect_url)
+        elif 'unique_file_input_name' in request.FILES:
+            file = request.FILES['unique_file_input_name']
+
+            # Check the file type
+            if file.content_type.startswith('image'):
+                # File is an image, save it to the image attribute
+                Story.objects.create(user=request.user, profile=profile_user, image=file)
+            elif file.content_type.startswith('video'):
+                # File is a video, save it to the video attribute
+                Story.objects.create(user=request.user, profile=profile_user, video=file)
+            return redirect("/")
+        elif "delete_story" in request.POST:
+            id = request.POST.get("id")
+            delete_story = Story.objects.get(id=id)
+            delete_story.delete()
+            return redirect("/")
+
     context = {
         "profile_user": profile_user,
         "post": post,
         "liked_post_ids":liked_post_ids,
+        "stories":stories,
     }
     return render(request, "core/newsfeed.html", context)
 
 def profile(request, id):
     user = User.objects.get(id=id)
     profile = Profile.objects.get(user=user)
+    friend_request = None
+    if FriendRequest.objects.filter(reciever_user = request.user, sender_user = user, is_friend = False).exists():
+        friend_request = FriendRequest.objects.get(reciever_user = request.user, sender_user = user, is_friend = False)
+    sent_request = None
+    if FriendRequest.objects.filter(sender_user = request.user, reciever_user = user, is_friend = False).exists():
+        sent_request = FriendRequest.objects.get(sender_user = request.user, reciever_user = user, is_friend = False) 
+    is_friend = None
     profile_user = Profile.objects.get(user = request.user)
+    if Friend.objects.filter(friend_profile = profile, profile = profile_user).exists():
+        is_friend = Friend.objects.get(friend_profile = profile, profile = profile_user)
     post = Posts.objects.filter(user=user).order_by("-id")
     liked_post_ids = Like.objects.filter(user=request.user).values_list('post_id', flat=True)
-    info = General_information.objects.get(user=user)
+    info = None
+    if General_information.objects.filter(user=request.user).exists():
+        info = General_information.objects.get(user=user)
     current_user = request.user
     profile_for_post_creation = Profile.objects.get(user = current_user)
+    friend_list = None
+    if Friend.objects.filter(profile = profile).exists():
+        friend_list = Friend.objects.filter(profile = profile)
 
     if request.method == "POST":
         if "add_post" in request.POST:
@@ -148,6 +181,62 @@ def profile(request, id):
             redirect_url = redirect("core:post", post_id).url
             redirect_url += "#comments"
             return redirect(redirect_url)
+        elif "delete_request" in request.POST:
+            profile_id = request.POST.get("profile_id")
+            user_id = request.POST.get("user_id")
+            delete_request = FriendRequest.objects.get(sender_profile__id = profile_id)
+            delete_request.delete()
+
+            return redirect("core:profile", user_id)
+        elif "add_friend" in request.POST:
+            profile_id = request.POST.get('profile_id')
+            reciever_profile = Profile.objects.get(id=profile_id)
+            FriendRequest.objects.create(
+                sender_profile = profile_for_post_creation,
+                reciever_profile = reciever_profile,
+                sender_user = request.user,
+                reciever_user = reciever_profile.user
+            )
+            return redirect("core:profile", reciever_profile.user.id)
+        elif "cancel_sent_request" in request.POST:
+            profile_id = request.POST.get('profile_id')
+            reciever_profile = Profile.objects.get(id=profile_id)
+            profile_user_id = Profile.objects.get(id=profile_id)
+            delete_friend_request = FriendRequest.objects.get(reciever_profile=reciever_profile)
+            delete_friend_request.delete()
+            return redirect("core:profile", profile_user_id.user.id)
+        elif "accept_request" in request.POST:
+            profile_id = request.POST.get('profile_id')
+            user_id = request.POST.get('user_id')
+            friend_profile = Profile.objects.get(id = profile.id)
+            user_profile = Profile.objects.get(user=request.user)
+            Friend.objects.create(
+                profile=user_profile,
+                user = request.user,
+                friend_profile=friend_profile,
+                friend_user=friend_profile.user
+            )
+            Friend.objects.create(
+                profile = friend_profile,
+                user = friend_profile.user,
+                friend_profile = user_profile,
+                friend_user = user_profile.user
+            )
+            sender_profile = Profile.objects.get(id=profile_id)
+            delete_friend_request = FriendRequest.objects.get(sender_profile=sender_profile, reciever_user = request.user)
+            delete_friend_request.delete()
+            return redirect("core:profile", user_id)
+        elif "unfriend_user" in request.POST:
+            id = request.POST.get("id")
+            profile = Profile.objects.get(id=id)
+            user_profile = Profile.objects.get(user=request.user)
+            delete_friend1 = Friend.objects.get(profile = profile, friend_profile = user_profile)
+            delete_friend2 = Friend.objects.get(profile = user_profile, friend_profile=profile)
+            delete_friend1.delete()
+            delete_friend2.delete()
+            return redirect("core:profile", profile.user.id)
+
+        
     context = {
         "profile": profile,
         "profile_user": profile_user,
@@ -155,6 +244,11 @@ def profile(request, id):
         "post": post,
         "info":info,
         "liked_post_ids":liked_post_ids,
+        "friend_request": friend_request,
+        "sent_request": sent_request,
+        "is_friend": is_friend,
+        "friend_list": friend_list,
+        
     }
     return render(request, "core/profile.html", context)
 
@@ -185,6 +279,7 @@ def create_profile(request):
             cover_pic = cover_pic
         )
         new_profile.save()
+        General_information.objects.create(user=request.user)
 
         id = request.user.id
         profile_url = reverse('core:profile', args=[id])
@@ -232,7 +327,7 @@ def edit_account(request):
                 update_profile.profile_pic = profile_pic
                 
                 # Create a post for profile image change
-                post = Posts.objects.create(user=request.user, content="Updated profile image", image=profile_pic)
+                post = Posts.objects.create(user=request.user, profile=profile, content="Updated profile image", image=profile_pic)
                 post.save()
             else:
                 update_profile.profile_pic = update_profile.profile_pic
@@ -241,7 +336,7 @@ def edit_account(request):
                 update_profile.cover_pic = cover_pic
                 
                 # Create a post for cover image change
-                post = Posts.objects.create(user=request.user, content="Updated cover image", image=cover_pic)
+                post = Posts.objects.create(user=request.user, profile=profile, content="Updated cover image", image=cover_pic)
                 post.save()
             else:
                 update_profile.cover_pic = update_profile.cover_pic
@@ -438,3 +533,39 @@ def videos(request):
         "liked_post_ids":liked_post_ids,
     }
     return render(request, "core/videos.html", context)
+
+def friend_requests(request):
+    friend_request = FriendRequest.objects.filter(reciever_user = request.user)
+    context = {
+        "friend_request": friend_request,
+    }
+    return render(request, "core/friend-requests.html", context)
+@csrf_exempt
+def delete_friend_request(request):
+    if request.method == 'POST':
+        fri_req_id = request.POST.get('fri_req_id')
+        delete_request = FriendRequest.objects.get(fri_req_id=fri_req_id)
+        delete_request.delete()
+
+        return JsonResponse({'success':True})
+@csrf_exempt
+def accept_friend_request(request):
+    profile = Profile.objects.get(user = request.user)
+    if request.method == 'POST':
+        sender_profile_id = request.POST.get('sender_profile_id')
+        sender_profile = Profile.objects.get(id=sender_profile_id)
+        Friend.objects.create(
+            profile=profile,
+            user = profile.user,
+            friend_profile = sender_profile,
+            friend_user = sender_profile.user,
+        )
+        Friend.objects.create(
+            profile=sender_profile,
+            user = sender_profile.user,
+            friend_profile = profile,
+            friend_user = profile.user
+        )
+        delete_friend_request= FriendRequest.objects.get(sender_profile=sender_profile, reciever_user=request.user)
+        delete_friend_request.delete()
+        return JsonResponse({'success':True})

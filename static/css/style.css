@@ -16621,27 +16621,27 @@ a.shopping-cart > i {
 .slick-prev{
     left: -20px;
 }
-[dir='rtl'] .slick-prev{
+[dir=''] .slick-prev{
     right: -20px;
     left: auto;
 }
 .slick-prev:before{
     content: 'â†';
 }
-[dir='rtl'] .slick-prev:before{
+[dir=''] .slick-prev:before{
     content: 'â†’';
 }
 .slick-next{
     right: -10px;
 }
-[dir='rtl'] .slick-next{
+[dir=''] .slick-next{
     right: auto;
     left: -20px;
 }
 .slick-next:before{
     content: 'â†’';
 }
-[dir='rtl'] .slick-next:before{
+[dir=''] .slick-next:before{
     content: 'â†';
 }
 .slick-slide-item > * {

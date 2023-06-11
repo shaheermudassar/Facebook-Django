@@ -4,6 +4,9 @@
 {% block logo %}<a href="newsfeed.html" title=""><img style="margin-right: 220px;" src="{% static 'images/fb-logo.png' %}" alt=""></a>{% endblock logo %}
 {% block content %}
 <style>
+    .we-video-info{
+        border-top: 0px;
+    }
     .gray-bg {
     background: #212529;
     }
@@ -40,17 +43,7 @@
                                                 </figure>
                                                 <div class="friend-name">
                                                     {% if p.user == request.user %}
-                                                    <div class="more">
-                                                        <div class="more-post-optns"><i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-                                                            <ul>
-                                                                <form method="post">
-                                                                    {% csrf_token %}
-                                                                    <input type="hidden" name="id" value="{{p.id}}">
-                                                                <li><button style="" type="submit" name="delete_post" class="fa fa-trash-o"></i> Delete</li>
-                                                                </form>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
+                                                    
                                                     {% endif %}
                                                     <ins><a href="{% url 'core:profile' p.user.id %}" title="">{{p.profile.firstname}} {{p.profile.lastname}}</a></ins>
                                                     <span><i class="fa fa-globe"></i> published: {{p.created_at|date:"M d, Y"}} {{p.created_at|time:"h:i, A"}}</span>
@@ -61,13 +54,13 @@
                                                         {{p.content}}
                                                     </p>
                                                     <figure>
-                                                        <video style="max-height: 400px;" autoplay controls>
+                                                        <video style="max-height: 400px;" controls>
                                                             <source src="{{p.video.url}}">
                                                           </video>
                                                     </figure>
                                                     
                                                     <div class="we-video-info">
-                                                        <ul style="margin-top: 0;">
+                                                        <ul style="margin-top: 0; margin-left: 10px;">
                                                             <li>
 
 
