@@ -1083,16 +1083,18 @@ def all_pages(request):
 def search(request):
     query = None
     query = request.GET.get("query")
-    
+    profile_results = None
+    post_results = None
+    page_results = None
     if query:
         terms = query.split()
         profile_queries = [Q(firstname__icontains=term) | Q(lastname__icontains=term) | Q(user__username__icontains=term) for term in terms]
         post_query = Q(content__icontains=query)
         page_queries = [Q(name__icontains=term) | Q(about__icontains=term) for term in terms]
-        profile_results = None
+        
         if Profile.objects.filter(*profile_queries).exists():
             profile_results = Profile.objects.filter(*profile_queries)
-        post_results = None
+        
         if Posts.objects.filter(post_query).exists():
             post_results = Posts.objects.filter(post_query)
         page_results = None
