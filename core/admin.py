@@ -1,5 +1,5 @@
 from django.contrib import admin
-from core.models import Posts, General_information, Like, Comment, SharedPost, Friend, FriendRequest, Story
+from core.models import *
 
 # Register your models here.
 class PostsAdmin(admin.ModelAdmin):
@@ -26,6 +26,15 @@ class SharedPostAdmin(admin.ModelAdmin):
 class StoriesAdmin(admin.ModelAdmin):
     list_display = ['user', 'profile', 'created_at']
 
+class PagesAdmin(admin.ModelAdmin):
+    list_display = ['name', 'page_image', 'created_at']
+
+class LikedPagesAdmin(admin.ModelAdmin):
+    list_display = ['page_name', 'user']
+
+class NotificationsAdmin(admin.ModelAdmin):
+    list_display = ['sent_to', 'body']
+
 admin.site.register(Posts, PostsAdmin)
 admin.site.register(SharedPost, SharedPostAdmin)
 admin.site.register(Like, LikeAdmin)
@@ -34,3 +43,6 @@ admin.site.register(Friend, FriendAdmin)
 admin.site.register(Story, StoriesAdmin)
 admin.site.register(FriendRequest, FriendRequestAdmin)
 admin.site.register(General_information, General_informationAdmin)
+admin.site.register(Page, PagesAdmin)
+admin.site.register(LikedPage, LikedPagesAdmin)
+admin.site.register(Notification, NotificationsAdmin)

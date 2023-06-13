@@ -5,6 +5,20 @@
 {% block content %}
 {% load static %}
 {% load user_agents %}
+{% comment %} <div class="wavy-wraper">
+    <div class="wavy">
+      <span style="--i:1;">f</span>
+      <span style="--i:2;">a</span>
+      <span style="--i:3;">c</span>
+      <span style="--i:4;">e</span>
+      <span style="--i:5;">b</span>
+      <span style="--i:6;">o</span>
+      <span style="--i:7;">o</span>
+      <span style="--i:8;">k</span>
+      <span style="--i:9;">.</span>
+    </div>
+</div>
+<div class="theme-layout"> {% endcomment %}
 <section>
     <div class="gap2 gray-bg">
                 <div class="container">
@@ -47,7 +61,7 @@
                                                       <video id="videoPreview" src="#" alt="Video Preview" style="display: none;" controls></video>
                                                     </li>
                                                   </ul>
-                                                  <button class="post-btn" type="submit" name="add-post">Post</button>
+                                                  <button class="post-btn" type="submit" name="add_post">Post</button>
                                                 </div>
                                               </form>
                                               
@@ -93,7 +107,7 @@
                                     </div>
                                     <!-- add post new box -->
                                     <div class="central-meta">
-                                        <span class="create-post">Recent Stories <a href="#" title="">See All</a></span>
+                                        <span class="create-post">Recent Stories </span>
                                         <div class="story-postbox">
                                             <div class="row" style="display: flex; flex-wrap: nowrap; overflow: auto;">
                                                 <div class="col-lg-3 col-md-3 col-sm-3">
@@ -194,7 +208,11 @@
                                         <div class="user-post">
                                             <div class="friend-info">
                                                 <figure>
+                                                    {% if p.page %}
+                                                    <img src="{{p.page.profile_pic.url}}" alt="">
+                                                    {% else %}
                                                     <img src="{{p.profile.profile_pic.url}}" alt="">
+                                                    {% endif %}
                                                 </figure>
                                                 <div class="friend-name">
                                                     {% if p.user == request.user %}
@@ -210,7 +228,13 @@
                                                         </div>
                                                     </div>
                                                     {% endif %}
-                                                    <ins><a href="{% url 'core:profile' p.user.id %}" title="">{{p.profile.firstname}} {{p.profile.lastname}}</a>{% if p.shared_post %} shared <a href="{% url 'core:profile' p.shared_post.profile.user.id %}" title=""> {{p.shared_post.profile.firstname}} {{p.shared_post.profile.lastname}}'s</a> post{% endif %}</ins>
+                                                    {% if p.page %}
+                                                    <ins><a href="{% url 'core:page' p.page.id %}" title="">{{p.page.name}}</a>{% if p.shared_post %} shared <a href="{% url 'core:page' p.shared_post.page.id %}" title=""> {{p.shared_post.page.name}}'s</a> post{% endif %}</ins>
+                                                    {% else %}
+                                                    <ins><a href="{% url 'core:profile' p.user.id %}" title="">{{p.profile.firstname}} {{p.profile.lastname}}</a>
+                                                        {% if p.shared_post and p.shared_post.page %} shared <a href="{% url 'core:page' p.shared_post.page.id %}" title=""> {{p.shared_post.page.name}}'s</a> post</ins>
+                                                        {% elif p.shared_post %} shared <a href="{% url 'core:profile' p.shared_post.profile.user.id %}" title=""> {{p.shared_post.profile.firstname}} {{p.shared_post.profile.lastname}}'s</a> post{% endif %}</ins>
+                                                    {% endif %}
                                                     <span><i class="fa fa-globe"></i> published: {{p.created_at|date:"M d, Y"}} {{p.created_at|time:"h:i, A"}}</span>
 
                                                 </div>
@@ -220,7 +244,18 @@
                                                     </p>
                                                     {% if p.shared_post %}
 																	<div class="friend-info" style="border: solid 0.1px #8080802e; padding: 10px;">
+                                                                        {% if p.shared_post.page %}
 																		<figure>
+																			<img src="{{p.shared_post.page.profile_pic.url}}" alt="">
+																		</figure>
+																		<div class="friend-name">
+																			
+																			<ins><a href="{% url 'core:page' p.shared_post.page.id %}" title="">{{p.shared_post.page.name}}</a></ins>
+																			<span><i class="fa fa-globe"></i> published: {{p.shared_post.created_at|date:"M d, Y"}} {{p.shared_post.created_at|time:"h:i, A"}}</span>
+					
+																		</div>
+                                                                        {% else %}
+                                                                        <figure>
 																			<img src="{{p.shared_post.profile.profile_pic.url}}" alt="">
 																		</figure>
 																		<div class="friend-name">
@@ -229,6 +264,7 @@
 																			<span><i class="fa fa-globe"></i> published: {{p.shared_post.created_at|date:"M d, Y"}} {{p.shared_post.created_at|time:"h:i, A"}}</span>
 					
 																		</div>
+                                                                        {% endif %}
 																		<div class="post-meta">
 																			<p>
 																				{{p.shared_post.content}}
@@ -333,7 +369,7 @@
                                                                 <img src="{{profile_user.profile_pic.url}}" alt="">
                                                             </div>
                                                             <div class="post-comt-box">
-                                                                <form id="comment-form" method="POST">
+                                                                <form id="comment-form" method="POST" enctype="multipart/form-data">
                                                                     {% csrf_token %}
                                                                     <input type="hidden" value="{{p.id}}" name="post_id">
                                                                     <textarea name="comment" placeholder="Post your comment"></textarea>
@@ -404,119 +440,39 @@
                                 <div class="col-lg-3">
                                     <aside class="sidebar static right">
                                         <div class="widget">
-                                            <h4 class="widget-title">Shortcuts</h4>
-                                            <ul class="naves">
-                                                <li>
-                                                    <i class="ti-clipboard"></i>
-                                                    <a href="newsfeed.html" title="">News feed</a>
-                                                </li>
-                                                <li>
-                                                    <i class="ti-mouse-alt"></i>
-                                                    <a href="inbox.html" title="">Inbox</a>
-                                                </li>
-                                                <li>
-                                                    <i class="ti-files"></i>
-                                                    <a href="fav-page.html" title="">My pages</a>
-                                                </li>
-                                                <li>
-                                                    <i class="ti-user"></i>
-                                                    <a href="timeline-friends.html" title="">friends</a>
-                                                </li>
-                                                <li>
-                                                    <i class="ti-image"></i>
-                                                    <a href="timeline-photos.html" title="">images</a>
-                                                </li>
-                                                <li>
-                                                    <i class="ti-video-camera"></i>
-                                                    <a href="timeline-videos.html" title="">videos</a>
-                                                </li>
-                                                <li>
-                                                    <i class="ti-comments-smiley"></i>
-                                                    <a href="messages.html" title="">Messages</a>
-                                                </li>
-                                                <li>
-                                                    <i class="ti-bell"></i>
-                                                    <a href="notifications.html" title="">Notifications</a>
-                                                </li>
-                                                <li>
-                                                    <i class="ti-share"></i>
-                                                    <a href="people-nearby.html" title="">People Nearby</a>
-                                                </li>
-                                                <li>
-                                                    <i class="fa fa-bar-chart-o"></i>
-                                                    <a href="insights.html" title="">insights</a>
-                                                </li>
-                                                <li>
-                                                    <i class="ti-power-off"></i>
-                                                    <a href="landing.html" title="">Logout</a>
-                                                </li>
-                                            </ul>
-                                        </div><!-- Shortcuts -->
-                                        <div class="widget">
-                                            <h4 class="widget-title">Recent Activity</h4>
-                                            <ul class="activitiez">
-                                                <li>
-                                                    <div class="activity-meta">
-                                                        <i>10 hours Ago</i>
-                                                        <span><a href="#" title="">Commented on Video posted </a></span>
-                                                        <h6>by <a href="time-line.html">black demon.</a></h6>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div class="activity-meta">
-                                                        <i>30 Days Ago</i>
-                                                        <span><a href="#" title="">Posted your status. “Hello guys, how are you?”</a></span>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div class="activity-meta">
-                                                        <i>2 Years Ago</i>
-                                                        <span><a href="#" title="">Share a video on her timeline.</a></span>
-                                                        <h6>"<a href="#">you are so funny mr.been.</a>"</h6>
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </div><!-- recent activites -->
-                                        <div class="widget stick-widget">
-                                            <h4 class="widget-title">Who's follownig</h4>
+                                            <h4 class="widget-title">People You may know</h4>
                                             <ul class="followers">
+                                                {% if all_people %}
+                                                {% for a in all_people|slice:"3" %}
                                                 <li>
-                                                    <figure><img src="{% static 'images/resources/friend-avatar2.jpg' %}" alt=""></figure>
+                                                    <figure><a href="{% url 'core:profile' a.user.id %}" title=""><img src="{{a.profile_pic.url}}" alt="user_image"></figure></a>
                                                     <div class="friend-meta">
-                                                        <h4><a href="time-line.html" title="">Kelly Bill</a></h4>
-                                                        <a href="#" title="" class="underline">Add Friend</a>
+                                                        <h4><a href="{% url 'core:profile' a.user.id %}" title="">{{a.firstname}} {{a.lastname}}</a></h4>
+                                                        <a href="{% url 'core:profile' a.user.id %}" title="view profile" class="underline">view profile</a>
                                                     </div>
                                                 </li>
-                                                <li>
-                                                    <figure><img src="{% static 'images/resources/friend-avatar4.jpg' %}" alt=""></figure>
-                                                    <div class="friend-meta">
-                                                        <h4><a href="time-line.html" title="">Issabel</a></h4>
-                                                        <a href="#" title="" class="underline">Add Friend</a>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <figure><img src="{% static 'images/resources/friend-avatar6.jpg' %}" alt=""></figure>
-                                                    <div class="friend-meta">
-                                                        <h4><a href="time-line.html" title="">Andrew</a></h4>
-                                                        <a href="#" title="" class="underline">Add Friend</a>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <figure><img src="{% static 'images/resources/friend-avatar8.jpg' %}" alt=""></figure>
-                                                    <div class="friend-meta">
-                                                        <h4><a href="time-line.html" title="">Sophia</a></h4>
-                                                        <a href="#" title="" class="underline">Add Friend</a>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <figure><img src="{% static 'images/resources/friend-avatar3.jpg' %}" alt=""></figure>
-                                                    <div class="friend-meta">
-                                                        <h4><a href="time-line.html" title="">Allen</a></h4>
-                                                        <a href="#" title="" class="underline">Add Friend</a>
-                                                    </div>
-                                                </li>
+                                                {% endfor %}
+                                                {% endif %}
                                             </ul>
-                                        </div><!-- who's following -->
+                                            <span><a href="{% url 'core:all-users' %}">See all</a></span>
+                                        </div><!-- who's following -->                                        
+                                        <div class="widget stick-widget">
+                                            <h4 class="widget-title">Pages You may like</h4>
+                                            <ul class="followers">
+                                                {% if all_pages %}
+                                                {% for a in all_pages|slice:"3" %}
+                                                <li>
+                                                    <figure><a href="{% url 'core:page' a.id %}" title=""><img src="{{a.profile_pic.url}}" alt="user_image"></figure></a>
+                                                    <div class="friend-meta">
+                                                        <h4><a href="{% url 'core:page' a.id %}" title="">{{a.name}}</a></h4>
+                                                        <a href="{% url 'core:page' a.id %}" title="view page" class="underline">view page</a>
+                                                    </div>
+                                                </li>
+                                                {% endfor %}
+                                                {% endif %}
+                                            </ul>
+                                            <span><a href="{% url 'core:all-pages' %}">See all</a></span>
+                                        </div><!-- who's following -->                                        
                                     </aside>
                                 </div>
                                 <!-- sidebar -->

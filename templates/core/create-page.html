@@ -1,0 +1,93 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block title %}Create Page{% endblock title %}
+{% block content %}
+	<section>
+		<div class="gap2 gray-bg">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="row merged20" id="page-contents">
+							<div class="col-lg-12">
+								<div class="central-meta">
+									<span class="create-post">Create New Page</span>
+									<div class="page-createbox">
+										<form method="post" enctype="multipart/form-data" name="create_page">
+											{% csrf_token %}
+										<div class="row">
+
+											<div class="setting-meta col-lg-6">
+												<div class="change-photo">
+													<figure>
+														<img id="profilePicPreview" src="{% static 'images/unknown_user.jpg' %}" alt="" style="border-radius: 0px;" height="200">
+													</figure>
+													<div class="edit-img">
+														<div class="edit-phto">
+															<label class="fileContainer">
+																<i class="fa fa-camera-retro"></i>
+																Add Profile
+																<input required type="file" id="profilePicInput" onchange="previewImage(event, 'profilePicPreview')" name="profile_pic">
+															</label>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="setting-meta col-lg-6">
+												<div class="change-photo">
+													<figure>
+														<img id="coverPicPreview" style="border-radius: 0px;" src="{% static 'images/unknown_user.jpg' %}" width="100%" height="200" alt="">
+													</figure>
+													<div class="edit-img">
+														<div class="edit-phto">
+															<label class="fileContainer">
+																<i class="fa fa-camera-retro"></i>
+																Add Cover Photo
+																<input required type="file" id="coverPicInput" onchange="previewImage(event, 'coverPicPreview')" name="cover_pic">
+															</label>
+														</div>
+													</div>
+												</div>
+											</div>
+											
+											<script>
+											function previewImage(event, elementId) {
+												var input = event.target;
+												if (input.files && input.files[0]) {
+													var reader = new FileReader();
+													reader.onload = function(e) {
+														var imgElement = document.getElementById(elementId);
+														imgElement.setAttribute('src', e.target.result);
+													};
+													reader.readAsDataURL(input.files[0]);
+												}
+											}
+											</script>
+											
+										</div>
+											<div class="stg-form-area">
+											<div class="c-form">
+												<div class="row">
+												<div class="col-lg-12">
+													<label>Page Name</label>
+													<input required type="text" value="" placeholder="Page Name" name="page_name">
+												</div>
+												<div class="col-lg-12">
+													<label>About Page</label>
+													<textarea required name="about" placeholder="Tell others about your Page.." cols="30" rows="10"></textarea>
+												</div>
+											</div>
+												<div>
+													<button type="submit" name="create_page">Create</button>
+												</div>
+											</div>
+										</form>
+									</div>
+								</div>
+							</div><!-- centerl meta -->
+						</div>	
+					</div>
+				</div>
+			</div>
+		</div>	
+	</section><!-- content -->
+	{% endblock content %}

@@ -33987,12 +33987,12 @@ a.text-dark:hover {
     padding: 0 20px
 }
 
-.mm-panels>.mm-panel.mm-hasnavbar {
-    padding-top: 40px
-}
+
 
 .mm-panels>.mm-panel:not(.mm-hidden) {
-    display: block
+    display: block;
+    background: white;
+    border-left: solid #95999c40;
 }
 
 .mm-panels>.mm-panel:after,
@@ -34154,7 +34154,7 @@ li.mm-vertical.mm-opened>.mm-panel {
 }
 
 .mm-panel.mm-hasnavbar .mm-navbar {
-    display: block
+    display: none;
 }
 
 .mm-listview,

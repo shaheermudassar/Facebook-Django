@@ -1,4 +1,5 @@
 {% load static %}
+{% load user_agents %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -8,9 +9,11 @@
     <meta name="description" content="" />
     <meta name="keywords" content="" />
     <title> {% block title %}
-		My Website
+		Facebook
 		{% endblock title %} </title>
-    <link rel="icon" href="{% static 'images/fav.png' %}" type="image/png" sizes="16x16">
+        {% block favicon %}
+    <link rel="icon" href="{% static 'images/favicon.png' %}">
+    {% endblock favicon %}
     <link rel="stylesheet" href="{% static 'css/main.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/weather-icons.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
@@ -47,7 +50,7 @@
         <div class="postoverlay"></div>
 
         <div class="responsive-header">
-            <div class="mh-head first Sticky" {% if request.path == '/videos' %}style="background: #212529; padding: 5px;"{% else %} style="background: #fff; padding: 5px;"{% endif %} >
+            <div class="mh-head first Sticky" {% if request.path == '/videos/' %}style="background: #212529; padding: 5px;"{% else %} style="background: #fff; padding: 5px;"{% endif %} >
                 
 			</span>
                 <span class="mh-text">
@@ -55,22 +58,22 @@
 			</span>
 			</span>
                 <span class="mh-btns-right">
-				<a href="newsfeed.html" style="color: #555; background: rgb(248, 246, 246); border-radius: 20px;" title=""><i class="fas fa-search"></i></a>
-				<a href="newsfeed.html" style="color: #555; background: rgb(248, 246, 246); border-radius: 20px;" title=""><i class="fas fa-cog"></i></a>
+                <a href="{% url 'core:search' %}" id="search-icon" style="color: #555; background: rgb(248, 246, 246); border-radius: 20px;" title=""><i class="fas fa-search"></i></a>
+				<a href="#shoppingbag" style="color: #555; background: rgb(248, 246, 246); border-radius: 20px;" title=""><i class="fa-solid fa-bars"></i></a>
 			</span>
                 
             </div>
             
         </div>
         <div class="responsive-header">
-            <div class="mh-head first Sticky" {% if request.path == '/videos' %}style="background: #212529; padding: 5px;"{% else %} style="background: #fff; padding: 5px;"{% endif %} >
+            <div class="mh-head first Sticky" {% if request.path == '/videos/' %}style="background: #212529; padding: 5px;"{% else %} style="background: #fff; padding: 5px;"{% endif %} >
                 <span class="mh-text">
 				<a style="padding: 8px 17px; {% if request.path == '/' %} color: #1877f2 {% else %} color: #555{% endif %};" href="{% url 'core:newsfeed' %}" title=""><i class="fa-solid fa-house"></i></a>
-				<a style="padding: 8px 17px; {% if request.path == '/friend-requests' %} color: #1877f2 {% else %} color: #555{% endif %};" href="{% url 'core:friend-requests' %}" title=""><i class="fa-solid fa-user-group"></i></a>
-				<a style="padding: 8px 17px;  color: #555;" href="#" title=""><i class="fa-brands fa-facebook-messenger"></i></a>
-				<a style="padding: 8px 17px; {% if request.path == '/videos' %} color: #1877f2 {% else %} color: #555{% endif %};" href="{% url 'core:videos' %}" title=""><i class="fa-solid fa-film"></i></a>
-				<a style="padding: 8px 17px;  color: #555;" href="#" title=""><i class="fa-solid fa-bell"></i></a>
-				<a style="padding: 8px 17px;  color: #555;" href="#" title=""><i class="fa-solid fa-people-group"></i></a>
+				<a style="padding: 8px 17px; {% if request.path == '/friend-requests/' %} color: #1877f2 {% else %} color: #555{% endif %};" href="{% url 'core:friend-requests' %}" title=""><i class="fa-solid fa-user-group"></i>{% if friend_requests_count != None %}<em style="border-radius: 100%; bottom: 30px; color: #fff; font-size: 10px; height: 17px; line-height: 17px; position: absolute; text-align: center; width: 17px; font-style: normal;" class="bg-red">{{friend_requests_count}}</em>{% endif %}</a>
+				<a style="padding: 8px 17px;  color: #555;" href="{% url 'messenger:messenger' %}" title=""><i class="fa-brands fa-facebook-messenger"></i></a>
+				<a style="padding: 8px 17px; {% if request.path == '/videos/' %} color: #1877f2 {% else %} color: #555{% endif %};" href="{% url 'core:videos' %}" title=""><i class="fa-solid fa-film"></i></a>
+				<a style="padding: 8px 17px; {% if request.path == '/notifications/' %} color: #1877f2 {% else %} color: #555{% endif %};" href="{% url 'core:notifications' %}" title=""><i class="fa-solid fa-bell"></i>{% if notifications_count != None and notifications_count != 0 %}<em style="border-radius: 100%; bottom: 30px; color: #fff; font-size: 10px; height: 17px; line-height: 17px; position: absolute; text-align: center; width: 17px; font-style: normal;" class="bg-red">{{notifications_count}}</em>{% endif %}</a>
+				<a style="padding: 8px 17px; {% if request.path == profile_path %} color: #1877f2 {% else %} color: #555{% endif %};" href="{% url 'core:profile' profile_pro.user.id %}" title=""><i class="fa-solid fa-user"></i></a>
 			</span>
                 
             </div>
@@ -89,9 +92,9 @@
 			    </span>
                 </div>
                 <div class="top-search">
-                    <form method="post" class="">
-                        <input type="text" placeholder="Search People, Pages, Groups etc">
-                        <button data-ripple><i class="ti-search"></i></button>
+                    <form method="get" action="{% url 'core:search' %}" class="">
+                        <input required type="text" placeholder="Search People, Pages, Groups etc" name="query">
+                        <button type="submit"><i class="fa fa=search"></i></button>
                     </form>
                 </div>
                 
@@ -99,88 +102,82 @@
                     
                     <li>
                         <a href="#" title="Notification" data-ripple="">
-						<i class="fa fa-bell"></i><em class="bg-purple">7</em>
+						<i class="fa fa-bell"></i><em class="bg-purple">{{notifications_count}}</em>
 					</a>
                         <div class="dropdowns">
-                            <span>4 New Notifications <a href="#" title="">Mark all as read</a></span>
+                            <span>{{notifications_count}} New Notifications <a href="{% url 'core:notifications' %}" title="">See all</a></span>
                             <ul class="drops-menu">
-                                <li>
-                                    <a href="notifications.html" title="">
-                                        <figure>
-                                            <img src="{% static 'images/resources/thumb-1.jpg' %}" alt="">
-                                            <span class="status f-online"></span>
-                                        </figure>
-                                        <div class="mesg-meta">
-                                            <h6>sarah Loren</h6>
-                                            <span>commented on your new profile status</span>
-                                            <i>2 min ago</i>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="notifications.html" title="">
-                                        <figure>
-                                            <img src="{% static 'images/resources/thumb-2.jpg' %}" alt="">
-                                            <span class="status f-online"></span>
-                                        </figure>
-                                        <div class="mesg-meta">
-                                            <h6>Jhon doe</h6>
-                                            <span>Nicholas Grissom just became friends. Write on his wall.</span>
-                                            <i>4 hours ago</i>
-                                            <figure>
-                                                <span>Today is Marina Valentine’s Birthday! wish for celebrating</span>
-                                                <img src="{% static 'images/birthday.png' %}" alt="">
-                                            </figure>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="notifications.html" title="">
-                                        <figure>
-                                            <img src="{% static 'images/resources/thumb-3.jpg' %}" alt="">
-                                            <span class="status f-online"></span>
-                                        </figure>
-                                        <div class="mesg-meta">
-                                            <h6>Andrew</h6>
-                                            <span>commented on your photo.</span>
-                                            <i>Sunday</i>
-                                            <figure>
-                                                <span>"Celebrity looks Beautiful in that outfit! We should see each"</span>
-                                                <img src="{% static 'images/resources/admin.jpg' %}" alt="">
-                                            </figure>
-                                        </div>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="notifications.html" title="">
-                                        <figure>
-                                            <img src="{% static 'images/resources/thumb-4.jpg' %}" alt="">
-                                            <span class="status f-online"></span>
-                                        </figure>
-                                        <div class="mesg-meta">
-                                            <h6>Tom cruse</h6>
-                                            <span>nvited you to attend to his event Goo in</span>
-                                            <i>May 19</i>
-                                        </div>
-                                    </a>
-                                    <span class="tag">New</span>
-                                </li>
-                                <li>
-                                    <a href="notifications.html" title="">
-                                        <figure>
-                                            <img src="{% static 'images/resources/thumb-5.jpg' %}" alt="">
-                                            <span class="status f-online"></span>
-                                        </figure>
-                                        <div class="mesg-meta">
-                                            <h6>Amy</h6>
-                                            <span>Andrew Changed his profile picture. </span>
-                                            <i>dec 18</i>
-                                        </div>
-                                    </a>
-                                    <span class="tag">New</span>
-                                </li>
-                            </ul>
-                            <a href="notifications.html" title="" class="more-mesg">View All</a>
+                                
+                                    {% if notifications %}
+                                    {% for n in notifications  %}
+												{% if n.profile and n.post %}
+												<li {% if n.seen == False %} style = "background: #665f5f21;" {% else %} style = "background: white" {% endif %}>
+													<a href="{% url 'core:post' n.post.id %}">
+													<figure><img style="width: 40px;" src="{{n.profile.profile_pic.url}}" alt=""></figure>
+													<div class="notifi-meta">
+														<p> <span style="font-weight: 800;">{{n.profile.firstname}} {{n.profile.lastname}}</span> {{n.body|safe}}</p>
+														<span> {{n.created_at|timesince}} ago</span>
+													</div>
+												</a>
+												</li>
+												{% elif n.page and n.post and n.profile %}
+												<a href="{% url 'core:post' n.post.id %}">
+														<li {% if n.seen == False %} style = "background: #665f5f21;" {% else %} style = "background: white" {% endif %}>
+													<figure><img style="width: 40px;" src="{{n.profile.profile_pic.url}}" alt=""></figure>
+													<div class="notifi-meta">
+														<p><span style="font-weight: 800;">{{n.profile.firstname}} {{n.profile.lastname}}</span> {{n.body}}</p>
+														<span> {{n.created_at|timesince}} ago</span>
+													</div>
+												</a>
+												</li>
+												{% elif n.page and n.post %}
+												<a href="{% url 'core:post' n.post.id %}">
+														<li {% if n.seen == False %} style = "background: #665f5f21;" {% else %} style = "background: white" {% endif %}>
+													<figure><img style="width: 40px;" src="{{n.page.profile_pic.url}}" alt=""></figure>
+													<div class="notifi-meta">
+														<p><span style="font-weight: 800;">{{n.page.name}}</span> {{n.body}}</p>
+														<span> {{n.created_at|timesince}} ago</span>
+													</div>
+												</a>
+												</li>
+                                                {% elif n.friends == True %}
+                                                <a href="{% url 'core:profile' n.profile.user.id %}">
+                                                    <li {% if n.seen == False %} style = "background: #665f5f21;" {% else %} style = "background: white" {% endif %}>
+                                                <figure><img style="width: 40px;" src="{{n.profile.profile_pic.url}}" alt=""></figure>
+                                                <div class="notifi-meta">
+                                                    <p><span style="font-weight: 800;">{{n.profile.firstname}} {{n.profile.lastname}}</span> {{n.body}}</p>
+                                                    <span> {{n.created_at|timesince}} ago</span>
+                                                </div>
+                                            </a>
+                                            </li>
+												{% elif n.post %}
+												<a href="{% url 'core:post' n.post.id %}">
+														<li {% if n.seen == False %} style = "background: #665f5f21;" {% else %} style = "background: white" {% endif %}>
+													<figure><img style="width: 40px;" src="{{n.sent_to_profile.profile_pic.url}}" alt=""></figure>
+													<div class="notifi-meta">
+														<p><span style="font-weight: 800;">Hey {{n.sent_to_profile.firstname}},</span> {{n.body}}</p>
+														<span> {{n.created_at|timesince}} ago</span>
+													</div>
+												</a>
+												</li>
+												{% else %}
+                                                <a>
+												<li {% if n.seen == False %} style = "background: #665f5f21;" {% else %} style = "background: white" {% endif %}>
+													<figure><img style="width: 40px;" src="{{n.sent_to_profile.profile_pic.url}}" alt=""></figure>
+													<div class="notifi-meta">
+														<p><span style="font-weight: 800;">{{n.sent_to_profile.firstname}} {{n.sent_to_profile.lastname}}</span> {{n.body}}</p>
+														<span> {{n.created_at|timesince}} ago</span>
+													</div>
+                                                </a>
+												</li>
+												{% endif %}
+												{% endfor %}
+											
+                                            </ul>
+											{% else %}
+											<h2>No Notifications</h2>
+											{% endif %}
+                            <a href="{% url 'core:notifications' %}" title="" class="more-mesg">View All</a>
                         </div>
                     </li>
                    
@@ -192,15 +189,18 @@
                     <div class="user-setting">
 
                         <ul class="log-out">
-                            <li><a href="{% url 'core:profile' request.user.id %}" title=""><i class="ti-user"></i> view profile</a></li>
-                            <li><a href="{% url 'core:settings' %}" title=""><i class="ti-pencil-alt"></i>edit profile</a></li>
-                            <li><a href="{% url 'userauths:signout' %}" title=""><i class="ti-power-off"></i>log out</a></li>
+                            <li><a href="{% url 'core:profile' request.user.id %}" title=""> view profile</a></li>
+                            <li><a href="{% url 'core:user-pages' %}" title=""> Your Pages</a></li>
+                            <li><a href="{% url 'core:liked_pages' %}" title=""> Liked Pages</a></li>
+                            <li><a href="{% url 'core:settings' %}" title="">edit profile</a></li>
+                            <li><a href="{% url 'userauths:signout' %}" title="">log out</a></li>
                         </ul>
                     </div>
                 </div>
             </div>
         </div>
         <!-- topbar -->
+        
         
         <div class="fixed-sidebar right">
             <div class="chat-friendz">
@@ -355,32 +355,32 @@
 					</a>
                     </li>
                     <li>
-                        <a href="{% url 'core:friend-requests' %}" title="Friend Requests" {% if request.path == '/friend-requests' %} style="color: #1877f2" {% endif %}>
+                        <a href="{% url 'core:friend-requests' %}" title="Friend Requests" {% if request.path == '/friend-requests/' %} style="color: #1877f2" {% endif %}>
                             <i class="fa-solid fa-user-group"></i>{% if friend_requests_count != None %}<em style="border-radius: 100%; bottom: 20px; color: #fff; font-size: 10px; height: 17px; line-height: 17px; position: absolute; text-align: center; width: 17px; font-style: normal;" class="bg-red">{{friend_requests_count}}</em>{% endif %}
 					</a>
                     </li>
                     <li>
-                        <a href="{% url 'core:videos' %}" title="Watch" {% if request.path == '/videos' %} style="color: #1877f2" {% endif %}>
+                        <a href="{% url 'core:videos' %}" title="Watch" {% if request.path == '/videos/' %} style="color: #1877f2" {% endif %}>
                             <i class="fa-solid fa-play"></i>
 					</a>
                     </li>
                     <li>
-                        <a href="#" title="Messenger">
+                        <a href="{% url 'messenger:messenger' %}" title="Messenger" {% if request.path == '/messenger/' %} style="color: #1877f2" {% endif %}>
                             <i class="fa-brands fa-facebook-messenger"></i>
 					</a>
                     </li>
                     <li>
-                        <a href="#" title="Favourit page">
+                        <a href="{% url 'core:liked_pages' %}" title="Favourit page" {% if request.path == '/liked_pages/' %} style="color: #1877f2" {% endif %}>
 						<i class="fa fa-star-o"></i>
 					</a>
                     </li>
                     <li>
-                        <a href="#" title="Notification" >
-                            <i class="fa-solid fa-bell"></i>
+                        <a href="{% url 'core:notifications' %}" title="Notifications" {% if request.path == '/notifications/' %} style="color: #1877f2" {% endif %}>
+                            <i class="fa-solid fa-bell"></i>{% if notifications_count != None and notifications_count != 0 %}<em style="border-radius: 100%; bottom: 20px; color: #fff; font-size: 10px; height: 17px; line-height: 17px; position: absolute; text-align: center; width: 17px; font-style: normal;" class="bg-red">{{notifications_count}}</em>{% endif %}
 					</a>
                     </li>
                     <li>
-                        <a href="{% url 'core:settings' %}" title="Settings" {% if request.path == '/settings' %} style="color: #1877f2" {% endif %} >
+                        <a href="{% url 'core:settings' %}" title="Settings" {% if request.path == '/settings/' %} style="color: #1877f2" {% endif %} >
                             <i class="fa-solid fa-gear"></i>
 					</a>
                     </li>
@@ -403,7 +403,28 @@
     </div>
 </div>
 </div>
-
+<nav id="shoppingbag">
+    <div>
+        <div class="">
+                <a href="{% url 'core:profile' profile_pro.user.id %}"><div style="display: flex;" class="setting-row"><img style="border-radius: 100%; width: 50px;" src="{{profile_pro.profile_pic.url}}" alt="user profile">
+                    <span style="font-size: 23px; margin-left: 6px ;"> {{profile_pro.firstname}} {{profile_pro.lastname}} <br><span style="color: #ccc; font-size: 18px;">view your profile</span></span>
+                </div></a>
+                <a href="{% url 'core:settings' %}"><div style="display: flex;" class="setting-row"><i style="font-size: 30px; color: #a9a9a978;" class="fas fa-cog"></i>
+                    <span style="font-size: 23px; margin-left: 6px ;">Edit Account</span>
+                </div></a>
+                <a href="{% url 'core:liked_pages' %}"><div style="display: flex;" class="setting-row"><i style="font-size: 30px; color: #a9a9a978;" class="fa-solid fa-flag"></i>
+                    <span style="font-size: 23px; margin-left: 6px ;">Liked Pages</span>
+                </div></a>
+                <a href="{% url 'core:user-pages' %}"><div style="display: flex;" class="setting-row"><i style="font-size: 30px; color: #a9a9a978;" class="fa-regular fa-flag"></i>
+                    <span style="font-size: 23px; margin-left: 6px ;">Your Pages</span>
+                </div></a>
+                <a href="{% url 'userauths:signout' %}"><div style="display: flex;" class="setting-row"><i style="font-size: 30px; color: #a9a9a978;" class="fa-solid fa-arrow-right-from-bracket"></i>
+                    <span style="font-size: 23px; margin-left: 6px ;">Logout</span>
+                </div></a>
+                
+        </div>
+    </div>
+</nav>
 <!-- send message popup -->
 
 <script src="{% static 'js/main.min.js' %}"></script>
@@ -530,3 +551,11 @@
         height: auto;
     }
 </style>
+<script>
+    $(document).ready(function() {
+  $("#search-icon").click(function() {
+    $("#search-bar").toggle(); // Toggle the visibility of the search bar
+  });
+});
+
+</script>

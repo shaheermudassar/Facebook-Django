@@ -56,35 +56,35 @@ def logout_view(request):
     logout(request)
     return redirect("userauths:signin")
 
-# from django.contrib.auth.hashers import check_password
+from django.contrib.auth.hashers import check_password
 
-# @login_required
-# def change_password(request):
-#     if request.method == "POST":
-#         old_password = request.POST.get("old_password")
-#         new_password = request.POST.get("new_password")
-#         confirm_password = request.POST.get("confirm_password")
-#         user = User.objects.get(email=request.user.email)
-#         if not check_password(old_password, user.password):
-#             messages.warning(request, "Old password was incorrect")
-#         elif confirm_password != new_password:
-#             messages.warning(request, "Passwords do not match")
-#         else:
-#             user.set_password(new_password)
-#             user.save()
-#             user = authenticate(request, email=user.email, password=new_password)
-#             login(request, user)
-#             messages.success(request, "Password changed successfully")
-#             return redirect("/")
-#     return render(request, "userauths/change_password.html")
+@login_required
+def change_password(request):
+    if request.method == "POST":
+        old_password = request.POST.get("old_password")
+        new_password = request.POST.get("new_password")
+        confirm_password = request.POST.get("confirm_password")
+        user = User.objects.get(email=request.user.email)
+        if not check_password(old_password, user.password):
+            messages.warning(request, "Old password was incorrect")
+        elif confirm_password != new_password:
+            messages.warning(request, "Passwords do not match")
+        else:
+            user.set_password(new_password)
+            user.save()
+            user = authenticate(request, email=user.email, password=new_password)
+            login(request, user)
+            messages.success(request, "Password changed successfully")
+            return redirect("core:profile", user.id)
+    return render(request, "userauths/change_password.html")
 
 
-# @login_required
-# def delete_account(request):
-#     if request.method == "POST":
-#         request.user.delete()
-#         logout(request)
-#         messages.success(request, "Account Deleted Successfully!")
-#         return redirect("/")
+@login_required
+def delete_account(request):
+    if request.method == "POST":
+        request.user.delete()
+        logout(request)
+        messages.success(request, "Account Deleted Successfully!")
+        return redirect("userauths:signin")
 
-#     return render(request, "userauths/delete-account.html")
+    return render(request, "userauths/delete-account.html")

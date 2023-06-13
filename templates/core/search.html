@@ -1,0 +1,425 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block title %}Search{% endblock title %}
+{% block content %}	
+{% load user_agents %}
+	<section>
+		<div class="gap2 gray-bg">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="row merged20" id="page-contents">
+							<div class="col-lg-12">
+								{% if request|is_mobile %}
+								<div class="central-meta">
+									<div class="title-block">
+										<div class="row">
+											<div class="col-lg-6">
+												<div class="row merged20">
+													<div class="col-lg-7 col-md-7 col-sm-7">
+														<form method="get" action="{% url 'core:search' %}">
+															<input required type="text" placeholder="Search Friend" name="query">
+															<button type="submit"><i class="fa fa-search"></i></button>
+														</form>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								{% endif %}
+							</div>
+							<div class="col-lg-2">
+								<aside class="sidebar static left">
+								</aside>
+							</div><!-- sidebar -->
+							<div class="col-lg-8">
+								<div class="search-tab">
+									<ul class="nav nav-tabs tab-btn">
+										<li class="nav-item"><a class="active" href="#people" data-toggle="tab">People</a></li>
+										<li class="nav-item"><a class="" href="#pages" data-toggle="tab">Pages</a></li>
+		                                 <li class="nav-item"><a class="" href="#photos" data-toggle="tab">Photos</a></li>
+		                                 <li class="nav-item"><a class="" href="#videos" data-toggle="tab">Videos</a></li>
+		                                 <li class="nav-item"><a class="" href="#posts" data-toggle="tab">Posts</a></li>
+		                            </ul>
+
+									<!-- Tab panes -->
+									<div class="tab-content">
+									    <div class="tab-pane active fade show" id="people" >
+									    	<div class="central-meta item">
+												<span class="create-post">People<a title="" href="{% url 'core:all-users' %}">See All</a></span>
+												{% if profiles %}
+												{% for p in profiles %}
+												<div class="pit-friends">
+													<figure><a href="{% url 'core:profile' p.user.id %}" title=""><img src="{{p.profile_pic.url}}" alt=""></a></figure>
+													<div class="pit-frnz-meta">
+														<a href="{% url 'core:profile' p.user.id %}" title="">{{p.firstname}} {{p.lastname}}</a>
+														<i>{{p.city}}, {{p.country}}</i>
+														<ul class="add-remove-frnd">
+															<li class="add-tofrndlist">
+																<a title="Add friend" href="{% url 'core:profile' p.user.id %}">View Profile</a>
+															</li>
+														</ul>
+													</div>
+												</div>
+												{% endfor %}
+												{% else %}
+												<h2>No person found</h2>
+												{% endif %}
+											</div><!-- searched peoples -->
+									    </div>
+									    <div class="tab-pane fade" id="photos">
+											<div class="central-meta item">
+												<span class="create-post">Images</span>
+												{% if posts %}
+												{% for p in posts %}
+												{% if p.image %}
+												<div class="user-post">
+													<div class="friend-info">
+														<figure>
+															{% if p.page %}
+															<img src="{{p.page.profile_pic.url}}" alt="">
+															{% else %}
+															<img src="{{p.profile.profile_pic.url}}" alt="">
+															{% endif %}
+														</figure>
+														<div class="friend-name">
+															{% if p.user == request.user %}
+															<div class="more">
+																<div class="more-post-optns"><i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+																	<ul>
+																		<form method="post">
+																			{% csrf_token %}
+																			<input type="hidden" name="id" value="{{p.id}}">
+																		<li><button style="" type="submit" name="delete_post" class="fa fa-trash-o"></i> Delete</li>
+																		</form>
+																	</ul>
+																</div>
+															</div>
+															{% endif %}
+															{% if p.page %}
+															<ins><a href="{% url 'core:page' p.page.id %}" title="">{{p.page.name}}</a>{% if p.shared_post %} shared <a href="{% url 'core:page' p.shared_post.page.id %}" title=""> {{p.shared_post.page.name}}'s</a> post{% endif %}</ins>
+															{% else %}
+															<ins><a href="{% url 'core:profile' p.user.id %}" title="">{{p.profile.firstname}} {{p.profile.lastname}}</a>
+																{% if p.shared_post and p.shared_post.page %} shared <a href="{% url 'core:page' p.shared_post.page.id %}" title=""> {{p.shared_post.page.name}}'s</a> post</ins>
+																{% elif p.shared_post %} shared <a href="{% url 'core:profile' p.shared_post.profile.user.id %}" title=""> {{p.shared_post.profile.firstname}} {{p.shared_post.profile.lastname}}'s</a> post{% endif %}</ins>
+															{% endif %}
+															<span><i class="fa fa-globe"></i> published: {{p.created_at|date:"M d, Y"}} {{p.created_at|time:"h:i, A"}}</span>
+		
+														</div>
+														<div class="post-meta">
+															<p>
+																{{p.content}}
+															</p>
+															{% if p.shared_post %}
+																			<div class="friend-info" style="border: solid 0.1px #8080802e; padding: 10px;">
+																				{% if p.shared_post.page %}
+																				<figure>
+																					<img src="{{p.shared_post.page.profile_pic.url}}" alt="">
+																				</figure>
+																				<div class="friend-name">
+																					
+																					<ins><a href="{% url 'core:page' p.shared_post.page.id %}" title="">{{p.shared_post.page.name}}</a></ins>
+																					<span><i class="fa fa-globe"></i> published: {{p.shared_post.created_at|date:"M d, Y"}} {{p.shared_post.created_at|time:"h:i, A"}}</span>
+							
+																				</div>
+																				{% else %}
+																				<figure>
+																					<img src="{{p.shared_post.profile.profile_pic.url}}" alt="">
+																				</figure>
+																				<div class="friend-name">
+																					
+																					<ins><a href="{% url 'core:profile' p.shared_post.user.id %}" title="">{{p.shared_post.profile.firstname}} {{p.shared_post.profile.lastname}}</a></ins>
+																					<span><i class="fa fa-globe"></i> published: {{p.shared_post.created_at|date:"M d, Y"}} {{p.shared_post.created_at|time:"h:i, A"}}</span>
+							
+																				</div>
+																				{% endif %}
+																				<div class="post-meta">
+																					<p>
+																						{{p.shared_post.content}}
+																					</p>
+																					{% if p.shared_post.image %}
+																					<figure>
+																						<a href="{% url 'core:post' p.shared_post.original_post_id %}"><img src="{{p.shared_post.image.url}}" alt=""></a>
+																					</figure>
+																					{% endif %}
+																					{% if p.shared_post.video %}
+																					<figure>
+																						<a href="{% url 'core:post' p.shared_post.original_post_id %}"><video style="max-height: 400px;" controls>
+																							<source src="{{p.shared_post.video.url}}">
+																						  </video></a>
+																					</figure>
+																					{% endif %}
+																				</div>
+																			</div>
+																			{% endif %}
+															{% if p.image %}
+															<figure>
+																<a href="{% url 'core:post' p.id %}"><img src="{{p.image.url}}" alt=""></a>
+															</figure>
+															{% endif %}
+															{% if p.video %}
+															<figure>
+																<a href="{% url 'core:post' p.id %}"><video style="max-height: 400px;" controls>
+																	<source src="{{p.video.url}}">
+																  </video></a>
+															</figure>
+															{% endif %}
+															
+														</div>
+													</div>
+												</div>
+												{% endif %}
+												{% endfor %}
+												{% else %}
+												<h2>No images found</h2>
+												{% endif %}
+											</div><!-- post with image -->
+										</div>
+									    <div class="tab-pane fade" id="videos">
+									    	<div class="central-meta item">
+												<span class="create-post">Videos</span>
+												{% if posts %}
+												{% for p in posts %}
+												{% if p.video %}
+												<div class="user-post">
+													<div class="friend-info">
+														<figure>
+															{% if p.page %}
+															<img src="{{p.page.profile_pic.url}}" alt="">
+															{% else %}
+															<img src="{{p.profile.profile_pic.url}}" alt="">
+															{% endif %}
+														</figure>
+														<div class="friend-name">
+															{% if p.user == request.user %}
+															<div class="more">
+																<div class="more-post-optns"><i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+																	<ul>
+																		<form method="post">
+																			{% csrf_token %}
+																			<input type="hidden" name="id" value="{{p.id}}">
+																		<li><button style="" type="submit" name="delete_post" class="fa fa-trash-o"></i> Delete</li>
+																		</form>
+																	</ul>
+																</div>
+															</div>
+															{% endif %}
+															{% if p.page %}
+															<ins><a href="{% url 'core:page' p.page.id %}" title="">{{p.page.name}}</a>{% if p.shared_post %} shared <a href="{% url 'core:page' p.shared_post.page.id %}" title=""> {{p.shared_post.page.name}}'s</a> post{% endif %}</ins>
+															{% else %}
+															<ins><a href="{% url 'core:profile' p.user.id %}" title="">{{p.profile.firstname}} {{p.profile.lastname}}</a>
+																{% if p.shared_post and p.shared_post.page %} shared <a href="{% url 'core:page' p.shared_post.page.id %}" title=""> {{p.shared_post.page.name}}'s</a> post</ins>
+																{% elif p.shared_post %} shared <a href="{% url 'core:profile' p.shared_post.profile.user.id %}" title=""> {{p.shared_post.profile.firstname}} {{p.shared_post.profile.lastname}}'s</a> post{% endif %}</ins>
+															{% endif %}
+															<span><i class="fa fa-globe"></i> published: {{p.created_at|date:"M d, Y"}} {{p.created_at|time:"h:i, A"}}</span>
+		
+														</div>
+														<div class="post-meta">
+															<p>
+																{{p.content}}
+															</p>
+															{% if p.shared_post %}
+																			<div class="friend-info" style="border: solid 0.1px #8080802e; padding: 10px;">
+																				{% if p.shared_post.page %}
+																				<figure>
+																					<img src="{{p.shared_post.page.profile_pic.url}}" alt="">
+																				</figure>
+																				<div class="friend-name">
+																					
+																					<ins><a href="{% url 'core:page' p.shared_post.page.id %}" title="">{{p.shared_post.page.name}}</a></ins>
+																					<span><i class="fa fa-globe"></i> published: {{p.shared_post.created_at|date:"M d, Y"}} {{p.shared_post.created_at|time:"h:i, A"}}</span>
+							
+																				</div>
+																				{% else %}
+																				<figure>
+																					<img src="{{p.shared_post.profile.profile_pic.url}}" alt="">
+																				</figure>
+																				<div class="friend-name">
+																					
+																					<ins><a href="{% url 'core:profile' p.shared_post.user.id %}" title="">{{p.shared_post.profile.firstname}} {{p.shared_post.profile.lastname}}</a></ins>
+																					<span><i class="fa fa-globe"></i> published: {{p.shared_post.created_at|date:"M d, Y"}} {{p.shared_post.created_at|time:"h:i, A"}}</span>
+							
+																				</div>
+																				{% endif %}
+																				<div class="post-meta">
+																					<p>
+																						{{p.shared_post.content}}
+																					</p>
+																					{% if p.shared_post.image %}
+																					<figure>
+																						<a href="{% url 'core:post' p.shared_post.original_post_id %}"><img src="{{p.shared_post.image.url}}" alt=""></a>
+																					</figure>
+																					{% endif %}
+																					{% if p.shared_post.video %}
+																					<figure>
+																						<a href="{% url 'core:post' p.shared_post.original_post_id %}"><video style="max-height: 400px;" controls>
+																							<source src="{{p.shared_post.video.url}}">
+																						  </video></a>
+																					</figure>
+																					{% endif %}
+																				</div>
+																			</div>
+																			{% endif %}
+															{% if p.image %}
+															<figure>
+																<a href="{% url 'core:post' p.id %}"><img src="{{p.image.url}}" alt=""></a>
+															</figure>
+															{% endif %}
+															{% if p.video %}
+															<figure>
+																<a href="{% url 'core:post' p.id %}"><video style="max-height: 400px;" controls>
+																	<source src="{{p.video.url}}">
+																  </video></a>
+															</figure>
+															{% endif %}
+															
+														</div>
+													</div>
+												</div>
+												{% endif %}
+												{% endfor %}
+												{% else %}
+												<h2>No videos found</h2>
+												{% endif %}
+											</div><!-- post with image -->
+									    </div>
+									    <div class="tab-pane fade" id="posts">
+									    	<div class="central-meta item">
+												<span class="create-post">Posts</span>
+												{% if posts %}
+												{% for p in posts %}
+												<div class="user-post">
+													<div class="friend-info">
+														<figure>
+															{% if p.page %}
+															<img src="{{p.page.profile_pic.url}}" alt="">
+															{% else %}
+															<img src="{{p.profile.profile_pic.url}}" alt="">
+															{% endif %}
+														</figure>
+														<div class="friend-name">
+															{% if p.user == request.user %}
+															<div class="more">
+																<div class="more-post-optns"><i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+																	<ul>
+																		<form method="post">
+																			{% csrf_token %}
+																			<input type="hidden" name="id" value="{{p.id}}">
+																		<li><button style="" type="submit" name="delete_post" class="fa fa-trash-o"></i> Delete</li>
+																		</form>
+																	</ul>
+																</div>
+															</div>
+															{% endif %}
+															{% if p.page %}
+															<ins><a href="{% url 'core:page' p.page.id %}" title="">{{p.page.name}}</a>{% if p.shared_post %} shared <a href="{% url 'core:page' p.shared_post.page.id %}" title=""> {{p.shared_post.page.name}}'s</a> post{% endif %}</ins>
+															{% else %}
+															<ins><a href="{% url 'core:profile' p.user.id %}" title="">{{p.profile.firstname}} {{p.profile.lastname}}</a>
+																{% if p.shared_post and p.shared_post.page %} shared <a href="{% url 'core:page' p.shared_post.page.id %}" title=""> {{p.shared_post.page.name}}'s</a> post</ins>
+																{% elif p.shared_post %} shared <a href="{% url 'core:profile' p.shared_post.profile.user.id %}" title=""> {{p.shared_post.profile.firstname}} {{p.shared_post.profile.lastname}}'s</a> post{% endif %}</ins>
+															{% endif %}
+															<span><i class="fa fa-globe"></i> published: {{p.created_at|date:"M d, Y"}} {{p.created_at|time:"h:i, A"}}</span>
+		
+														</div>
+														<div class="post-meta">
+															<p>
+																{{p.content}}
+															</p>
+															{% if p.shared_post %}
+																			<div class="friend-info" style="border: solid 0.1px #8080802e; padding: 10px;">
+																				{% if p.shared_post.page %}
+																				<figure>
+																					<img src="{{p.shared_post.page.profile_pic.url}}" alt="">
+																				</figure>
+																				<div class="friend-name">
+																					
+																					<ins><a href="{% url 'core:page' p.shared_post.page.id %}" title="">{{p.shared_post.page.name}}</a></ins>
+																					<span><i class="fa fa-globe"></i> published: {{p.shared_post.created_at|date:"M d, Y"}} {{p.shared_post.created_at|time:"h:i, A"}}</span>
+							
+																				</div>
+																				{% else %}
+																				<figure>
+																					<img src="{{p.shared_post.profile.profile_pic.url}}" alt="">
+																				</figure>
+																				<div class="friend-name">
+																					
+																					<ins><a href="{% url 'core:profile' p.shared_post.user.id %}" title="">{{p.shared_post.profile.firstname}} {{p.shared_post.profile.lastname}}</a></ins>
+																					<span><i class="fa fa-globe"></i> published: {{p.shared_post.created_at|date:"M d, Y"}} {{p.shared_post.created_at|time:"h:i, A"}}</span>
+							
+																				</div>
+																				{% endif %}
+																				<div class="post-meta">
+																					<p>
+																						{{p.shared_post.content}}
+																					</p>
+																					{% if p.shared_post.image %}
+																					<figure>
+																						<a href="{% url 'core:post' p.shared_post.original_post_id %}"><img src="{{p.shared_post.image.url}}" alt=""></a>
+																					</figure>
+																					{% endif %}
+																					{% if p.shared_post.video %}
+																					<figure>
+																						<a href="{% url 'core:post' p.shared_post.original_post_id %}"><video style="max-height: 400px;" controls>
+																							<source src="{{p.shared_post.video.url}}">
+																						  </video></a>
+																					</figure>
+																					{% endif %}
+																				</div>
+																			</div>
+																			{% endif %}
+															{% if p.image %}
+															<figure>
+																<a href="{% url 'core:post' p.id %}"><img src="{{p.image.url}}" alt=""></a>
+															</figure>
+															{% endif %}
+															{% if p.video %}
+															<figure>
+																<a href="{% url 'core:post' p.id %}"><video style="max-height: 400px;" controls>
+																	<source src="{{p.video.url}}">
+																  </video></a>
+															</figure>
+															{% endif %}
+															
+														</div>
+													</div>
+												</div>
+												{% endfor %}
+												{% else %}
+												<h2>No posts found</h2>
+												{% endif %}
+											</div><!-- post with image -->
+									    </div>
+									    <div class="tab-pane fade" id="pages">
+									    	<div class="central-meta item">
+												<span class="create-post">Pages<a title="" href="{% url 'core:all-pages' %}">See All</a></span>
+												{% if pages %}
+												{% for p in pages %}
+												<div class="pit-pages">
+													<figure><a href="{% url 'core:page' p.id %}" title=""><img src="{{p.profile_pic.url}}" alt=""></a></figure>
+													<div class="pit-pages-meta">
+														<a href="{% url 'core:page' p.id %}" title="">{{p.name}}</a>
+														<i>{{p.about|slice:"20"}}</i>
+														<ul class="add-remove-frnd">
+															<li class="add-tofrndlist">
+																<a title="Like" href="{% url 'core:page' p.id %}"> View Page</a>
+															</li>
+														</ul>
+													</div>
+												</div>
+												{% endfor %}
+												{% else %}
+												<h2>No pages found</h2>
+												{% endif %}
+											</div><!-- searched pages -->
+									    </div>
+									</div>
+								</div>	
+							</div>
+						</div>	
+					</div>
+				</div>
+			</div>
+		</div>	
+	</section>
+	{% endblock content %}

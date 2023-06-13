@@ -1,0 +1,62 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block title %}Your Pages{% endblock title %}
+{% block content %}
+<style>
+	.central-meta{
+		padding: 20px 10px;
+	}
+	@media screen and (max-width: 420px){
+.pit-post {
+    text-align: center;
+    display: flex;
+}
+}
+</style>
+	<section>
+		<div class="gap2 gray-bg">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="row merged20" id="page-contents">
+							<div class="col-lg-7">
+                                <div class="central-meta item" >
+									<div class="pit-post">
+										<div class="pit-post-deta">
+										</div>
+										<div class="buttons">
+											<a href="{% url 'core:create-page' %}" title="Create Page" class="main-btn " >Create Page</a>
+										</div>
+									</div>
+								</div>
+								{% if pages %}
+								{% for p in pages %}
+								<div class="central-meta item" >
+									<div class="pit-post">
+										<div style="display: contents;">
+											<a href="{% url 'core:page' p.id %}"><img src="{{p.profile_pic.url}}" alt="" style="width: 90px; border-radius: 90px;"></a>
+										</div>
+										<div class="pit-post-deta">
+											<h4><a href="{% url 'core:page' p.id %}">{{p.name}}</a> </h4>											
+										</div>
+										<div class="buttons">
+                                            <a href="{% url 'core:edit-page' p.id %}" title="Edit Page" class="main-btn ">Edit Page</a>
+                                            <form method="post">
+                                                {% csrf_token %}
+                                                <input type="hidden" value="{{p.id}}" name="id">
+                                                <button type="submit" title="Delete Page" class="main-btn2 ">Delete Page</button>
+                                            </form>
+										</div>
+									</div>
+								</div>
+								{% endfor %} 
+                            {% endif %}
+							</div>
+							
+						</div>	
+					</div>
+				</div>
+			</div>
+		</div>	
+	</section>
+{% endblock content %}

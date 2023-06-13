@@ -1,6 +1,6 @@
 {% extends 'core/base.html' %}
  {% block title %}
-    Newsfeed
+    Facebook
     {% endblock title %} 
 {% block content %}
 {% load static %}
@@ -18,10 +18,14 @@
                                         <div class="user-post">
                                             <div class="friend-info">
                                                 <figure>
+                                                    {% if p.page %}
+                                                    <img src="{{p.page.profile_pic.url}}" alt="">
+                                                    {% else %}
                                                     <img src="{{profile.profile_pic.url}}" alt="">
+                                                    {% endif %}
                                                 </figure>
                                                 <div class="friend-name">
-                                                    {% if p.user == request.user %}
+                                                    {% if p.page.user == request.user or p.user == request.user %}
                                                     <div class="more">
                                                         <div class="more-post-optns"><i class="fa fa-ellipsis-v" aria-hidden="true"></i>
                                                             <ul>
@@ -34,7 +38,11 @@
                                                         </div>
                                                     </div>
                                                     {% endif %}
+                                                    {% if p.page %}
+                                                    <ins><a href="{% url 'core:page' p.page.id %}" title="">{{p.page.name}}</a></ins>
+                                                    {% else %}
                                                     <ins><a href="{% url 'core:profile' profile.user.id %}" title="">{{profile.firstname}} {{profile.lastname}}</a></ins>
+                                                    {% endif %}
                                                     <span><i class="fa fa-globe"></i> published: {{p.created_at|date:"M d, Y"}} {{p.created_at|time:"h:i, A"}}</span>
 
                                                 </div>
@@ -45,12 +53,19 @@
                                                     {% if p.shared_post %}
 																	<div class="friend-info" style="border: solid 0.1px #8080802e; padding: 10px;">
 																		<figure>
+                                                                            {% if p.shared_post.page %}
+																			<img src="{{p.shared_post.page.profile_pic.url}}" alt="">
+                                                                            {% else %}
 																			<img src="{{p.shared_post.profile.profile_pic.url}}" alt="">
-																		</figure>
+                                                                            {% endif %}
+                                                                        </figure>
 																		<div class="friend-name">
-																			
+																			{% if p.shared_post.page %}
+																			<ins><a href="{% url 'core:page' p.shared_post.page.id %}" title="">{{p.shared_post.page.name}} </a></ins>
+																			{% else %}
 																			<ins><a href="{% url 'core:profile' p.shared_post.user.id %}" title="">{{p.shared_post.profile.firstname}} {{p.shared_post.profile.lastname}}</a></ins>
-																			<span><i class="fa fa-globe"></i> published: {{p.shared_post.created_at|date:"M d, Y"}} {{p.shared_post.created_at|time:"h:i, A"}}</span>
+                                                                            {% endif %}
+                                                                            <span><i class="fa fa-globe"></i> published: {{p.shared_post.created_at|date:"M d, Y"}} {{p.shared_post.created_at|time:"h:i, A"}}</span>
 					
 																		</div>
 																		<div class="post-meta">
@@ -174,7 +189,7 @@
                                                         <img src="{{profile_user.profile_pic.url}}" alt="">
                                                     </div>
                                                     <div class="post-comt-box">
-                                                        <form id="comment-form" method="POST">
+                                                        <form id="comment-form" method="POST" enctype="multipart/form-data">
                                                             {% csrf_token %}
                                                             <input type="hidden" value="{{p.id}}" name="post_id">
                                                             <textarea id="myTextarea" name="comment" placeholder="Post your comment"></textarea>

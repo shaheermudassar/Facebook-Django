@@ -131,7 +131,7 @@
                                                                 <img src="{{profile_user.profile_pic.url}}" alt="">
                                                             </div>
                                                             <div class="post-comt-box">
-                                                                <form id="comment-form" method="POST">
+                                                                <form id="comment-form" method="POST" enctype="multipart/form-data">
                                                                     {% csrf_token %}
                                                                     <input type="hidden" value="{{p.id}}" name="post_id">
                                                                     <textarea name="comment" placeholder="Post your comment"></textarea>

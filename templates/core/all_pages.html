@@ -1,0 +1,45 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block title %}Pages{% endblock title %}
+{% block content %}
+		
+	<section>
+		<div class="gap2 gray-bg">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="row merged20" id="page-contents">
+							<div class="col-lg-12">
+								<div class="central-meta padding30">
+									<div class="row">
+										{% for a in all_pages %}
+										
+										<div class="col-lg-3 col-md-6 col-sm-6 friend-link">
+											<div class="friend-box">
+												<figure>
+													<img style="height: 120px; overflow-y: auto; object-fit: cover;" src="{{a.cover_pic.url}}" alt="">
+												</figure>
+												<div class="frnd-meta">
+													<img  style="width: 90px;" src="{{a.profile_pic.url}}" alt="">
+													<div class="frnd-name">
+														<a href="{% url 'core:page' a.id %}" title="">{{a.name}}</a>
+													</div>
+													<div>
+													<a style="color: #1877f2;" class="" href="{% url 'core:page' a.id %}" title="">View Page</a>
+													</div>
+												</div>
+											</div>
+										</div>
+										{% endfor %}
+									</div>
+									
+								</div>
+							</div>	
+						</div>	
+					</div>
+				</div>
+			</div>
+		</div>	
+	</section><!-- content -->
+
+	{% endblock content %}

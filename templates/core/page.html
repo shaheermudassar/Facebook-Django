@@ -1,0 +1,716 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block favicon %}<link rel="icon" href="{{page.profile_pic.url}}">{% endblock favicon %}
+{% block title %}{{page.name}}{% endblock title %}
+
+{% block content %}
+
+	<section>
+		<div class="gap2 gray-bg">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="row merged20">
+							<div class="user-profile">
+								<figure>
+									<div class="edit-pp">
+										<a href="{% url 'core:settings' %}">
+											<i class="fa fa-camera"></i>
+											</a>
+									</div>
+									<div class="cover-image-container">
+										<img src="{{ page.cover_pic.url }}" alt="" class="cover-image fullscreen-img">
+									  </div>
+									  
+									<ul class="profile-controls">										
+										{% if page.user != request.user and liked %}
+										<li>
+											<form method="post">
+												{% csrf_token %}
+												<input type="hidden" value="{{profile.id}}" name="profile_id">
+												<input type="hidden" value="{{profile.user.id}}" name="user_id">
+												<button name="dislike_page" style="border-radius: 8px; display: inline-block; height: 100%; line-height: 150%; text-align: center; width: 100%; font-size: 16px; padding: 6px; border: none; background: #1877f2; color: white;" title="" ><i class="fa-sharp fa-solid fa-thumbs-down"></i> Dislike</button>
+											</form>
+										</li>
+										
+										{% elif page.user != request.user %}
+										
+										<li>
+											<form method="post">
+												{% csrf_token %}
+												<input type="hidden" value="{{profile.id}}" name="profile_id">
+												<button type="submit" style="border-radius: 8px; display: inline-block; height: 100%; line-height: 150%; text-align: center; width: 100%; font-size: 16px; padding: 6px; border: none; color: white; background: #1877f2;" title="" name="like_page"><i class="fa-sharp fa-solid fa-thumbs-up"></i> Like</a>
+												</form>
+											</li>
+											{% endif %}
+										
+										
+										{% if page.user == request.user %}
+										<li><a href="{% url 'core:edit-page' page.id %}" class="edit-seting" title="Edit Page"><i class="fa fa-sliders"></i></a></li>
+										{% endif %}
+									</ul>
+								</figure>
+								
+								<div class="profile-section">
+									<div class="row">
+										<div class="col-lg-3">
+											<div class="profile-author">
+												<div class="profile-author-thumb image-container" >
+													<img style="border-radius: 0px;" alt="author" src="{{page.profile_pic.url}}" class="fullscreen-img">
+													<div class="edit-dp">
+														<a href="{% url 'core:settings' %}">
+														<i class="fa fa-camera"></i>
+														</a>
+													</div>
+												</div>
+												<div class="author-content">
+													<a class="h4 author-name" href="02-ProfilePage.html">{{page.name}}</a>
+												</div>
+											</div>
+										</div>
+										<div class="col-lg-10 col-md-9">
+											<ul class="nav nav-tabs links-tab">
+												<li class="nav-item"><a class="active" href="#link3" data-toggle="tab">Posts</a></li>
+												 <li class="nav-item"><a class="" href="#link1" data-toggle="tab">About</a></li>
+												 <li class="nav-item"><a class="" href="#link2" data-toggle="tab">Videos</a></li>
+												 <li class="nav-item"><a class="" href="#link4" data-toggle="tab">Photos</a></li>
+												 <li class="nav-item"><a class="" href="#link5" data-toggle="tab">Followers</a></li>
+											</ul>
+											<ol class="folw-detail">
+												<li><span>Posts</span><ins>{{post|length}}</ins></li>
+												<li><span>Likes</span><ins>{{page.likes}}</ins></li>
+											</ol>
+										</div>
+									</div>
+								</div>	
+							</div><!-- user profile banner  -->
+							<div class="col-lg-12">
+								<div class="tab-content">
+									<div class="tab-pane fade " id="link1">
+										<div class="row merged20" id="page-contents">
+											<div class="col-lg-2">
+												<aside class="sidebar static left">
+												   
+													<!-- who's following -->
+												</aside>
+											</div>
+											<div class="col-lg-8 col-md-8">
+												<div class="central-meta stick-widget">
+													<span class="create-post">Page Info
+														{% if page.user == request.user %}
+														<a href="{% url 'core:edit-page' page.id %}" title="Edit info">Edit</a>
+														{% endif %}
+													</span>
+													<div class="personal-head">
+														<span class="f-title"><i class="fa fa-user"></i> About:</span>
+														<p>
+															{{page.about}}
+														</p>
+														
+														<span class="f-title"><i class="fa fa-handshake-o"></i> Since:</span>
+														<p>
+															{{page.created_at|date:"M d, Y"}}  
+														</p>
+
+													</div>
+												</div>
+												<div class="central-meta">
+													<span class="create-post">Liked by ({{liked_by|length}}) </span>
+													<ul class="frndz-list">
+														{% if liked_by %}
+														{% for l in liked_by|slice:"4" %}
+														<li>
+															<img src="{{l.profile.profile_pic.url}}" alt="">
+															<div class="sugtd-frnd-meta">
+																<a href="{% url 'core:profile' l.profile.user.id %}" title="">{{l.profile.firstname}} {{l.profile.lastname}}</a>
+															</div>
+														</li>
+														{% endfor %}
+														{% endif %}
+													</ul>
+												</div><!-- friends list -->
+												<div class="central-meta">
+													<span class="create-post">Photos </span>
+													<ul class="photos-list">
+														{% for p in post %}
+														{% if p.image %}
+														<li>
+															<div class="item-box">
+																<a class="strip" href="{{p.image.url}}" title="" data-strip-group="mygroup" data-strip-group-options="loop: false">
+																<img style="height: 120px; object-fit: cover;" src="{{p.image.url}}" alt=""></a>
+																<div class="over-photo">
+																	<div class="likes heart" title="Like/Dislike"><i class="fa-solid fa-thumbs-up"></i> <span>{{p.likes}}</span></div>
+																	<span>{{p.created_at|timesince}}</span>
+																</div>
+															</div>
+														</li>
+														{% endif %}
+														{% endfor %}
+													</ul>
+												</div>
+												<div class="central-meta">
+													<span class="create-post">Videos </span>
+													<ul class="videos-list">
+														{% for p in post %}
+														{% if p.video %}
+														<li>
+															<div class="item-box">
+																<a href="{% url 'core:post' p.id %}"><video src="{{p.video.url}}"></video></a>
+																<div class="over-photo">
+																	<div class="likes heart" title="Like/Dislike"><i class="fa-solid fa-thumbs-up"></i> <span>{{p.likes}}</span></div>
+																	<span>{{p.created_at|timesince}}</span>
+																</div>
+															</div>
+														</li>
+														{% endif %}
+														{% endfor %}
+													</ul>
+												</div>
+											</div>		
+										</div>
+									</div>
+									<div class="tab-pane fade" id="link2">
+										<div class="central-meta">
+											<div class="create-post">Videos</div>
+											<div class="row merged20">
+												{% for p in post %}
+												{% if p.video %}
+												<div class="col-lg-3 col-md-4 col-sm-6">
+													<div class="tube-post">
+															<a href = "{% url 'core:post' p.id %}"><video style="width: 270px; height: 150px;" controls src="{{p.video.url}}"></video></a>
+														<div class="tube-title">
+															<h6>{{p.content}}</h6>
+															<span class="upload-time">{{p.created_at}}</span>
+														</div>
+													</div>
+												</div>
+												{% endif %}
+												{% endfor %}
+												
+											</div>
+										</div>	
+									</div>
+									<div class="tab-pane active fade show" id="link3">
+										<div class="row merged20" id="page-contents">
+											<div class="col-lg-9">
+												{% if page.user == request.user %}
+												<div class="central-meta postbox">
+													<span class="create-post">Create post</span>
+													<div class="new-postbox">
+														<figure>
+															<img style="width: 60px" src="{{page.profile_pic.url}}" alt="">
+														</figure>
+														<form method="post" enctype="multipart/form-data">
+															{% csrf_token %}
+															<div class="newpst-input">
+															  <textarea rows="2" required placeholder="Share some what you are thinking?" name="content"></textarea>
+															</div>
+															<div class="attachments">
+															  <ul>
+																<li>
+																  <i class="fa fa-image"></i>
+																  <label class="fileContainer">
+																	<input type="file" accept="image/*" name="image" onchange="previewImage(event)">
+																  </label>
+																  <img id="imagePreview" src="#" alt="Image Preview" style="display: none;">
+																</li>
+																<li>
+																  <i class="fa fa-video-camera"></i>
+																  <label class="fileContainer">
+																	<input type="file" accept="video/*" name="video" onchange="previewVideo(event)">
+																  </label>
+																  <video id="videoPreview" src="#" alt="Video Preview" style="display: none;" controls></video>
+																</li>
+															  </ul>
+															  <button class="post-btn" type="submit" name="add_post">Post</button>
+															</div>
+														  </form>
+														  
+														  <script>
+															function previewImage(event) {
+															  var reader = new FileReader();
+															  reader.onload = function() {
+																var imagePreview = document.getElementById('imagePreview');
+																imagePreview.src = reader.result;
+																imagePreview.style.display = 'block';
+															  }
+															  reader.readAsDataURL(event.target.files[0]);
+															}
+															
+															function previewVideo(event) {
+															  var reader = new FileReader();
+															  reader.onload = function() {
+																var videoPreview = document.getElementById('videoPreview');
+																videoPreview.src = reader.result;
+																videoPreview.style.display = 'block';
+															  }
+															  reader.readAsDataURL(event.target.files[0]);
+															}
+														  </script>
+														  
+															<div class="add-location-post">
+																<span>Drag map point to selected area</span>
+															<div class="row">
+																
+																<div class="col-lg-6">
+																	<label class="control-label">Lat :</label>
+																	<input type="text" class="" id="us3-lat" />
+																</div>
+																<div class="col-lg-6">
+																	<label>Long :</label>
+																	<input type="text" class="" id="us3-lon" />
+																</div>
+															</div>
+															<!-- map -->
+															<div id="us3"></div>
+														</div>
+													</div>
+												</div>
+												{% endif %}
+												
+                                    
+                                        
+													{% for p in post %}
+													<div class="central-meta item">
+														<div class="user-post">
+															<div class="friend-info">
+																<figure>
+																	<img src="{{page.profile_pic.url}}" alt="">
+																</figure>
+																<div class="friend-name">
+																	{% if p.user == request.user %}
+																	<div class="more">
+																		<div class="more-post-optns"><i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+																			<ul>
+																				<form method="post">
+																					{% csrf_token %}
+																					<input type="hidden" name="id" value="{{p.id}}">
+																				<li><button style="" type="submit" name="delete_post" class="fa fa-trash-o"></i> Delete</li>
+																				</form>
+																			</ul>
+																		</div>
+																	</div>
+																	{% endif %}
+																	<ins><a href="{% url 'core:page' page.id %}" title="">{{page.name}}</a>{% if p.shared_post %} shared <a href="{% url 'core:profile' p.shared_post.profile.user.id %}" title=""> {{p.shared_post.profile.firstname}} {{p.shared_post.profile.lastname}}'s</a> post{% endif %}</ins>
+																	<span><i class="fa fa-globe"></i> published: {{p.created_at|date:"M d, Y"}} {{p.created_at|time:"h:i, A"}}</span>
+			
+																</div>
+																<div class="post-meta">
+																	<p>
+																		{{p.content}}
+																	</p>
+																	{% if p.shared_post %}
+																	<div class="friend-info" style="border: solid 0.1px #8080802e; padding: 10px;">
+																		<figure>
+																			<img src="{{p.shared_post.profile.profile_pic.url}}" alt="">
+																		</figure>
+																		<div class="friend-name">
+																			
+																			<ins><a href="{% url 'core:profile' p.shared_post.user.id %}" title="">{{p.shared_post.profile.firstname}} {{p.shared_post.profile.lastname}}</a></ins>
+																			<span><i class="fa fa-globe"></i> published: {{p.shared_post.created_at|date:"M d, Y"}} {{p.shared_post.created_at|time:"h:i, A"}}</span>
+					
+																		</div>
+																		<div class="post-meta">
+																			<p>
+																				{{p.shared_post.content}}
+																			</p>
+																			{% if p.shared_post.image %}
+																			<figure>
+																				<a href="{% url 'core:post' p.shared_post.original_post_id %}"><img src="{{p.shared_post.image.url}}" alt=""></a>
+																			</figure>
+																			{% endif %}
+																			{% if p.shared_post.video %}
+																			<figure>
+																				<a href="{% url 'core:post' p.shared_post.original_post_id %}"><video style="max-height: 400px;" controls>
+																					<source src="{{p.shared_post.video.url}}">
+																				  </video></a>
+																			</figure>
+																			{% endif %}
+																		</div>
+																	</div>
+																	{% endif %}
+																	{% if p.image %}
+																	<figure>
+																		<a href="{% url 'core:post' p.id %}"><img src="{{p.image.url}}" alt=""></a>
+																	</figure>
+																	{% endif %}
+																	{% if p.video %}
+																	<figure>
+																		<a href="{% url 'core:post' p.id %}"><video style="max-height: 400px;" controls>
+																			<source src="{{p.video.url}}">
+																		  </video></a>
+																	</figure>
+																	{% endif %}
+																	
+																	<div class="we-video-info">
+																		<ul style="margin-top: 0;">
+																			<li>
+
+
+																				{% if p.id in liked_post_ids %}
+																				<button style="border: 0; background-color: #fdfcfc00;" class="like-button" data-post-id="{{ p.id }}"><div class="likes heart happy" title="Like/Dislike"><i class="fa-solid fa-thumbs-up"></i> <span>{{p.likes}}</span></div></button>
+																				{% else %}
+																				<button style="border: 0; background-color: #fdfcfc00;" class="like-button" data-post-id="{{ p.id }}"><div class="likes heart" title="Like/Dislike"><i class="fa-solid fa-thumbs-up"></i> <span>{{p.likes}}</span></div></button>
+																				{% endif %}
+																			</li>
+																			<li>
+																				<span class="comment" title="Comments">
+																				<i class="fa fa-commenting"></i>
+																				<ins>{{p.comments}}</ins>
+																			</span>
+																			</li>
+			
+																			<li>
+																				<span>
+																					{% if p.shared_post %}
+																					<a href="{% url 'core:post' p.shared_post.original_post_id %}" title="Share">
+																						<i class="fa fa-share-alt"></i>
+																					{% else %}
+																				<a class="share-pst" data-post-id="{{ p.id }}" href="#" title="Share">
+																					<i class="fa fa-share-alt"></i>
+																				</a>
+																				{% endif %}
+																				<ins>{{p.shares}}</ins>
+																			</span>
+																			</li>
+																		</ul>
+																	</div>
+																</div>
+																<div class="coment-area">
+																	<ul class="we-comet">
+																		{% for c in p.post_comments.all %}
+																		<li>
+																			<div class="comet-avatar">
+																				<img src="{{c.profile.profile_pic.url}}" alt="">
+																			</div>
+																			<div class="we-comment">
+																				<h5><a href="{{c.user.id}}" title="">{{c.profile.firstname}} {{c.profile.lastname}}</a></h5>
+																				<p>{{c.comment}}</p>
+																				{% if c.image %}
+																				<img src="{{c.image.url}}" alt="">
+																				{% endif %}
+																				<div class="inline-itms">
+																					<span>{{c.created_at|timesince}}</span>
+																				</div>
+																			</div>
+																			{% if c.user == request.user %}
+																			<div class="more">
+																				<div class="more-post-optns"><i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+																					<ul>
+																						<form method="post">
+																							{% csrf_token %}
+																							<input type="hidden" name="id" value="{{p.id}}">
+																							<input type="hidden" name="cid" value="{{c.cid}}">
+																						<li><button style="" type="submit" name="delete_comment" class="fa fa-trash-o"></i> Delete</li>
+																						</form>
+																					</ul>
+																				</div>
+																			</div>
+																			{% endif %}
+																		</li>
+																		
+																		{% endfor %}
+																		<li class="post-comment">
+																			<div class="comet-avatar">
+																				<img src="{{profile.profile_pic.url}}" alt="">
+																			</div>
+																			<div class="post-comt-box">
+																				<form id="comment-form" method="POST" enctype="multipart/form-data">
+																					{% csrf_token %}
+																					<input type="hidden" value="{{p.id}}" name="post_id">
+																					<textarea name="comment" placeholder="Post your comment"></textarea>
+																					
+																					<div class="add-smiles">
+																						<div class="uploadimage">
+																							<i class="fa fa-image"></i>
+																							<label class="fileContainer">
+																								<input type="file" name="image">	
+																							</label>
+																						</div>
+																					
+																						<button name="add-comment" style="background: none; padding: 0;" type="submit"><i style="color: #1877f2;" class="fas fa-paper-plane"></i></button>
+																					</div>
+																				</form>
+																			</div>
+																		</li>
+																		
+																	</ul>
+																</div>
+															</div>
+														</div>
+													</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+													<div id="share-form-{{ p.id }}" class="popup-wraper2">
+														<div class="popup post-sharing">
+															<div class="popup-meta">
+																<div class="postbox" >
+																	<div class="post-comt-box">
+																		<form method="post" class="share-post" id="share-post-{{p.id}}">
+																			{% csrf_token %}
+																			<input type="hidden" value="{{p.id}}" name="original_post_id">
+																			<textarea placeholder="Add caption..." name="new_post_content"></textarea>
+																	</div>
+																	{% if p.image %}
+
+																	<div style="display: flex; justify-content: center; align-items: center;"><img style="width: 200px;" src="{{p.image.url}}" alt=""></div>
+																	{% endif %}
+																	{% if p.video %}
+																	<div style="display: flex; justify-content: center; align-items: center;"><video style="width: 300px; margin-bottom: 10px;" src="{{p.video.url}}"></video></div>
+																	{% endif %}
+																	<div class="friend-info">
+																		<figure>
+																			<img alt="" src="{{profile_pro.profile_pic.url}}">
+																		</figure>
+																		<div class="friend-name">
+																			<ins><a >{{profile_pro.firstname}} {{profile_pro.lastname}}</a> shared <a>{{p.profile.firstname}} {{p.profile.lastname}}'s post</a></ins>
+																			<span>{{p.content}}</span>
+																		</div>
+																	</div>
+																	
+																	<div class="we-video-info">
+																		
+																		<button class="main-btn color" type="submit">Share</button>
+																		<button class="main-btn cancel" data-ripple="">Close</button>
+																	</div>
+																</form>
+																</div>
+															</div>	
+														</div>
+													</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+													{% endfor %}
+													
+													<!-- digital sponsors -->
+												 
+													<!-- video post -->
+												
+											</div><!-- centerl meta -->
+											<div class="col-lg-3">
+												<aside class="sidebar static right">
+													<div class="widget">
+														<h4 class="widget-title">Owner</h4>	
+														<div class="your-page">
+															<figure>
+																<a href="{% url 'core:profile' page.owner.user.id %}" title="visit profile"><img src="{{page.owner.profile_pic.url}}" alt="page.owner pic"></a>
+															</figure>
+															<div class="page-meta">
+																<a href="{% url 'core:profile' page.owner.user.id %}" title="" class="underline">{{page.owner.firstname}} {{page.owner.lastname}}</a>
+																<span><a href="{% url 'core:profile' page.owner.user.id %}" title="">View Profile </a></span>
+																<span><a href="{% url 'messenger:chat' page.owner.user.id %}" title="">Message </a></span>
+															</div>
+														</div>
+													</div><!-- page like widget -->
+													<div class="widget">
+														<h4 class="widget-title">Page intro</h4>
+														<ul class="short-profile">
+															<li>
+																<span>About:</span>
+																<p>{{page.about}}</p>
+															</li>
+															<li>
+																<span>Since</span>
+																<p>{{page.created_at}}</p>
+															</li>
+														</ul>
+													</div>
+												</aside>
+											</div><!-- sidebar -->
+										</div>
+									</div>
+									<div class="tab-pane fade" id="link4">
+										
+												<div class="row merged20">
+													<style>
+														.row.merged20 > div {
+															padding: 10px 10px;
+														}
+													</style>
+													<div class="central-meta">
+														<div class="row merged5">
+															{% for p in post %}
+															{% if p.image %}
+															<div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+																<div class="item-box">
+																	<a class="strip" href="{{p.image.url}}" title="" >
+																		<img class="square-image" src="{{p.image.url}}" alt=""></a>
+																		<div class="over-photo">
+																		<a href="{% url 'core:post' p.id %}" title=""><i class="fa-solid fa-thumbs-up"></i> {{p.likes}}</a>
+																		<span>{{p.created_at}}</span>
+																	</div>
+																</div>
+															</div>
+															{% endif %}
+															{% endfor %}
+														</div>
+													</div><!-- photos -->
+												</div>
+											</div>
+										<style>
+											.square-image {
+												width: 200px;
+												height: 270px;
+												object-fit: cover;
+											}
+										</style>
+										<div class="tab-pane fade" id="link5">
+											<div class="central-meta">
+												<div class="title-block">
+													<div class="row">
+														<div class="col-lg-6">
+															<div class="align-left">
+																<h5>Liked By <span>{{liked_by|length}}</span></h5>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div><!-- title block -->
+									
+											<div class="central-meta padding30">
+												<div class="row">
+													{% for l in liked_by %}
+													
+													<div class="col-lg-3 col-md-6 col-sm-6 friend-link">
+														<div class="friend-box">
+															<figure>
+																<img style="height: 120px; overflow-y: auto; object-fit: cover;" src="{{l.profile.cover_pic.url}}" alt="">
+															</figure>
+															<div class="frnd-meta">
+																<img  style="width: 90px;" src="{{l.profile.profile_pic.url}}" alt="">
+																<div class="frnd-name">
+																	<a href="{% url 'core:profile' l.user.id %}" title="">{{l.profile.firstname}} {{l.profile.lastname}}</a>
+																	<span>{{l.profile.city}}, {{l.profile.country}}</span>
+																</div>
+																<div>
+																<a style="color: #1877f2;" class="" href="{% url 'core:profile' l.user.id %}" title="">View Profile</a>
+															    </div>
+															</div>
+														</div>
+													</div>
+													{% endfor %}
+												</div>
+												
+											</div>
+												
+								
+									
+								</div>
+							</div>
+						</div>	
+					</div>
+				</div>
+			</div>
+		</div>	
+	</section>
+	<style>
+		.fullscreen-img {
+  cursor: pointer;
+}
+
+.fullscreen-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.fullscreen-image {
+  max-width: 90%;
+  max-height: 90%;
+}
+
+	</style>
+	
+<script>
+	const imgContainer = document.querySelector('.image-container');
+const img = imgContainer.querySelector('.fullscreen-img');
+
+img.addEventListener('click', function () {
+  const overlay = document.createElement('div');
+  overlay.classList.add('fullscreen-overlay');
+
+  const fullscreenImg = document.createElement('img');
+  fullscreenImg.classList.add('fullscreen-image');
+  fullscreenImg.src = img.src;
+
+  overlay.appendChild(fullscreenImg);
+  document.body.appendChild(overlay);
+
+  overlay.addEventListener('click', function () {
+    document.body.removeChild(overlay);
+  });
+});
+
+</script>
+<style>
+	.cover-image-container {
+  position: relative;
+}
+
+.cover-image {
+  cursor: pointer;
+}
+
+/* Add the rest of the CSS code for the overlay and full-screen image from the previous example */
+
+</style>
+<script>
+	const coverImgContainer = document.querySelector('.cover-image-container');
+const coverImg = coverImgContainer.querySelector('.cover-image');
+
+coverImg.addEventListener('click', function () {
+  const overlay = document.createElement('div');
+  overlay.classList.add('fullscreen-overlay');
+
+  const fullscreenImg = document.createElement('img');
+  fullscreenImg.classList.add('fullscreen-image');
+  fullscreenImg.src = coverImg.src;
+
+  overlay.appendChild(fullscreenImg);
+  document.body.appendChild(overlay);
+
+  overlay.addEventListener('click', function () {
+    document.body.removeChild(overlay);
+  });
+});
+
+</script>
+
+
+	{% endblock content %}

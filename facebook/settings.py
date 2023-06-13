@@ -64,6 +64,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django_user_agents.middleware.UserAgentMiddleware',
+    'facebook.middleware.ProfileCheckMiddleware',
 ]
 
 ROOT_URLCONF = 'facebook.urls'

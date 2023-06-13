@@ -1,15 +1,22 @@
 from django.shortcuts import render, redirect
-from core.models import Posts, General_information, Like, Comment, SharedPost, FriendRequest, Friend, Story
+from core.models import *
 from userauths.models import Profile, User
 from django.urls import reverse
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models.functions import Random
+from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 
 
 # Create your views here.
+@login_required
 def newsfeed(request):
     profile_user = Profile.objects.get(user = request.user)
+    all_pages = None
+    if Page.objects.all():
+        all_pages = Page.objects.all().order_by(Random())
+    all_people = Profile.objects.exclude(user=request.user).order_by(Random())
     post = Posts.objects.all().order_by("-id")
     liked_post_ids = Like.objects.filter(user=request.user).values_list('post_id', flat=True)
     user = request.user
@@ -28,6 +35,22 @@ def newsfeed(request):
                 image=image,
                 video=video,
             )
+            if Friend.objects.filter(user=request.user).exists():
+                friends = Friend.objects.filter(user=request.user)
+                for f in friends:
+                    Notification.objects.create(
+                        sent_to = f.friend_user,
+                        sent_to_profile = f.friend_profile,
+                        profile = profile_user,
+                        post = new_post,
+                        body = "added a post",
+                    )
+                Notification.objects.create(
+                    sent_to = request.user,
+                    sent_to_profile = profile_user,
+                    post = new_post,
+                    body = "Your post was uploaded",
+                )
             
 
             return redirect("/") 
@@ -38,6 +61,11 @@ def newsfeed(request):
                 delete_shared_post = SharedPost.objects.filter(original_post_id = post_id)
                 delete_shared_post.delete()
             delete_post.delete()
+            Notification.objects.create(
+                sent_to = request.user,
+                sent_to_profile = profile_user,
+                body = "Your post was deleted"
+            )
             return redirect("/")
         elif "add-comment" in request.POST:
             post_id = request.POST.get('post_id')
@@ -56,6 +84,33 @@ def newsfeed(request):
             new_comment.save()
             post.comments += 1
             post.save()
+            if post.page:
+                Notification.objects.create(
+                sent_to=post.user,
+                sent_to_profile=post.profile,
+                page = post.page,
+                profile = profile_user,
+                body = f"commented on your page {post.page.name}'s post",
+                post = post
+            )
+            elif post.user == request.user:
+                pass
+            elif post.shared_post:
+                Notification.objects.create(
+                    sent_to=post.user,
+                    sent_to_profile=post.profile,
+                    profile = profile_user,
+                    body = "commented on a post you shared",
+                    post = post
+                )
+            else:
+                Notification.objects.create(
+                    sent_to=post.user,
+                    sent_to_profile=post.profile,
+                    profile = profile_user,
+                    body = "commented on your post",
+                    post = post
+                )
             redirect_url = redirect("core:post", post_id).url
             redirect_url += "#comments"
 
@@ -90,16 +145,22 @@ def newsfeed(request):
             return redirect("/")
 
     context = {
+        "all_people": all_people,
         "profile_user": profile_user,
         "post": post,
         "liked_post_ids":liked_post_ids,
         "stories":stories,
+        "all_pages":all_pages,
     }
     return render(request, "core/newsfeed.html", context)
 
+@login_required
 def profile(request, id):
     user = User.objects.get(id=id)
     profile = Profile.objects.get(user=user)
+    pages = None
+    if Page.objects.filter(user=user).exists():
+        pages = Page.objects.filter(user=user)
     friend_request = None
     if FriendRequest.objects.filter(reciever_user = request.user, sender_user = user, is_friend = False).exists():
         friend_request = FriendRequest.objects.get(reciever_user = request.user, sender_user = user, is_friend = False)
@@ -110,7 +171,7 @@ def profile(request, id):
     profile_user = Profile.objects.get(user = request.user)
     if Friend.objects.filter(friend_profile = profile, profile = profile_user).exists():
         is_friend = Friend.objects.get(friend_profile = profile, profile = profile_user)
-    post = Posts.objects.filter(user=user).order_by("-id")
+    post = Posts.objects.filter(user=user, profile=profile).order_by("-id")
     liked_post_ids = Like.objects.filter(user=request.user).values_list('post_id', flat=True)
     info = None
     if General_information.objects.filter(user=request.user).exists():
@@ -133,6 +194,22 @@ def profile(request, id):
                 image=image,
                 video=video,
             )
+            if Friend.objects.filter(user=request.user).exists():
+                friends = Friend.objects.filter(user=request.user)
+                for f in friends:
+                    Notification.objects.create(
+                        sent_to = f.friend_user,
+                        sent_to_profile = f.friend_profile,
+                        profile = profile_user,
+                        post = new_post,
+                        body = "added a post",
+                    )
+                Notification.objects.create(
+                    sent_to = request.user,
+                    sent_to_profile = profile_user,
+                    post = new_post,
+                    body = "Your post was uploaded",
+                )
             id = request.user.id
             profile_url = reverse('core:profile', args=[id])
 
@@ -144,6 +221,11 @@ def profile(request, id):
                 delete_shared_post = SharedPost.objects.filter(original_post_id = post_id)
                 delete_shared_post.delete()
             delete_post.delete()
+            Notification.objects.create(
+                sent_to = request.user,
+                sent_to_profile = profile_user,
+                body = "Your post was deleted"
+            )
             id = request.user.id
             profile_url = reverse('core:profile', args=[id])
 
@@ -165,6 +247,33 @@ def profile(request, id):
             new_comment.save()
             post.comments += 1
             post.save()
+            if post.page:
+                Notification.objects.create(
+                sent_to=post.user,
+                sent_to_profile=post.profile,
+                page = post.page,
+                profile = profile_user,
+                body = f"commented on your page {post.page.name}'s post",
+                post = post
+            )
+            elif post.user == request.user:
+                pass
+            elif post.shared_post:
+                Notification.objects.create(
+                    sent_to=post.user,
+                    sent_to_profile=post.profile,
+                    profile = profile_user,
+                    body = "commented on a post you shared",
+                    post = post
+                )
+            else:
+                Notification.objects.create(
+                    sent_to=post.user,
+                    sent_to_profile=post.profile,
+                    profile = profile_user,
+                    body = "commented on your post",
+                    post = post
+                )
             redirect_url = redirect("core:post", post_id).url
             redirect_url += "#comments"
 
@@ -222,6 +331,13 @@ def profile(request, id):
                 friend_profile = user_profile,
                 friend_user = user_profile.user
             )
+            Notification.objects.create(
+                sent_to = friend_profile.user,
+                sent_to_profile = friend_profile,
+                profile = profile,
+                body = "accepted your friend request",
+                friends = True,
+            )
             sender_profile = Profile.objects.get(id=profile_id)
             delete_friend_request = FriendRequest.objects.get(sender_profile=sender_profile, reciever_user = request.user)
             delete_friend_request.delete()
@@ -248,10 +364,12 @@ def profile(request, id):
         "sent_request": sent_request,
         "is_friend": is_friend,
         "friend_list": friend_list,
+        "pages": pages,
         
     }
     return render(request, "core/profile.html", context)
 
+@login_required
 def create_profile(request):
     if request.method == "POST":
         firstname = request.POST.get("firstname")
@@ -280,7 +398,11 @@ def create_profile(request):
         )
         new_profile.save()
         General_information.objects.create(user=request.user)
-
+        Notification.objects.create(
+            sent_to = request.user,
+            sent_to_profile = new_profile,
+            body = f"Welcome to Facebook" 
+        )
         id = request.user.id
         profile_url = reverse('core:profile', args=[id])
 
@@ -288,6 +410,7 @@ def create_profile(request):
 
     return render(request, "core/create-profile.html")
 
+@login_required
 def edit_account(request):
     profile = Profile.objects.get(user=request.user)
     info = General_information.objects.get(user = request.user)
@@ -329,6 +452,21 @@ def edit_account(request):
                 # Create a post for profile image change
                 post = Posts.objects.create(user=request.user, profile=profile, content="Updated profile image", image=profile_pic)
                 post.save()
+                Notification.objects.create(
+                    sent_to = request.user,
+                    sent_to_profile = profile,
+                    body = f"Your Profile picture was updated"
+                )
+                if Friend.objects.filter(user=request.user).exists():
+                    friends = Friend.objects.filter(user=request.user)
+                    for f in friends:
+                        Notification.objects.create(
+                            sent_to = f.friend_user,
+                            sent_to_profile = f.friend_profile,
+                            profile = profile,
+                            post = post,
+                            body = "updated their <span style=\"color: #1877f2;\">profile picture</span>",
+                        )
             else:
                 update_profile.profile_pic = update_profile.profile_pic
                 
@@ -338,10 +476,30 @@ def edit_account(request):
                 # Create a post for cover image change
                 post = Posts.objects.create(user=request.user, profile=profile, content="Updated cover image", image=cover_pic)
                 post.save()
+                Notification.objects.create(
+                    sent_to = request.user,
+                    sent_to_profile = profile,
+                    body = f"Your Cover picture was updated"
+                )
+                if Friend.objects.filter(user=request.user).exists():
+                    friends = Friend.objects.filter(user=request.user)
+                    for f in friends:
+                        Notification.objects.create(
+                            sent_to = f.friend_user,
+                            sent_to_profile = f.friend_profile,
+                            profile = profile,
+                            post = post,
+                            body = "updated their <span style=\"color: #1877f2;\">cover picture</span>",
+                        )
             else:
                 update_profile.cover_pic = update_profile.cover_pic
 
             update_profile.save()
+            Notification.objects.create(
+                sent_to = request.user,
+                sent_to_profile = profile,
+                body = f"Your Profile was updated.."
+            )
 
             id = request.user.id
             profile_url = reverse('core:profile', args=[id])
@@ -360,7 +518,11 @@ def edit_account(request):
             updated_info.other_interests = other_interests
             updated_info.hobbies = hobbies
             updated_info.save()
-
+            Notification.objects.create(
+                sent_to = request.user,
+                sent_to_profile = profile,
+                body = f"Your Profile was updated.."
+            )
             id = request.user.id
             profile_url = reverse('core:profile', args=[id])
 
@@ -374,6 +536,7 @@ def edit_account(request):
 
 @csrf_exempt
 def like(request):
+    profile = Profile.objects.get(user=request.user)
     if request.method == 'POST':
         post_id = request.POST.get('post_id')
         
@@ -387,11 +550,18 @@ def like(request):
                 # User didn't like the post, so like it
             new_like = Like.objects.create(user = request.user, post=post)
             post.likes += 1
+            Notification.objects.create(
+                sent_to = post.user,
+                sent_to_profile = post.profile,
+                profile = profile,
+                body = f"liked your post"
+            )
         post.save()
             
             # Return the updated likes count as JSON response
         return JsonResponse({'likes': post.likes})
 
+@login_required
 def post_details(request, id):
     post = Posts.objects.get(id=id)
     profile = Profile.objects.get(user=post.user)
@@ -417,6 +587,43 @@ def post_details(request, id):
         new_comment.save()
         post.comments += 1
         post.save()
+        if post.page:
+            Notification.objects.create(
+                sent_to=post.user,
+                sent_to_profile=post.profile,
+                page = post.page,
+                profile = profile_user,
+                body = f"commented on your page {post.page.name}'s post",
+                post = post
+            )
+        elif post.page:
+            Notification.objects.create(
+                sent_to=post.user,
+                sent_to_profile=post.profile,
+                page = post.page,
+                profile = profile_user,
+                body = f"commented on your page {post.page.name}'s post",
+                post = post
+            )
+        elif post.user == request.user:
+            pass
+
+        elif post.shared_post:
+            Notification.objects.create(
+                sent_to=post.user,
+                sent_to_profile=post.profile,
+                profile = profile_user,
+                body = "commented on a post you shared",
+                post = post
+            )
+        else:
+            Notification.objects.create(
+                sent_to=post.user,
+                sent_to_profile=post.profile,
+                profile = profile_user,
+                body = "commented on your post",
+                post = post
+            )
         redirect_url = redirect("core:post", post_id).url
         redirect_url += "#comments"
         return redirect(redirect_url)
@@ -439,6 +646,11 @@ def post_details(request, id):
             delete_shared_post = SharedPost.objects.filter(original_post_id = post_id)
             delete_shared_post.delete()
         delete_post.delete()
+        Notification.objects.create(
+                sent_to = request.user,
+                sent_to_profile = profile_user,
+                body = "Your post was deleted"
+            )
         id = request.user.id
         profile_url = reverse('core:profile', args=[id])
 
@@ -463,6 +675,7 @@ def share_post(request):
             profile = post.profile,
             image = post.image,
             video = post.video,
+            page = post.page,
             content = post.content,
             original_post_id = post_id,
         )
@@ -477,8 +690,29 @@ def share_post(request):
             shared_post = new_shared_post
         )
         new_post.save()
+        if Friend.objects.filter(user=request.user).exists():
+            friends = Friend.objects.filter(user=request.user)
+            if new_post.shared_post.page:
+                for f in friends:
+                    Notification.objects.create(
+                        sent_to = f.friend_user,
+                        sent_to_profile = f.friend_profile,
+                        profile = new_post.profile,
+                        post = new_post,
+                        body = f"shared <span style=\"color: #1877f2;\">{new_post.shared_post.page.name}</span>'s post"
+                    )
+            else:
+                for f in friends:
+                    Notification.objects.create(
+                        sent_to = f.friend_user,
+                        sent_to_profile = f.friend_profile,
+                        profile = new_post.profile,
+                        post = new_post,
+                        body = f"shared <span style=\"color: #1877f2;\">{new_post.shared_post.profile.firstname} {new_post.shared_post.profile.lastname}</span>'s post"
+                    )
         return JsonResponse({'success':True})
-    
+
+@login_required
 def videos(request):
     profile_user = Profile.objects.get(user = request.user)
     post = Posts.objects.all().order_by(Random())
@@ -493,6 +727,11 @@ def videos(request):
                 delete_shared_post = SharedPost.objects.filter(original_post_id = post_id)
                 delete_shared_post.delete()
             delete_post.delete()
+            Notification.objects.create(
+                sent_to = request.user,
+                sent_to_profile = profile_user,
+                body = "Your Video was deleted"
+            )
             return redirect("core:videos")
         elif "add-comment" in request.POST:
             post_id = request.POST.get('post_id')
@@ -511,6 +750,25 @@ def videos(request):
             new_comment.save()
             post.comments += 1
             post.save()
+            if post.page:
+                Notification.objects.create(
+                sent_to=post.user,
+                sent_to_profile=post.profile,
+                page = post.page,
+                profile = profile_user,
+                body = f"commented on your page {post.page.name}'s post",
+                post = post
+            )
+            elif post.user == request.user:
+                pass
+            else:
+                Notification.objects.create(
+                    sent_to=post.user,
+                    sent_to_profile=post.profile,
+                    profile = profile_user,
+                    body = "commented on your post",
+                    post = post
+                )
             redirect_url = redirect("core:post", post_id).url
             redirect_url += "#comments"
 
@@ -534,12 +792,14 @@ def videos(request):
     }
     return render(request, "core/videos.html", context)
 
+@login_required
 def friend_requests(request):
     friend_request = FriendRequest.objects.filter(reciever_user = request.user)
     context = {
         "friend_request": friend_request,
     }
     return render(request, "core/friend-requests.html", context)
+
 @csrf_exempt
 def delete_friend_request(request):
     if request.method == 'POST':
@@ -548,6 +808,7 @@ def delete_friend_request(request):
         delete_request.delete()
 
         return JsonResponse({'success':True})
+    
 @csrf_exempt
 def accept_friend_request(request):
     profile = Profile.objects.get(user = request.user)
@@ -566,6 +827,262 @@ def accept_friend_request(request):
             friend_profile = profile,
             friend_user = profile.user
         )
+        Notification.objects.create(
+            sent_to = sender_profile.user,
+            sent_to_profile = sender_profile,
+            profile = profile,
+            body = "accepted your friend request",
+            friends = True,
+        )
         delete_friend_request= FriendRequest.objects.get(sender_profile=sender_profile, reciever_user=request.user)
         delete_friend_request.delete()
         return JsonResponse({'success':True})
+
+@login_required  
+def page(request, id):
+    page = Page.objects.get(id=id)
+    profile = Profile.objects.get(user=request.user)
+    post = Posts.objects.filter(page=page).order_by("-id")
+    liked_post_ids = Like.objects.filter(user=request.user).values_list('post_id', flat=True)
+    liked = None
+    if LikedPage.objects.filter(user=request.user).exists():
+        liked = LikedPage.objects.get(user=request.user)
+    liked_by = None
+    if LikedPage.objects.filter(page=page).exists():
+        liked_by = LikedPage.objects.filter(page=page)
+        
+    if request.method == "POST":
+        if "add_post" in request.POST:
+            content = request.POST.get("content")
+            image = request.FILES.get("image")
+            video = request.FILES.get("video")
+            new_post = Posts.objects.create(
+                user=request.user,
+                page=page,
+                content=content,
+                image=image,
+                video=video,
+            )
+            id = page.id
+            page_url = reverse('core:page', args=[id])
+
+            return redirect(page_url) 
+        elif "delete_post" in request.POST:
+            post_id = request.POST.get("id")
+            delete_post = Posts.objects.get(id=post_id)
+            if SharedPost.objects.filter(original_post_id = post_id).exists():
+                delete_shared_post = SharedPost.objects.filter(original_post_id = post_id)
+                delete_shared_post.delete()
+            delete_post.delete()
+            id = page.id
+            page_url = reverse('core:page', args=[id])
+
+            return redirect(page_url)
+        elif "add-comment" in request.POST:
+            post_id = request.POST.get('post_id')
+            comment_text = request.POST.get('comment')
+            image_file = request.FILES.get('image')
+            post = Posts.objects.get(id=post_id)
+            profile_c = Profile.objects.get(user=request.user)
+            new_comment = Comment.objects.create(
+                user = request.user,
+                post = post,
+                comment = comment_text,
+                profile = profile_c,
+            )
+            if image_file:
+                new_comment.image = image_file
+            new_comment.save()
+            post.comments += 1
+            post.save()
+            if post.page:
+                Notification.objects.create(
+                sent_to=post.user,
+                sent_to_profile=post.profile,
+                page = post.page,
+                profile = profile,
+                body = f"commented on your page {post.page.name}'s post",
+                post = post
+            )
+            elif post.user == request.user:
+                pass
+            else:
+                Notification.objects.create(
+                    sent_to=post.user,
+                    sent_to_profile=post.profile,
+                    profile = profile,
+                    body = "commented on your post",
+                    post = post
+                )
+            redirect_url = redirect("core:post", post_id).url
+            redirect_url += "#comments"
+
+            return redirect(redirect_url)
+        elif "delete_comment" in request.POST:
+            post_id = request.POST.get("id")
+            cid = request.POST.get("cid")
+            that_post = Posts.objects.get(id=post_id)
+            delete_comment = Comment.objects.get(cid=cid)
+            delete_comment.delete()
+            that_post.comments -= 1
+            that_post.save()
+
+            redirect_url = redirect("core:post", post_id).url
+            redirect_url += "#comments"
+            return redirect(redirect_url)
+        elif "like_page" in request.POST:
+            profile_id = request.POST.get("profile_id")
+            liker_profile = Profile.objects.get(id =profile_id)
+            LikedPage.objects.create(
+                profile=liker_profile,
+                user = request.user,
+                page=page
+            )
+            page.likes +=1
+            page.save()
+            id = page.id
+            page_url = reverse('core:page', args=[id])
+            return redirect(page_url)
+        elif "dislike_page" in request.POST:
+            profile_id = request.POST.get("profile_id")
+            dislike = LikedPage.objects.get(profile__id=profile_id)
+            dislike.delete()
+            page.likes -=1
+            page.save()
+            id = page.id
+            page_url = reverse('core:page', args=[id])
+            return redirect(page_url)
+    context = {
+        "page":page,
+        "profile": profile,
+        "post": post,
+        "liked_post_ids":liked_post_ids,
+        "liked":liked,
+        "liked_by": liked_by,
+    }
+    return render(request, "core/page.html", context)
+
+@login_required
+def create_page(request):
+    owner = Profile.objects.get(user=request.user)
+    if request.method == "POST":
+        name = request.POST.get("page_name")
+        about = request.POST.get("about")
+        profile_pic = request.FILES.get("profile_pic")
+        cover_pic = request.FILES.get("cover_pic")
+        new_page = Page.objects.create(
+            name = name,
+            about = about,
+            profile_pic = profile_pic,
+            cover_pic = cover_pic,
+            owner = owner,
+            user = owner.user
+        )
+        new_page.save()
+        return redirect("core:page", new_page.id)
+    return render(request, "core/create-page.html")
+
+@login_required
+def edit_page(request, id):
+    page = Page.objects.get(id = id)
+    if request.method == "POST":
+        if "update_page" in request.POST:
+            name = request.POST.get("page_name")
+            about = request.POST.get("about")
+            profile_pic = request.FILES.get("profile_pic")
+            cover_pic = request.FILES.get("cover_pic")
+            page.name = name
+            page.about = about
+            page.profile_pic = profile_pic or page.profile_pic
+            page.cover_pic = cover_pic or page.cover_pic
+            page.save()
+            return redirect("core:page", page.id)
+        elif "delete_page" in request.POST:
+            page.delete()
+            return redirect("core:user-pages")
+    context = {
+        "page": page,
+    }
+    return render(request, "core/edit-page.html", context)
+
+@login_required
+def user_pages(request):
+    pages = None
+    if Page.objects.filter(user=request.user).exists():
+        pages = Page.objects.filter(user=request.user)
+    if request.method == "POST":
+        id = request.POST.get("id")
+        page = Page.objects.get(id =id)
+        page.delete()
+        return redirect("core:user-pages")
+    context = {
+        "pages": pages,
+    }
+    return render(request, "core/user-pages.html", context)
+
+@login_required
+def all_users(request):
+    all_users = Profile.objects.exclude(user=request.user)
+    context = {
+        "all_users": all_users,
+    }
+    return render(request, "core/all-users.html", context)
+
+@login_required
+def liked_pages(request):
+    liked = None
+    if LikedPage.objects.filter(user = request.user).exists():
+        liked = LikedPage.objects.filter(user=request.user)
+    context = {
+        "liked": liked,
+    }
+    return render(request, "core/liked_pages.html", context)
+
+@login_required
+def all_pages(request):
+    all_pages = None
+    if Page.objects.all().exists():
+        all_pages = Page.objects.all()
+    context = {
+        "all_pages": all_pages,
+    }
+    return render(request, "core/all_pages.html", context)
+
+@login_required
+def search(request):
+    query = None
+    query = request.GET.get("query")
+    
+    if query:
+        terms = query.split()
+        profile_queries = [Q(firstname__icontains=term) | Q(lastname__icontains=term) | Q(user__username__icontains=term) for term in terms]
+        post_query = Q(content__icontains=query)
+        page_queries = [Q(name__icontains=term) | Q(about__icontains=term) for term in terms]
+        profile_results = None
+        if Profile.objects.filter(*profile_queries).exists():
+            profile_results = Profile.objects.filter(*profile_queries)
+        post_results = None
+        if Posts.objects.filter(post_query).exists():
+            post_results = Posts.objects.filter(post_query)
+        page_results = None
+        if Page.objects.filter(*page_queries).exists():
+            page_results = Page.objects.filter(*page_queries)
+    
+    context = {
+        "profiles": profile_results,
+        "pages": page_results,
+        "posts": post_results,
+    }
+    return render(request, "core/search.html", context)
+
+def notifications(request):
+    notifications = None
+    if Notification.objects.filter(sent_to=request.user).exists():
+        notifications = Notification.objects.filter(sent_to=request.user).order_by("-id")
+        for n in notifications:
+            n.seen = True
+            n.save()
+    context = {
+        "notifications":notifications,
+    }
+    return render(request, "core/notifications.html", context)

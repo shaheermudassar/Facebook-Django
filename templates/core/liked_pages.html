@@ -1,0 +1,53 @@
+{% extends 'core/base.html' %}
+{% load static %}{% block title %}Liked Pages{% endblock title %}
+
+{% block content %}
+		
+	<section>
+		<div class="gap2 gray-bg">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="row merged20" id="page-contents">
+							<div class="col-lg-12">
+								<div class="central-meta padding30">
+									<div class="row">
+                                        {% if liked %}
+										{% for a in all_users %}
+										
+										<div class="col-lg-3 col-md-6 col-sm-6 friend-link">
+											<div class="friend-box">
+												<figure>
+													<img style="height: 120px; overflow-y: auto; object-fit: cover;" src="{{l.cover_pic.url}}" alt="">
+												</figure>
+												<div class="frnd-meta">
+													<img  style="width: 90px;" src="{{l.profile_pic.url}}" alt="">
+													<div class="frnd-name">
+														<a href="{% url 'core:page' l.id %}" title="">{{l.name}}</a>
+													</div>
+													<div>
+													<a style="color: #1877f2;" class="" href="{% url 'core:page' l.id %}" title="">View Page</a>
+													</div>
+												</div>
+											</div>
+										</div>
+										{% endfor %}
+                                        {% else %}
+                                        <div class="col-lg-12 col-md-12 col-sm-12 friend-link">
+											<div class="friend-box">
+												<h2>Not liked any page <a href="{% url 'core:all-pages' %}" style="color: #1877f2;"> view all pages</a></h2>
+											</div>
+										</div>
+                                        {% endif %}
+									</div>
+									
+								</div>
+							</div>	
+						</div>	
+					</div>
+				</div>
+			</div>
+		</div>	
+	</section><!-- content -->
+
+	{% endblock content %}

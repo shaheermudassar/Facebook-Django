@@ -72,3 +72,4 @@ def search(request):
         "recent": recents,
     }
     return render(request, "messenger/search.html", context)
+
