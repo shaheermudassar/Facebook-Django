@@ -866,8 +866,8 @@ def page(request, id):
     post = Posts.objects.filter(page=page).order_by("-id")
     liked_post_ids = Like.objects.filter(user=request.user).values_list('post_id', flat=True)
     liked = None
-    if LikedPage.objects.filter(user=request.user).exists():
-        liked = LikedPage.objects.get(user=request.user)
+    if LikedPage.objects.filter(user=request.user, page=page).exists():
+        liked = LikedPage.objects.get(user=request.user, page=page)
     liked_by = None
     if LikedPage.objects.filter(page=page).exists():
         liked_by = LikedPage.objects.filter(page=page)
@@ -976,7 +976,7 @@ def page(request, id):
             return redirect(page_url)
         elif "dislike_page" in request.POST:
             profile_id = request.POST.get("profile_id")
-            dislike = LikedPage.objects.get(profile__id=profile_id)
+            dislike = LikedPage.objects.get(profile__id=profile_id, page = page)
             dislike.delete()
             page.likes -=1
             page.save()
