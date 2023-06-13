@@ -8,7 +8,8 @@ from django.db.models.functions import Random
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 
-
+def error_404_view(request, exception):
+    return redirect("/")
 # Create your views here.
 @login_required
 def newsfeed(request):
