@@ -125,7 +125,7 @@
 														<li {% if n.seen == False %} style = "background: #665f5f21;" {% else %} style = "background: white" {% endif %}>
 													<figure><img style="width: 40px;" src="{{n.profile.profile_pic.url}}" alt=""></figure>
 													<div class="notifi-meta">
-														<p><span style="font-weight: 800;">{{n.profile.firstname}} {{n.profile.lastname}}</span> {{n.body}}</p>
+														<p><span style="font-weight: 800;">{{n.profile.firstname}} {{n.profile.lastname}}</span> {{n.body|safe}}</p>
 														<span> {{n.created_at|timesince}} ago</span>
 													</div>
 												</a>
@@ -135,7 +135,7 @@
 														<li {% if n.seen == False %} style = "background: #665f5f21;" {% else %} style = "background: white" {% endif %}>
 													<figure><img style="width: 40px;" src="{{n.page.profile_pic.url}}" alt=""></figure>
 													<div class="notifi-meta">
-														<p><span style="font-weight: 800;">{{n.page.name}}</span> {{n.body}}</p>
+														<p><span style="font-weight: 800;">{{n.page.name}}</span> {{n.body|safe}}</p>
 														<span> {{n.created_at|timesince}} ago</span>
 													</div>
 												</a>
@@ -145,7 +145,7 @@
                                                     <li {% if n.seen == False %} style = "background: #665f5f21;" {% else %} style = "background: white" {% endif %}>
                                                 <figure><img style="width: 40px;" src="{{n.profile.profile_pic.url}}" alt=""></figure>
                                                 <div class="notifi-meta">
-                                                    <p><span style="font-weight: 800;">{{n.profile.firstname}} {{n.profile.lastname}}</span> {{n.body}}</p>
+                                                    <p><span style="font-weight: 800;">{{n.profile.firstname}} {{n.profile.lastname}}</span> {{n.body|safe}}</p>
                                                     <span> {{n.created_at|timesince}} ago</span>
                                                 </div>
                                             </a>
@@ -155,7 +155,7 @@
 														<li {% if n.seen == False %} style = "background: #665f5f21;" {% else %} style = "background: white" {% endif %}>
 													<figure><img style="width: 40px;" src="{{n.sent_to_profile.profile_pic.url}}" alt=""></figure>
 													<div class="notifi-meta">
-														<p><span style="font-weight: 800;">Hey {{n.sent_to_profile.firstname}},</span> {{n.body}}</p>
+														<p><span style="font-weight: 800;">Hey {{n.sent_to_profile.firstname}},</span> {{n.body|safe}}</p>
 														<span> {{n.created_at|timesince}} ago</span>
 													</div>
 												</a>
@@ -165,7 +165,7 @@
 												<li {% if n.seen == False %} style = "background: #665f5f21;" {% else %} style = "background: white" {% endif %}>
 													<figure><img style="width: 40px;" src="{{n.sent_to_profile.profile_pic.url}}" alt=""></figure>
 													<div class="notifi-meta">
-														<p><span style="font-weight: 800;">{{n.sent_to_profile.firstname}} {{n.sent_to_profile.lastname}}</span> {{n.body}}</p>
+														<p><span style="font-weight: 800;">{{n.sent_to_profile.firstname}} {{n.sent_to_profile.lastname}}</span> {{n.body|safe}}</p>
 														<span> {{n.created_at|timesince}} ago</span>
 													</div>
                                                 </a>
@@ -205,72 +205,15 @@
         <div class="fixed-sidebar right">
             <div class="chat-friendz">
                 <ul class="chat-users">
+                    {% if friends %}
+                    {% for f in friends %}
                     <li>
                         <div class="author-thmb">
-                            <img src="{% static 'images/resources/side-friend1.jpg' %}" alt="">
-                            <span class="status f-online"></span>
+                            <a href="{% url 'messenger:chat' f.friend_user.id %}"><img style="width:50px;" src="{{f.friend_profile.profile_pic.url}}" alt=""></a>
                         </div>
                     </li>
-                    <li>
-                        <div class="author-thmb">
-                            <img src="{% static 'images/resources/side-friend2.jpg' %}" alt="">
-                            <span class="status f-away"></span>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="author-thmb">
-                            <img src="{% static 'images/resources/side-friend3.jpg' %}" alt="">
-                            <span class="status f-online"></span>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="author-thmb">
-                            <img src="{% static 'images/resources/side-friend4.jpg' %}" alt="">
-                            <span class="status f-offline"></span>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="author-thmb">
-                            <img src="{% static 'images/resources/side-friend5.jpg' %}" alt="">
-                            <span class="status f-online"></span>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="author-thmb">
-                            <img src="{% static 'images/resources/side-friend6.jpg' %}" alt="">
-                            <span class="status f-online"></span>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="author-thmb">
-                            <img src="{% static 'images/resources/side-friend7.jpg' %}" alt="">
-                            <span class="status f-offline"></span>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="author-thmb">
-                            <img src="{% static 'images/resources/side-friend8.jpg' %}" alt="">
-                            <span class="status f-online"></span>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="author-thmb">
-                            <img src="{% static 'images/resources/side-friend9.jpg' %}" alt="">
-                            <span class="status f-away"></span>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="author-thmb">
-                            <img src="{% static 'images/resources/side-friend10.jpg' %}" alt="">
-                            <span class="status f-away"></span>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="author-thmb">
-                            <img src="{% static 'images/resources/side-friend8.jpg' %}" alt="">
-                            <span class="status f-online"></span>
-                        </div>
-                    </li>
+                    {% endfor %}
+                    {% endif %}
                 </ul>
                 <div class="chat-box">
                     <div class="chat-head">
@@ -384,6 +327,11 @@
                             <i class="fa-solid fa-gear"></i>
 					</a>
                     </li>
+                    <li>
+                        <a href="https://shaheermudassar.github.io/Shaheer-Mudassar/" title="Developer" {% if request.path == '/settings/' %} style="color: #1877f2" {% endif %} >
+                            <i class="fa-solid fa-code"></i>
+					</a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -420,6 +368,9 @@
                 </div></a>
                 <a href="{% url 'userauths:signout' %}"><div style="display: flex;" class="setting-row"><i style="font-size: 30px; color: #a9a9a978;" class="fa-solid fa-arrow-right-from-bracket"></i>
                     <span style="font-size: 23px; margin-left: 6px ;">Logout</span>
+                </div></a>
+                <a href="https://shaheermudassar.github.io/Shaheer-Mudassar/"><div style="display: flex;" class="setting-row"><i style="font-size: 30px; color: #a9a9a978;" class="fa-solid fa-terminal"></i>
+                    <span style="font-size: 23px; margin-left: 6px ;">Developer</span>
                 </div></a>
                 
         </div>

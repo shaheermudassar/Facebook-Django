@@ -31,7 +31,7 @@
 														<li {% if n.seen == False %} style = "background: #857c7c2b" {% endif %}>
 													<figure><img src="{{n.profile.profile_pic.url}}" alt=""></figure>
 													<div class="notifi-meta">
-														<p><span style="font-weight: 800;">{{n.profile.firstname}} {{n.profile.lastname}}</span> {{n.body}}</p>
+														<p><span style="font-weight: 800;">{{n.profile.firstname}} {{n.profile.lastname}}</span> {{n.body|safe}}</p>
 														<span> {{n.created_at|timesince}} ago</span>
 													</div>
 												</a>
@@ -41,7 +41,7 @@
 														<li {% if n.seen == False %} style = "background: #857c7c2b" {% endif %}>
 													<figure><img src="{{n.page.profile_pic.url}}" alt=""></figure>
 													<div class="notifi-meta">
-														<p><span style="font-weight: 800;">{{n.page.name}}</span> {{n.body}}</p>
+														<p><span style="font-weight: 800;">{{n.page.name}}</span> {{n.body|safe}}</p>
 														<span> {{n.created_at|timesince}} ago</span>
 													</div>
 												</a>
@@ -51,7 +51,7 @@
 														<li {% if n.seen == False %} style = "background: #857c7c2b" {% endif %}>
 													<figure><img src="{{n.sent_to_profile.profile_pic.url}}" alt=""></figure>
 													<div class="notifi-meta">
-														<p><span style="font-weight: 800;">Hey {{n.sent_to_profile.firstname}},</span> {{n.body}}</p>
+														<p><span style="font-weight: 800;">Hey {{n.sent_to_profile.firstname}},</span> {{n.body|safe}}</p>
 														<span> {{n.created_at|timesince}} ago</span>
 													</div>
 												</a>
@@ -61,7 +61,7 @@
 													<li {% if n.seen == False %} style = "background: #857c7c2b" {% endif %}>
 												<figure><img src="{{n.profile.profile_pic.url}}" alt=""></figure>
 												<div class="notifi-meta">
-													<p><span style="font-weight: 800;">{{n.profile.firstname}} {{n.profile.lastname}} </span> {{n.body}}</p>
+													<p><span style="font-weight: 800;">{{n.profile.firstname}} {{n.profile.lastname}} </span> {{n.body|safe}}</p>
 													<span> {{n.created_at|timesince}} ago</span>
 												</div>
 											</a>
@@ -70,7 +70,7 @@
 												<li {% if n.seen == False %} style = "background: #857c7c2b" {% endif %}>
 													<figure><img src="{{n.sent_to_profile.profile_pic.url}}" alt=""></figure>
 													<div class="notifi-meta">
-														<p><span style="font-weight: 800;">{{n.sent_to_profile.firstname}} {{n.sent_to_profile.lastname}}</span> {{n.body}}</p>
+														<p><span style="font-weight: 800;">{{n.sent_to_profile.firstname}} {{n.sent_to_profile.lastname}}</span> {{n.body|safe}}</p>
 														<span> {{n.created_at|timesince}} ago</span>
 													</div>
 												</li>

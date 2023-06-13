@@ -13,11 +13,19 @@ from django.db.models import Q
 @login_required
 def newsfeed(request):
     profile_user = Profile.objects.get(user = request.user)
+    user_friends = Friend.objects.filter(user=request.user)
+    user_liked_pages = LikedPage.objects.filter(user=request.user)
+    profiles = [friend.friend_profile for friend in user_friends]
+    profiles += [liked_page.profile for liked_page in user_liked_pages]
+    
+
     all_pages = None
     if Page.objects.all():
         all_pages = Page.objects.all().order_by(Random())
     all_people = Profile.objects.exclude(user=request.user).order_by(Random())
-    post = Posts.objects.all().order_by("-id")
+    post = Posts.objects.filter(
+        Q(profile__in=profiles) | Q(page__in=user_liked_pages.values('page')) |Q(user=request.user)
+        ).order_by("-id")
     liked_post_ids = Like.objects.filter(user=request.user).values_list('post_id', flat=True)
     user = request.user
     profile_for_post_creation = Profile.objects.get(user = user)
@@ -334,7 +342,7 @@ def profile(request, id):
             Notification.objects.create(
                 sent_to = friend_profile.user,
                 sent_to_profile = friend_profile,
-                profile = profile,
+                profile = profile_user,
                 body = "accepted your friend request",
                 friends = True,
             )
@@ -371,7 +379,9 @@ def profile(request, id):
 
 @login_required
 def create_profile(request):
-    if request.method == "POST":
+    if Profile.objects.filter(user=request.user).exists():
+        return redirect("core:profile", request.user.id)
+    elif request.method == "POST":
         firstname = request.POST.get("firstname")
         lastname = request.POST.get("lastname")
         bio = request.POST.get("bio")
@@ -550,11 +560,21 @@ def like(request):
                 # User didn't like the post, so like it
             new_like = Like.objects.create(user = request.user, post=post)
             post.likes += 1
-            Notification.objects.create(
-                sent_to = post.user,
-                sent_to_profile = post.profile,
-                profile = profile,
-                body = f"liked your post"
+            if post.page:
+                Notification.objects.create(
+                    sent_to = post.user,
+                    sent_to_profile = post.profile,
+                    profile = profile,
+                    post=post,
+                    body = f"liked your page <span style=\"color: #1877f2;\">{post.page.name}</span>'s post",
+            )
+            else:
+                Notification.objects.create(
+                    sent_to = post.user,
+                    sent_to_profile = post.profile,
+                    profile = profile,
+                    post=post,
+                    body = f"liked your post",
             )
         post.save()
             
@@ -863,6 +883,15 @@ def page(request, id):
                 image=image,
                 video=video,
             )
+            if LikedPage.objects.filter(page=new_post.page).exists():
+                liked_by = LikedPage.objects.filter(page=new_post.page)
+                for l in liked_by:
+                    Notification.objects.create(
+                        sent_to = l.profile.user,
+                        sent_to_profile = l.profile,
+                        page = new_post.page,
+                        body = "added a post",
+                    )
             id = page.id
             page_url = reverse('core:page', args=[id])
 
@@ -938,6 +967,7 @@ def page(request, id):
                 user = request.user,
                 page=page
             )
+            
             page.likes +=1
             page.save()
             id = page.id

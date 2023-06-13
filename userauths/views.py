@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.conf import settings
 from userauths.models import User
 from django.contrib.auth.decorators import login_required
+from core.models import *
 # User = settings.AUTH_USER_MODEL
 
 def register_views(request):
@@ -60,6 +61,7 @@ from django.contrib.auth.hashers import check_password
 
 @login_required
 def change_password(request):
+    profile = Profile.objects.get(user=request.user)
     if request.method == "POST":
         old_password = request.POST.get("old_password")
         new_password = request.POST.get("new_password")
@@ -74,7 +76,11 @@ def change_password(request):
             user.save()
             user = authenticate(request, email=user.email, password=new_password)
             login(request, user)
-            messages.success(request, "Password changed successfully")
+            Notification.objects.create(
+                sent_to = request.user,
+                sent_to_profile = profile,
+                body = "Your password was changed"
+            )
             return redirect("core:profile", user.id)
     return render(request, "userauths/change_password.html")
 

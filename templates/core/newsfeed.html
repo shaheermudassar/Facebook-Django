@@ -202,7 +202,7 @@
                                     </div>
                                     <!-- top stories -->
                                     
-                                        
+                                        {% if post %}
                                     {% for p in post %}
                                     <div class="central-meta item">
                                         <div class="user-post">
@@ -431,6 +431,29 @@
                                         </div>
                                     </div>
                                     {% endfor %}
+                                    {% else %}
+                                    <div class="central-meta item">
+                                        <div class="user-post">
+                                            <div class="friend-info">
+                                                <figure>
+                                                    <img src="{% static 'images/favicon.png' %}" alt="">
+                                                </figure>
+                                                <div class="friend-name">
+                                                    <ins><a title="">Facebook</a></ins>
+                                                    <span> by developer</span>
+
+                                                </div>
+                                                <div class="post-meta">
+                                                    <figure>
+                                                        <a><img src="{% static 'images/facebook_post.jpg' %}" alt=""></a>
+                                                    </figure>
+                                           
+                                                </div>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
                                         <!-- digital sponsors -->
                                      
                                         <!-- video post -->

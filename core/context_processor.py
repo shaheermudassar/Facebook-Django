@@ -9,6 +9,9 @@ def default(request):
     friend_requests_count = None
     notifications_count = None
     notifications = None
+    friends = None
+    if request.user.is_authenticated and Friend.objects.filter(user=request.user).exists():
+        friends=Friend.objects.filter(user=request.user)
     if request.user.is_authenticated and Profile.objects.filter(user=request.user).exists():
         profile_pro = Profile.objects.get(user = request.user)
         profile_path = f"/profile/{profile_pro.user.id}/"
@@ -23,4 +26,5 @@ def default(request):
         "profile_path": profile_path,
         "notifications": notifications,
         "notifications_count": notifications_count,
+        "friends":friends,
     }
