@@ -39,13 +39,21 @@
                                         <div class="user-post">
                                             <div class="friend-info">
                                                 <figure>
+                                                    {% if p.page %}
+                                                    <img src="{{p.page.profile_pic.url}}" alt="">
+                                                    {% else %}
                                                     <img src="{{p.profile.profile_pic.url}}" alt="">
+                                                    {% endif %}
                                                 </figure>
                                                 <div class="friend-name">
                                                     {% if p.user == request.user %}
                                                     
                                                     {% endif %}
+                                                    {% if p.page %}
+                                                    <ins><a href="{% url 'core:page' p.page.id %}" title="">{{p.page.name}}</a></ins>
+                                                    {% else %}
                                                     <ins><a href="{% url 'core:profile' p.user.id %}" title="">{{p.profile.firstname}} {{p.profile.lastname}}</a></ins>
+                                                    {% endif %}
                                                     <span><i class="fa fa-globe"></i> published: {{p.created_at|date:"M d, Y"}} {{p.created_at|time:"h:i, A"}}</span>
 
                                                 </div>

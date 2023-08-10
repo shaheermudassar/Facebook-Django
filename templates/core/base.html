@@ -54,7 +54,7 @@
                 
 			</span>
                 <span class="mh-text">
-				{% block logo %}<a href="/" title=""><img style="margin-right: 220px;" src="{% static 'images/facebook-logo-blue.png' %}" alt=""></a>{% endblock logo %}
+				{% block logo %}<a href="{% url 'core:newsfeed' %}" title=""><img style="margin-right: 220px;" src="{% static 'images/facebook-logo-blue.png' %}" alt=""></a>{% endblock logo %}
 			</span>
 			</span>
                 <span class="mh-btns-right">
@@ -83,7 +83,7 @@
 
         <div class="topbar stick">
             <div class="logo">
-                <a title="" href="newsfeed.html"><img src="{% static 'images/fb-logo.png' %}" alt=""></a>
+                <a title="" href="{% url 'core:newsfeed' %}"><img src="{% static 'images/fb-logo.png' %}" alt=""></a>
             </div>
             <div class="top-area">
                 <div class="main-menu">
@@ -184,7 +184,7 @@
                 </ul>
                 <div class="user-img">
                     <h5>{{profile_pro.firstname}} {{profile_pro.lastname}}</h5>
-                    <img style="max-width: 60px;" src="{{profile_pro.profile_pic.url}}" alt="">
+                    <img style="width: 60px; height:60px; object-fit: cover;" src="{{profile_pro.profile_pic.url}}" alt="">
                     <span class="status f-online"></span>
                     <div class="user-setting">
 
@@ -209,7 +209,7 @@
                     {% for f in friends %}
                     <li>
                         <div class="author-thmb">
-                            <a href="{% url 'messenger:chat' f.friend_user.id %}"><img style="width:50px;" src="{{f.friend_profile.profile_pic.url}}" alt=""></a>
+                            <a href="{% url 'messenger:chat' f.friend_user.id %}"><img style="width:50px; height: 50px; object-fit: cover;" src="{{f.friend_profile.profile_pic.url}}" alt=""></a>
                         </div>
                     </li>
                     {% endfor %}
@@ -354,7 +354,9 @@
 <nav id="shoppingbag">
     <div>
         <div class="">
-                <a href="{% url 'core:profile' profile_pro.user.id %}"><div style="display: flex;" class="setting-row"><img style="border-radius: 100%; width: 50px;" src="{{profile_pro.profile_pic.url}}" alt="user profile">
+                <a href="{% url 'core:profile' profile_pro.user.id %}"><div style="display: flex;" class="setting-row"><img style="border-radius: 100%; height: 50px;
+                    object-fit: cover;
+                    width: 50px;" src="{{profile_pro.profile_pic.url}}" alt="user profile">
                     <span style="font-size: 23px; margin-left: 6px ;"> {{profile_pro.firstname}} {{profile_pro.lastname}} <br><span style="color: #ccc; font-size: 18px;">view your profile</span></span>
                 </div></a>
                 <a href="{% url 'core:settings' %}"><div style="display: flex;" class="setting-row"><i style="font-size: 30px; color: #a9a9a978;" class="fas fa-cog"></i>

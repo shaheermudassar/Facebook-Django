@@ -15,7 +15,8 @@ class FriendAdmin(admin.ModelAdmin):
     list_display = ["friend_profile_image","profile_image", 'user_name', 'friend_name']
     # list_display = ['user']
 class FriendRequestAdmin(admin.ModelAdmin):
-    list_display = ['sender_name',"sender_profile_image","reciever_profile_image",  "reciever_name"]
+    list_display = ['sender_name',"sender_profile_image","reciever_profile_image", "is_friend",  "reciever_name"]
+    list_editable = ["is_friend"]
     # list_display = ['send_user']
 class CommentAdmin(admin.ModelAdmin):
     list_display = ['user', "comment"]

@@ -51,7 +51,7 @@
 												{% if profiles %}
 												{% for p in profiles %}
 												<div class="pit-friends">
-													<figure><a href="{% url 'core:profile' p.user.id %}" title=""><img src="{{p.profile_pic.url}}" alt=""></a></figure>
+													<figure><a href="{% url 'core:profile' p.user.id %}" title=""><img style="height: 45px; object-fit: cover; width: 45px;" src="{{p.profile_pic.url}}" alt=""></a></figure>
 													<div class="pit-frnz-meta">
 														<a href="{% url 'core:profile' p.user.id %}" title="">{{p.firstname}} {{p.lastname}}</a>
 														<i>{{p.city}}, {{p.country}}</i>

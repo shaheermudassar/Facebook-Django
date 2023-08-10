@@ -34,7 +34,7 @@
 								<div class="central-meta item" >
 									<div class="pit-post">
 										<div style="display: contents;">
-											<a href="{% url 'core:page' p.id %}"><img src="{{p.profile_pic.url}}" alt="" style="width: 90px; border-radius: 90px;"></a>
+											<a href="{% url 'core:page' p.id %}"><img src="{{p.profile_pic.url}}" alt="" style="width: 90px; height: 90px; object-fit: cover; border-radius: 90px;"></a>
 										</div>
 										<div class="pit-post-deta">
 											<h4><a href="{% url 'core:page' p.id %}">{{p.name}}</a> </h4>											

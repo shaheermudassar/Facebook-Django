@@ -57,14 +57,16 @@
 											<div class="profile-author">
 												<div class="profile-author-thumb image-container" >
 													<img style="border-radius: 0px;" alt="author" src="{{page.profile_pic.url}}" class="fullscreen-img">
+													{% if page.user == request.user %}
 													<div class="edit-dp">
 														<a href="{% url 'core:settings' %}">
-														<i class="fa fa-camera"></i>
+															<i class="fa fa-camera"></i>
 														</a>
 													</div>
+													{% endif %}
 												</div>
 												<div class="author-content">
-													<a class="h4 author-name" href="02-ProfilePage.html">{{page.name}}</a>
+													<a class="h4 author-name">{{page.name}}</a>
 												</div>
 											</div>
 										</div>
@@ -198,7 +200,7 @@
 													<span class="create-post">Create post</span>
 													<div class="new-postbox">
 														<figure>
-															<img style="width: 60px" src="{{page.profile_pic.url}}" alt="">
+															<img style="width: 60px; height: 60px; object-fit: cover;" src="{{page.profile_pic.url}}" alt="">
 														</figure>
 														<form method="post" enctype="multipart/form-data">
 															{% csrf_token %}
